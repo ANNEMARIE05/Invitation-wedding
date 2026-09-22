@@ -19,8 +19,8 @@ const toInput = (iso) => {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
 };
 
-const fieldCls = "w-full bg-white/[0.06] border hairline-gold rounded-sm px-4 py-3.5 text-sm text-[#FAF7F2] placeholder:text-[#C48B92]/70 transition-all duration-300";
-const labelCls = "block font-cinzel text-[10px] tracking-[0.3em] uppercase text-[#C48B92] mb-2";
+const fieldCls = "w-full rounded-2xl border hairline-gold bg-white/[0.06] px-3.5 py-2.5 text-sm text-[#FAF7F2] placeholder:text-[#C48B92]/70 transition-all duration-300";
+const labelCls = "mb-1.5 block font-cinzel text-[10px] uppercase tracking-[0.22em] text-[#C48B92]";
 
 export default function InfosAdmin() {
   const [form, setForm] = useState(empty);
@@ -75,10 +75,10 @@ export default function InfosAdmin() {
           </Link>
         </div>
 
-        <form onSubmit={save} className="mt-8 space-y-8" data-testid="infos-form">
-          <section className="border hairline-gold bg-white/[0.04] rounded-sm p-6 sm:p-8">
+        <form onSubmit={save} className="mt-6 space-y-4" data-testid="infos-form">
+          <section className="rounded-3xl border hairline-gold bg-white/[0.04] p-5 sm:p-6">
             <h2 className="font-display text-2xl text-[#D4AF37]">Le Couple</h2>
-            <div className="mt-5 grid sm:grid-cols-2 gap-5">
+            <div className="mt-4 grid gap-3.5 sm:grid-cols-2">
               <div>
                 <label className={labelCls}>Prénom 1</label>
                 <input data-testid="infos-input-bride" placeholder="Ex. Éléonore" value={form.bride} onChange={set("bride")} className={fieldCls} />
@@ -90,17 +90,17 @@ export default function InfosAdmin() {
             </div>
           </section>
 
-          <section className="border hairline-gold bg-white/[0.04] rounded-sm p-6 sm:p-8">
+          <section className="rounded-3xl border hairline-gold bg-white/[0.04] p-5 sm:p-6">
             <h2 className="font-display text-2xl text-[#D4AF37]">Le Grand Jour</h2>
-            <div className="mt-5">
+            <div className="mt-4">
               <label className={labelCls}>Date & heure de la cérémonie</label>
               <input type="datetime-local" data-testid="infos-input-date" value={form.date_iso} onChange={set("date_iso")} className={fieldCls} />
             </div>
           </section>
 
-          <section className="border hairline-gold bg-white/[0.04] rounded-sm p-6 sm:p-8">
+          <section className="rounded-3xl border hairline-gold bg-white/[0.04] p-5 sm:p-6">
             <h2 className="font-display text-2xl text-[#D4AF37]">Le Lieu</h2>
-            <div className="mt-5 space-y-5">
+            <div className="mt-4 space-y-3.5">
               <div>
                 <label className={labelCls}>Nom du lieu</label>
                 <input data-testid="infos-input-venue-name" placeholder="Ex. Château de Deauville" value={form.venue_name} onChange={set("venue_name")} className={fieldCls} />
@@ -112,21 +112,21 @@ export default function InfosAdmin() {
             </div>
           </section>
 
-          <section className="border hairline-gold bg-white/[0.04] rounded-sm p-6 sm:p-8">
-            <h2 className="font-display text-2xl text-[#D4AF37] flex items-center gap-3">
+          <section className="rounded-3xl border hairline-gold bg-white/[0.04] p-5 sm:p-6">
+            <h2 className="flex items-center gap-3 font-display text-2xl text-[#D4AF37]">
               <Mail size={18} /> Notification E-mail
             </h2>
-            <p className="mt-2 text-sm text-[#C48B92]">Recevez un e-mail à chaque confirmation de présence d'un invité. Laissez vide pour désactiver.</p>
-            <div className="mt-5">
+            <p className="mt-1.5 text-sm text-[#C48B92]">Recevez un e-mail à chaque confirmation de présence d'un invité. Laissez vide pour désactiver.</p>
+            <div className="mt-4">
               <label className={labelCls}>Adresse e-mail de réception</label>
               <input type="email" data-testid="infos-input-notify-email" placeholder="Ex. vous@exemple.com" value={form.notify_email} onChange={set("notify_email")} className={fieldCls} />
             </div>
           </section>
 
-          <section className="border hairline-gold bg-white/[0.04] rounded-sm p-6 sm:p-8">
+          <section className="rounded-3xl border hairline-gold bg-white/[0.04] p-5 sm:p-6">
             <h2 className="font-display text-2xl text-[#D4AF37]">Notre Histoire</h2>
-            <p className="mt-2 text-sm text-[#C48B92]">Trois moments clés. Laissez vide pour garder le texte de démonstration.</p>
-            <div className="mt-5 space-y-6">
+            <p className="mt-1.5 text-sm text-[#C48B92]">Trois moments clés. Laissez vide pour garder le texte de démonstration.</p>
+            <div className="mt-4 space-y-4">
               {form.story.map((s, i) => (
                 <div key={i} className="space-y-3 border-b hairline-gold pb-5 last:border-0 last:pb-0">
                   <div className="grid grid-cols-[90px_1fr] gap-3">

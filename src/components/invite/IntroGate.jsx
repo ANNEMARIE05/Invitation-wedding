@@ -27,7 +27,7 @@ export default function IntroGate({ onOpen }) {
         transition={{ duration: 0.9, delay: 0.25, ease: EASE }}
         className="relative z-10 text-center mb-9"
       >
-        <p className="font-cinzel text-[10px] sm:text-[11px] tracking-[0.45em] uppercase text-[#C48B92]">
+        <p className="font-cinzel font-bold text-[10px] sm:text-[11px] tracking-[0.45em] uppercase text-[#C48B92]">
           Vous êtes invité·e·s au mariage de
         </p>
         <h1 className="mt-3 font-script text-5xl sm:text-6xl text-[#4A0E17] leading-tight" data-testid="intro-names">
@@ -130,7 +130,7 @@ export default function IntroGate({ onOpen }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: opening ? 0 : 1 }}
         transition={{ duration: 0.9, delay: 1.3 }}
-        className="relative z-10 mt-8 font-cinzel text-[10px] tracking-[0.45em] uppercase text-[#8C7B7E]"
+        className="relative z-10 mt-8 font-cinzel font-bold text-[10px] tracking-[0.45em] uppercase text-[#8C7B7E]"
       >
         Touchez l'enveloppe
       </motion.p>

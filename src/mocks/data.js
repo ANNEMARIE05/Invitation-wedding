@@ -2,7 +2,7 @@ export const SEED_RSVPS = [
   {
     id: "rsvp-1",
     nom: "Camille Dupont",
-    email: "camille@exemple.com",
+    telephone: "06 12 34 56 78",
     present: true,
     accompagnants: 1,
     regime: "Végétarien",
@@ -13,7 +13,7 @@ export const SEED_RSVPS = [
   {
     id: "rsvp-2",
     nom: "Julien Moreau",
-    email: "julien@exemple.com",
+    telephone: "07 98 76 54 32",
     present: true,
     accompagnants: 0,
     regime: "Aucun",
@@ -24,7 +24,7 @@ export const SEED_RSVPS = [
   {
     id: "rsvp-3",
     nom: "Sophie Martin",
-    email: "sophie@exemple.com",
+    telephone: "06 45 67 89 01",
     present: false,
     accompagnants: 0,
     regime: "Aucun",

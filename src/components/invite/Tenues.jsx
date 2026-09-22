@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
-import { Crown, Shirt, Sparkles } from "lucide-react";
-import { EASE } from "@/lib/invite-data";
+import { Crown, MessageCircle, Shirt, Sparkles } from "lucide-react";
+import { EASE, WHATSAPP_NUMBER } from "@/lib/invite-data";
 import Chapter from "./Chapter";
+
+const PAGNE_MESSAGE = "Bonjour, je souhaite commander un pagne pour le mariage. Pouvez-vous me renseigner ?";
 
 const PAGNES = [
   { id: "royal", name: "Le Royal", porteurs: "Familles & témoins", img: "/img/pagne-royal.jpg" },
@@ -48,12 +50,24 @@ export default function Tenues() {
           ))}
         </div>
 
+        <div className="mt-8 flex justify-center">
+          <a
+            data-testid="pagne-whatsapp-button"
+            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(PAGNE_MESSAGE)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0E17] px-7 py-3.5 font-cinzel text-[11px] uppercase tracking-[0.18em] text-[#FAF7F2] transition-colors duration-300 hover:bg-[#6B1724]"
+          >
+            <MessageCircle size={15} className="text-[#D4AF37]" /> Commander un pagne
+          </a>
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.9, ease: EASE }}
-          className="mt-16 text-center"
+          className="mt-12 text-center"
           data-testid="wedding-colors"
         >
           <p className="font-script text-4xl text-[#4A0E17]">Couleurs du mariage</p>
@@ -83,7 +97,7 @@ export default function Tenues() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.9, ease: EASE }}
-          className="mt-14 border hairline-gold bg-[#F3ECE2] rounded-sm p-7 sm:p-9 text-center"
+          className="mt-12 rounded-3xl border hairline-gold bg-[#F3ECE2] p-6 text-center sm:p-7"
           data-testid="dresscode-card"
         >
           <p className="font-cinzel text-[11px] tracking-[0.4em] uppercase text-[#C48B92]">Dress Code</p>
@@ -99,7 +113,7 @@ export default function Tenues() {
             ))}
           </div>
           <p className="mt-6 text-sm text-[#8C7B7E] leading-relaxed max-w-xl mx-auto">
-            Les pagnes sont à réserver auprès des témoins — indiquez votre choix dans le message de votre confirmation.
+            Un pagne vous tente ? Écrivez-nous sur WhatsApp, nous vous répondons directement.
           </p>
         </motion.div>
       </div>

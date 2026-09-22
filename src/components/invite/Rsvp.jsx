@@ -6,31 +6,33 @@ import { createRsvp } from "@/lib/api";
 import { EASE, WHATSAPP_NUMBER } from "@/lib/invite-data";
 import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
+import { CardActions, FairePart } from "./InviteCard";
 
 const REGIMES = ["Aucun", "Végétarien", "Sans gluten", "Allergies (préciser en message)"];
+
+const partySize = (d) => (d.present ? 1 + Number(d.accompagnants || 0) : 0);
 
 const waMessage = (d) =>
   [
     "Confirmation de présence — Mariage",
     `Nom : ${d.nom}`,
-    `Email : ${d.email}`,
+    `WhatsApp : ${d.telephone}`,
     `Présence : ${d.present ? "Oui, je serai là" : "Non, je ne pourrai pas venir"}`,
-    `Accompagnants : +${d.accompagnants}`,
+    `Nombre de personnes : ${partySize(d)}`,
     `Régime : ${d.regime}`,
     d.chanson ? `Chanson : ${d.chanson}` : "",
     d.message ? `Message : ${d.message}` : "",
   ].filter(Boolean).join("\n");
 
-const initial = { nom: "", email: "", present: true, accompagnants: 0, regime: "Aucun", chanson: "", message: "" };
+const initial = { nom: "", telephone: "", present: true, accompagnants: 0, regime: "Aucun", chanson: "", message: "" };
 
-const fieldCls = "w-full bg-white border hairline rounded-sm px-4 py-3.5 text-sm text-[#1C1617] placeholder:text-[#8C7B7E] transition-all duration-300";
-const labelCls = "block font-cinzel text-[10px] tracking-[0.3em] uppercase text-[#6B1724] mb-2";
+const fieldCls = "w-full bg-white border border-[#6B1724]/15 rounded-2xl px-3.5 py-2.5 text-sm text-[#1C1617] placeholder:text-[#8C7B7E] transition-all duration-300";
+const labelCls = "block font-cinzel text-[10px] tracking-[0.22em] uppercase text-[#6B1724] mb-1.5";
 
 const Frame = ({ children }) => (
-  <div className="relative bg-[#FAF7F2] rounded-sm shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
-    <div className="absolute inset-3 border border-[#D4AF37]/60 pointer-events-none" />
-    <div className="absolute inset-5 border border-[#D4AF37]/30 pointer-events-none" />
-    <div className="relative p-9 sm:p-14">{children}</div>
+  <div className="relative rounded-3xl bg-[#FAF7F2] shadow-[0_24px_60px_rgba(0,0,0,0.28)]">
+    <div className="pointer-events-none absolute inset-2.5 rounded-[1.35rem] border border-[#D4AF37]/55" />
+    <div className="relative px-5 py-6 sm:px-8 sm:py-7">{children}</div>
   </div>
 );
 
@@ -48,7 +50,7 @@ export default function Rsvp() {
     try {
       const data = await createRsvp({ ...form, accompagnants: Number(form.accompagnants) });
       setSent(data);
-      toast.success("Votre réponse a bien été envoyée aux mariés.");
+      toast.success(data.present ? "Votre carte d'invitation est prête." : "Votre réponse a bien été envoyée aux mariés.");
     } catch {
       toast.error("Une erreur est survenue — merci de réessayer.");
     } finally {
@@ -59,10 +61,10 @@ export default function Rsvp() {
   return (
     <section
       id="rsvp"
-      className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 bg-[linear-gradient(135deg,#3B0910_0%,#58111A_50%,#2A050B_100%)]"
+      className="relative bg-[linear-gradient(135deg,#3B0910_0%,#58111A_50%,#2A050B_100%)] px-5 py-16 sm:px-8 md:py-24 lg:px-16"
       data-testid="rsvp-section"
     >
-      <div className="relative z-10 max-w-3xl mx-auto">
+      <div className="relative z-10 mx-auto max-w-2xl">
         <Chapter index="VI" eyebrow="Répondez s'il vous plaît" title="Confirmation de Présence" script={deadlineLabel} dark />
         <AnimatePresence mode="wait">
           {sent ? (
@@ -75,29 +77,40 @@ export default function Rsvp() {
             >
               <Frame>
                 <div className="text-center">
-                  <span className="mx-auto w-16 h-16 rounded-full bg-[#4A0E17] border border-[#D4AF37]/60 flex items-center justify-center">
-                    <Check size={28} className="text-[#D4AF37]" />
+                  <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#D4AF37]/60 bg-[#4A0E17]">
+                    <Check size={22} className="text-[#D4AF37]" />
                   </span>
-                  <h3 className="mt-6 font-display text-3xl text-[#4A0E17]">Merci, {sent.nom.split(" ")[0]} !</h3>
-                  <p className="mt-3 text-[#5C4F51] text-sm leading-relaxed">
+                  <h3 className="mt-4 font-display text-3xl text-[#4A0E17]">Merci, {sent.nom.split(" ")[0]} !</h3>
+                  <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#5C4F51]">
                     {sent.present
-                      ? `Nous avons hâte de vous compter parmi nous${sent.accompagnants > 0 ? `, accompagné·e de ${sent.accompagnants} personne(s)` : ""}.`
+                      ? `Votre carte est au nom de ${sent.nom}, pour ${partySize(sent)} personne${partySize(sent) > 1 ? "s" : ""}.`
                       : "Nous sommes tristes de ne pas vous avoir à nos côtés, mais nous vous remercions de votre réponse."}
                   </p>
-                  <a
-                    data-testid="rsvp-whatsapp-button"
-                    href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage(sent))}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="animate-blink mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0E17] text-[#FAF7F2] font-cinzel text-[11px] tracking-[0.2em] uppercase px-8 py-4 hover:bg-[#6B1724] transition-colors duration-300"
-                  >
-                    <MessageCircle size={15} className="text-[#D4AF37]" /> Envoyer ma confirmation sur WhatsApp
-                  </a>
-                  <p className="mt-3 text-xs text-[#8C7B7E]">Un message pré-rempli s'ouvre — il ne reste qu'à l'envoyer.</p>
+
+                  {sent.present ? (
+                    <div className="mx-auto mt-5 w-full max-w-[460px]">
+                      <FairePart guest={sent} testId="personal-invite-card" />
+                      <CardActions
+                        cardTestId="personal-invite-card"
+                        fileName="ma-carte-invitation.png"
+                        whatsappText={waMessage(sent)}
+                      />
+                    </div>
+                  ) : (
+                    <a
+                      data-testid="rsvp-whatsapp-button"
+                      href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage(sent))}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0E17] px-7 py-3.5 font-cinzel text-[11px] uppercase tracking-[0.18em] text-[#FAF7F2] transition-colors duration-300 hover:bg-[#6B1724]"
+                    >
+                      <MessageCircle size={15} className="text-[#D4AF37]" /> Envoyer ma réponse sur WhatsApp
+                    </a>
+                  )}
                   <button
                     data-testid="rsvp-again-button"
                     onClick={() => { setSent(null); setForm(initial); }}
-                    className="mt-6 font-cinzel text-[11px] tracking-[0.25em] uppercase text-[#6B1724] gold-underline"
+                    className="gold-underline mt-5 font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#6B1724]"
                   >
                     Envoyer une autre réponse
                   </button>
@@ -113,30 +126,42 @@ export default function Rsvp() {
               transition={{ duration: 0.9, ease: EASE }}
             >
               <Frame>
-                <form onSubmit={submit} className="space-y-6" data-testid="rsvp-form">
-                  <div className="grid sm:grid-cols-2 gap-5">
+                <form onSubmit={submit} className="space-y-4" data-testid="rsvp-form">
+                  <div className="grid gap-3.5 sm:grid-cols-2">
                     <div>
                       <label className={labelCls} htmlFor="rsvp-nom">Nom & Prénom *</label>
                       <input id="rsvp-nom" required data-testid="rsvp-input-nom" placeholder="Votre nom complet" value={form.nom} onChange={set("nom")} className={fieldCls} />
                     </div>
                     <div>
-                      <label className={labelCls} htmlFor="rsvp-email">Adresse e-mail *</label>
-                      <input id="rsvp-email" required type="email" data-testid="rsvp-input-email" placeholder="vous@exemple.com" value={form.email} onChange={set("email")} className={fieldCls} />
+                      <label className={labelCls} htmlFor="rsvp-telephone">Numéro WhatsApp *</label>
+                      <input
+                        id="rsvp-telephone"
+                        required
+                        type="tel"
+                        inputMode="tel"
+                        autoComplete="tel"
+                        pattern="[0-9+().\s-]{8,20}"
+                        data-testid="rsvp-input-telephone"
+                        placeholder="+33 6 12 34 56 78"
+                        value={form.telephone}
+                        onChange={set("telephone")}
+                        className={fieldCls}
+                      />
                     </div>
                   </div>
 
                   <div>
                     <label className={labelCls}>Serez-vous des nôtres ?</label>
-                    <div className="flex flex-wrap gap-3" data-testid="rsvp-attendance">
+                    <div className="flex flex-wrap gap-2.5" data-testid="rsvp-attendance">
                       {[{ v: true, label: "Je serai présent·e" }, { v: false, label: "Je ne pourrai pas venir" }].map((o) => (
                         <button
                           type="button"
                           key={o.label}
                           data-testid={o.v ? "rsvp-present-oui" : "rsvp-present-non"}
                           onClick={() => setForm({ ...form, present: o.v })}
-                          className={`rounded-full px-6 py-2.5 font-cinzel text-[11px] tracking-[0.15em] uppercase transition-all duration-300 border ${
+                          className={`rounded-full border px-5 py-2 font-cinzel text-[11px] uppercase tracking-[0.12em] transition-all duration-300 ${
                             form.present === o.v
-                              ? "bg-[#4A0E17] text-[#FAF7F2] border-[#4A0E17]"
+                              ? "border-[#4A0E17] bg-[#4A0E17] text-[#FAF7F2]"
                               : "border-[#C48B92]/50 text-[#5C4F51] hover:border-[#4A0E17]"
                           }`}
                         >
@@ -146,7 +171,7 @@ export default function Rsvp() {
                     </div>
                   </div>
 
-                  <div className="grid sm:grid-cols-2 gap-5">
+                  <div className="grid gap-3.5 sm:grid-cols-2">
                     <div>
                       <label className={labelCls}>Accompagnants</label>
                       <select data-testid="rsvp-select-accompagnants" value={form.accompagnants} onChange={set("accompagnants")} className={fieldCls}>
@@ -163,18 +188,18 @@ export default function Rsvp() {
 
                   <div>
                     <label className={labelCls} htmlFor="rsvp-chanson">Votre chanson</label>
-                    <input id="rsvp-chanson" data-testid="rsvp-input-chanson" placeholder="Votre chanson incontournable sur la piste de danse…" value={form.chanson} onChange={set("chanson")} className={fieldCls} />
+                    <input id="rsvp-chanson" data-testid="rsvp-input-chanson" placeholder="Votre chanson incontournable…" value={form.chanson} onChange={set("chanson")} className={fieldCls} />
                   </div>
                   <div>
                     <label className={labelCls} htmlFor="rsvp-message">Un mot pour les mariés</label>
-                    <textarea id="rsvp-message" data-testid="rsvp-input-message" rows={3} placeholder="Choix du pagne, allergies, tendresses…" value={form.message} onChange={set("message")} className={fieldCls} />
+                    <textarea id="rsvp-message" data-testid="rsvp-input-message" rows={2} placeholder="Allergies, tendresses…" value={form.message} onChange={set("message")} className={`${fieldCls} resize-none`} />
                   </div>
 
                   <button
                     type="submit"
                     disabled={loading}
                     data-testid="rsvp-submit-button"
-                    className="animate-blink w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0E17] text-[#FAF7F2] font-cinzel text-xs tracking-[0.25em] uppercase px-7 py-4 hover:bg-[#6B1724] transition-colors duration-300 disabled:opacity-60"
+                    className="animate-blink inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#4A0E17] px-7 py-3.5 font-cinzel text-xs uppercase tracking-[0.22em] text-[#FAF7F2] transition-colors duration-300 hover:bg-[#6B1724] disabled:opacity-60"
                   >
                     <Send size={15} className="text-[#D4AF37]" /> {loading ? "Envoi en cours…" : "Confirmer ma présence"}
                   </button>

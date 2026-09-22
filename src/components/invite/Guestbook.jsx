@@ -57,17 +57,17 @@ export default function Guestbook() {
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.9, ease: EASE }}
           onSubmit={submit}
-          className="bg-white border hairline rounded-sm shadow-[0_20px_60px_rgba(74,14,23,0.08)] p-7 sm:p-9"
+          className="rounded-3xl border hairline bg-white p-5 shadow-[0_16px_40px_rgba(74,14,23,0.08)] sm:p-6"
           data-testid="guestbook-form"
         >
-          <div className="grid sm:grid-cols-[1fr_2fr] gap-5">
+          <div className="grid gap-3 sm:grid-cols-[1fr_2fr]">
             <input
               required
               data-testid="guestbook-input-nom"
               placeholder="Votre nom *"
               value={nom}
               onChange={(e) => setNom(e.target.value)}
-              className="bg-[#FAF7F2] border hairline rounded-sm px-4 py-3.5 text-sm placeholder:text-[#8C7B7E] transition-all duration-300"
+              className="rounded-2xl border hairline bg-[#FAF7F2] px-3.5 py-2.5 text-sm placeholder:text-[#8C7B7E] transition-all duration-300"
             />
             <div className="relative">
               <textarea
@@ -78,7 +78,7 @@ export default function Guestbook() {
                 placeholder="Un vœu, un souvenir, une déclaration… *"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full bg-[#FAF7F2] border hairline rounded-sm px-4 py-3.5 text-sm placeholder:text-[#8C7B7E] transition-all duration-300 resize-none"
+                className="w-full resize-none rounded-2xl border hairline bg-[#FAF7F2] px-3.5 py-2.5 text-sm placeholder:text-[#8C7B7E] transition-all duration-300"
               />
               <span className="absolute bottom-2.5 right-3 text-[10px] text-[#8C7B7E]" data-testid="guestbook-char-counter">{message.length}/280</span>
             </div>
@@ -87,7 +87,7 @@ export default function Guestbook() {
             type="submit"
             disabled={loading}
             data-testid="guestbook-submit-button"
-            className="mt-5 w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0E17] text-[#FAF7F2] font-cinzel text-[11px] tracking-[0.25em] uppercase px-8 py-3.5 hover:bg-[#6B1724] transition-all duration-300 disabled:opacity-60"
+            className="mt-3.5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#4A0E17] px-7 py-3 font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#FAF7F2] transition-all duration-300 hover:bg-[#6B1724] disabled:opacity-60 sm:w-auto"
           >
             <Feather size={15} /> {loading ? "Gravure…" : "Signer le livre d'or"}
           </button>
@@ -109,7 +109,7 @@ export default function Guestbook() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -70 }}
                     transition={{ duration: 0.5, ease: EASE }}
-                    className="bg-white border hairline rounded-sm p-8 sm:p-10 text-center shadow-[0_20px_60px_rgba(74,14,23,0.08)]"
+                    className="rounded-3xl border hairline bg-white p-6 text-center shadow-[0_16px_40px_rgba(74,14,23,0.08)] sm:p-8"
                     data-testid="guestbook-slide"
                   >
                     <span className="font-script text-6xl text-[#D4AF37] leading-none">«</span>

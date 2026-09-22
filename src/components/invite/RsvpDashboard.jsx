@@ -47,9 +47,9 @@ export default function RsvpDashboard() {
 
   const exportCsv = () => {
     const rows = [
-      ["Nom", "Email", "Présent", "Accompagnants", "Régime", "Chanson", "Message", "Date"],
+      ["Nom", "WhatsApp", "Présent", "Accompagnants", "Régime", "Chanson", "Message", "Date"],
       ...rsvps.map((r) => [
-        r.nom, r.email, r.present ? "Oui" : "Non", r.accompagnants, r.regime, r.chanson,
+        r.nom, r.telephone || r.email, r.present ? "Oui" : "Non", r.accompagnants, r.regime, r.chanson,
         (r.message || "").replace(/[\r\n;]+/g, " "), formatDate(r.created_at),
       ]),
     ];
@@ -102,7 +102,7 @@ export default function RsvpDashboard() {
 
         <div className="mt-6 sm:mt-10 grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4" data-testid="dashboard-stats">
           {stats.map(({ icon: Icon, label, value, testId }) => (
-            <div key={label} className="bg-white border hairline rounded-xl sm:rounded-sm p-3.5 sm:p-6 text-center shadow-[0_10px_30px_rgba(74,14,23,0.06)]" data-testid={testId}>
+            <div key={label} className="rounded-2xl border hairline bg-white p-3.5 text-center shadow-[0_10px_30px_rgba(74,14,23,0.06)] sm:p-6" data-testid={testId}>
               <Icon size={16} className="mx-auto text-[#D4AF37] sm:hidden" strokeWidth={1.5} />
               <Icon size={20} className="mx-auto text-[#D4AF37] hidden sm:block" strokeWidth={1.5} />
               <p className="mt-1.5 sm:mt-3 font-display text-2xl sm:text-4xl text-[#4A0E17] tabular-nums">{value}</p>
@@ -111,7 +111,7 @@ export default function RsvpDashboard() {
           ))}
         </div>
 
-        <div className="mt-3 sm:mt-6 bg-white border hairline rounded-xl sm:rounded-sm px-4 py-3.5 sm:px-6 sm:py-5 flex items-center gap-3 sm:gap-4" data-testid="dashboard-regimes">
+        <div className="mt-3 flex items-center gap-3 rounded-2xl border hairline bg-white px-4 py-3.5 sm:mt-6 sm:gap-4 sm:px-6 sm:py-5" data-testid="dashboard-regimes">
           <UtensilsCrossed size={18} className="text-[#D4AF37] shrink-0" strokeWidth={1.5} />
           {regimeEntries.length === 0 ? (
             <p className="text-xs sm:text-sm text-[#8C7B7E]">Aucun régime particulier signalé pour le moment.</p>
@@ -123,7 +123,7 @@ export default function RsvpDashboard() {
           )}
         </div>
 
-        <div className="mt-3 sm:mt-6 bg-white border hairline rounded-xl sm:rounded-sm overflow-hidden" data-testid="dashboard-table">
+        <div className="mt-3 overflow-hidden rounded-2xl border hairline bg-white sm:mt-6" data-testid="dashboard-table">
           {loading && <p className="p-6 sm:p-8 text-center font-display italic text-lg sm:text-xl text-[#8C7B7E]">Chargement des réponses…</p>}
           {!loading && rsvps.length === 0 && (
             <p className="p-6 sm:p-8 text-center font-display italic text-lg sm:text-xl text-[#8C7B7E]" data-testid="dashboard-empty">
@@ -142,7 +142,7 @@ export default function RsvpDashboard() {
                         {r.present ? "Oui" : "Non"}
                       </span>
                     </div>
-                    <p className="mt-1 text-[11px] text-[#8C7B7E] truncate">{r.email} · {formatDate(r.created_at)}</p>
+                    <p className="mt-1 text-[11px] text-[#8C7B7E] truncate">{r.telephone || r.email} · {formatDate(r.created_at)}</p>
                     <p className="mt-1 text-[11px] text-[#5C4F51]">
                       {[
                         r.present && r.accompagnants > 0 ? `+${r.accompagnants} accomp.` : "",
@@ -175,7 +175,7 @@ export default function RsvpDashboard() {
                       <tr key={r.id || i} className="border-b hairline last:border-0 align-top" data-testid={`dashboard-rsvp-row-${i}`}>
                         <td className="px-5 py-4">
                           <p className="font-medium text-[#1C1617]">{r.nom}</p>
-                          <p className="text-xs text-[#8C7B7E]">{r.email}</p>
+                          <p className="text-xs text-[#8C7B7E]">{r.telephone || r.email}</p>
                           <p className="mt-0.5 text-[10px] font-cinzel tracking-[0.15em] uppercase text-[#8C7B7E]/70">{formatDate(r.created_at)}</p>
                         </td>
                         <td className="px-4 py-4">

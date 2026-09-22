@@ -56,7 +56,7 @@ export default function PhotosAdmin() {
             const custom = Boolean(photos[s.key]);
             const src = custom ? fileUrl(photos[s.key]) : s.fallback;
             return (
-              <div key={s.key} className="border hairline-gold bg-white/[0.04] rounded-sm overflow-hidden" data-testid={`photo-slot-${s.key}`}>
+              <div key={s.key} className="overflow-hidden rounded-3xl border hairline-gold bg-white/[0.04]" data-testid={`photo-slot-${s.key}`}>
                 <div className="relative h-44 bg-[#2A050B]">
                   {src ? (
                     <img src={src} alt={s.label} className="w-full h-full object-cover" data-testid={`photo-preview-${s.key}`} />
