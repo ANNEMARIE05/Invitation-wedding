@@ -6,30 +6,45 @@ const VIDEO_ID = "rtOvBOTyX00";
 
 export default function MusicPlayer({ opened }) {
   const playerRef = useRef(null);
+  const volumeRef = useRef(50);
   const wantPlay = useRef(false);
+  const userPaused = useRef(false);
   const [ready, setReady] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
 
+  const startPlayback = (player = playerRef.current) => {
+    if (!wantPlay.current || userPaused.current || !player) return;
+    if (typeof player.unMute === "function") player.unMute();
+    if (typeof player.setVolume === "function") player.setVolume(volumeRef.current);
+    if (typeof player.playVideo === "function") player.playVideo();
+  };
+
   useEffect(() => {
+    let alive = true;
     if (!window.YT) {
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
       document.body.appendChild(tag);
     }
     const init = () => {
-      if (playerRef.current || !window.YT?.Player) return;
+      if (!alive || playerRef.current || !window.YT?.Player) return;
+      if (!document.getElementById("yt-hidden-player")) return;
       try {
         playerRef.current = new window.YT.Player("yt-hidden-player", {
           videoId: VIDEO_ID,
           playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: VIDEO_ID, playsinline: 1 },
           events: {
             onReady: (e) => {
+              if (!alive) return;
               setReady(true);
-              e.target.setVolume(50);
-              if (wantPlay.current) e.target.playVideo();
+              e.target.setVolume(volumeRef.current);
+              startPlayback(e.target);
             },
-            onStateChange: (e) => setPlaying(e.data === window.YT.PlayerState.PLAYING),
+            onStateChange: (e) => {
+              if (!alive) return;
+              setPlaying(e.data === window.YT.PlayerState.PLAYING);
+            },
           },
         });
       } catch {
@@ -41,39 +56,61 @@ export default function MusicPlayer({ opened }) {
       const prev = window.onYouTubeIframeAPIReady;
       window.onYouTubeIframeAPIReady = () => {
         prev?.();
-        init();
+        if (alive) init();
       };
     }
+    return () => {
+      alive = false;
+      const player = playerRef.current;
+      playerRef.current = null;
+      if (typeof player?.destroy === "function") player.destroy();
+    };
   }, []);
 
   useEffect(() => {
-    if (opened) {
+    const onStart = () => {
       wantPlay.current = true;
-      if (typeof playerRef.current?.playVideo === "function") playerRef.current.playVideo();
-    }
+      startPlayback();
+    };
+    window.addEventListener("wedding-music-start", onStart);
+    return () => window.removeEventListener("wedding-music-start", onStart);
+  }, []);
+
+  useEffect(() => {
+    if (!opened) return;
+    wantPlay.current = true;
+    startPlayback();
   }, [opened]);
 
   const toggle = () => {
     if (!ready || typeof playerRef.current?.playVideo !== "function") return;
-    playing ? playerRef.current.pauseVideo() : playerRef.current.playVideo();
+    if (playing) {
+      userPaused.current = true;
+      playerRef.current.pauseVideo();
+    } else {
+      userPaused.current = false;
+      startPlayback();
+    }
   };
 
   const changeVolume = (delta) => {
     const v = Math.min(100, Math.max(0, volume + delta));
+    volumeRef.current = v;
     setVolume(v);
     if (typeof playerRef.current?.setVolume === "function") playerRef.current.setVolume(v);
   };
 
   return (
     <>
-      <div className="fixed w-px h-px overflow-hidden opacity-0 pointer-events-none -left-10 -top-10">
-        <div id="yt-hidden-player" />
+      <div className="fixed left-0 top-0 w-[200px] h-[200px] opacity-0 pointer-events-none overflow-hidden" aria-hidden>
+        <div id="yt-hidden-player" className="h-full w-full" />
       </div>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: opened ? 1 : 0, y: opened ? 0 : 30 }}
-        transition={{ duration: 0.8, delay: 0.8 }}
-        className="fixed bottom-5 left-5 z-50 flex items-center gap-1.5 rounded-full bg-[#2A050B]/85 backdrop-blur-md border hairline-gold px-3 py-2 shadow-[0_10px_40px_rgba(42,5,11,0.5)]"
+        transition={{ duration: 0.8, delay: opened ? 0.8 : 0 }}
+        aria-hidden={!opened}
+        className={`fixed bottom-5 left-5 z-50 flex items-center gap-1.5 rounded-full bg-[#2A050B]/85 backdrop-blur-md border hairline-gold px-3 py-2 shadow-[0_10px_40px_rgba(42,5,11,0.5)] ${opened ? "" : "pointer-events-none"}`}
         data-testid="music-player"
       >
         <span className="flex items-end gap-[3px] h-4 w-5 justify-center mr-1" aria-hidden>

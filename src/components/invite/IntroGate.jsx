@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { EASE, IMAGES } from "@/lib/invite-data";
+import { EASE } from "@/lib/invite-data";
 import { useSettings } from "@/lib/settings";
-import { usePhoto } from "@/lib/photos";
 
 export default function IntroGate({ onOpen }) {
   const { bride, groom, initials, dateLabel } = useSettings();
-  const portrait = usePhoto("portrait", IMAGES.portrait);
   const [opening, setOpening] = useState(false);
 
   const open = () => {
     if (opening) return;
+    window.dispatchEvent(new Event("wedding-music-start"));
     setOpening(true);
     setTimeout(onOpen, 2400);
   };
@@ -135,30 +134,6 @@ export default function IntroGate({ onOpen }) {
       >
         Touchez l'enveloppe
       </motion.p>
-
-      {/* photo des mariés en cœur */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.6 }}
-        animate={{ opacity: opening ? 0 : 1, scale: opening ? 0.6 : 1 }}
-        transition={{ duration: 0.9, delay: 1.7, type: "spring", bounce: 0.4 }}
-        className="relative z-10 mt-6"
-        data-testid="intro-heart-photo"
-      >
-        <svg viewBox="0 0 100 100" className="w-20 h-20 sm:w-24 sm:h-24 animate-heart-beat drop-shadow-[0_10px_25px_rgba(74,14,23,0.25)]" aria-hidden="true">
-          <defs>
-            <clipPath id="intro-heart-clip">
-              <path d="M50 88 C 20 62, 6 44, 6 28 C 6 14, 16 6, 27 6 C 36 6, 44 11, 50 20 C 56 11, 64 6, 73 6 C 84 6, 94 14, 94 28 C 94 44, 80 62, 50 88 Z" />
-            </clipPath>
-          </defs>
-          <image href={portrait} width="100" height="100" preserveAspectRatio="xMidYMid slice" clipPath="url(#intro-heart-clip)" />
-          <path
-            d="M50 88 C 20 62, 6 44, 6 28 C 6 14, 16 6, 27 6 C 36 6, 44 11, 50 20 C 56 11, 64 6, 73 6 C 84 6, 94 14, 94 28 C 94 44, 80 62, 50 88 Z"
-            fill="none"
-            stroke="#D4AF37"
-            strokeWidth="2.5"
-          />
-        </svg>
-      </motion.div>
     </motion.div>
   );
 }
