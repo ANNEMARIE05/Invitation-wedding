@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { EASE } from "@/lib/invite-data";
 import { useSettings, cap } from "@/lib/settings";
 import Chapter from "./Chapter";
+import CloudEdge from "./CloudEdge";
 
 const compute = (target) => {
   const d = Math.max(0, target - Date.now());
@@ -84,7 +85,9 @@ export default function BigDay() {
       className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 bg-[linear-gradient(135deg,#3B0910_0%,#58111A_50%,#2A050B_100%)]"
       data-testid="bigday-section"
     >
-      <div className="max-w-5xl mx-auto">
+      <CloudEdge tone="wine" position="top" />
+      <CloudEdge tone="wine-deep" position="bottom" />
+      <div className="relative z-10 max-w-5xl mx-auto">
         <Chapter index="II" eyebrow="Le Grand Jour" title="Le Compte à Rebours" script="plus que quelques instants" dark />
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6" data-testid="countdown-grid">

@@ -201,6 +201,59 @@ body {
     outline-offset: -10px;
 }
 
+/* Jonctions de sections — bords en nuages */
+.cloud-edge {
+    position: absolute;
+    left: -2%;
+    width: 104%;
+    height: 150px;
+    pointer-events: none;
+    z-index: 1;
+    -webkit-mask-image: url("./assets/clouds/divider.svg");
+    mask-image: url("./assets/clouds/divider.svg");
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    mask-mode: luminance;
+    -webkit-mask-source-type: luminance;
+}
+
+.cloud-edge--top {
+    top: -58px;
+}
+
+.cloud-edge--bottom {
+    bottom: -58px;
+    transform: scaleY(-1);
+}
+
+.cloud-edge--wine {
+    background: #3B0910;
+}
+
+.cloud-edge--wine-deep {
+    background: #2A050B;
+}
+
+.cloud-edge--ivory {
+    background: #FAF7F2;
+}
+
+.cloud-edge--sand {
+    background: #F3ECE2;
+}
+
+.soir .cloud-edge--ivory,
+.soir .cloud-edge--sand {
+    background: #3B0910;
+}
+
+.soir .cloud-edge--wine,
+.soir .cloud-edge--wine-deep {
+    background: #2A050B;
+}
+
 input, select, textarea {
     outline: none;
 }

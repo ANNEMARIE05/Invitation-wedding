@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { getGuestbook, createGuestbook } from "@/lib/api";
 import { EASE } from "@/lib/invite-data";
 import Chapter from "./Chapter";
+import CloudEdge from "./CloudEdge";
 
 const formatDate = (iso) =>
   new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
@@ -37,8 +38,9 @@ export default function Guestbook() {
   };
 
   return (
-    <section id="livre-or" className="py-24 md:py-36 px-5 sm:px-8 lg:px-16 bg-[#F3ECE2]" data-testid="guestbook-section">
-      <div className="max-w-4xl mx-auto">
+    <section id="livre-or" className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 bg-[#F3ECE2]" data-testid="guestbook-section">
+      <CloudEdge tone="sand" position="bottom" />
+      <div className="relative z-10 max-w-4xl mx-auto">
         <Chapter index="VIII" eyebrow="Livre d'Or" title="Vos Mots Doux" script="gravez votre passage" />
 
         <motion.form

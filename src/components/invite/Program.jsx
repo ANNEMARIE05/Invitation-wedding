@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import { EASE, PROGRAM } from "@/lib/invite-data";
 import Chapter from "./Chapter";
+import CloudEdge from "./CloudEdge";
 
 export default function Program() {
   return (
-    <section id="programme" className="py-24 md:py-36 px-5 sm:px-8 lg:px-16 bg-[#F3ECE2]" data-testid="program-section">
-      <div className="max-w-4xl mx-auto">
+    <section id="programme" className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 bg-[#F3ECE2]" data-testid="program-section">
+      <CloudEdge tone="sand" position="bottom" />
+      <div className="relative z-10 max-w-4xl mx-auto">
         <Chapter index="III" eyebrow="Déroulé" title="Programme de la Journée" script="minute par minute, ensemble" />
         <div className="relative">
           <div className="absolute left-5 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#D4AF37]/60 to-transparent" />

@@ -6,6 +6,7 @@ import { createRsvp } from "@/lib/api";
 import { EASE } from "@/lib/invite-data";
 import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
+import CloudEdge from "./CloudEdge";
 
 const REGIMES = ["Aucun", "Végétarien", "Sans gluten", "Allergies (préciser en message)"];
 
@@ -38,10 +39,12 @@ export default function Rsvp() {
   return (
     <section
       id="rsvp"
-      className="py-24 md:py-36 px-5 sm:px-8 lg:px-16 bg-[linear-gradient(135deg,#3B0910_0%,#58111A_50%,#2A050B_100%)]"
+      className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 bg-[linear-gradient(135deg,#3B0910_0%,#58111A_50%,#2A050B_100%)]"
       data-testid="rsvp-section"
     >
-      <div className="max-w-3xl mx-auto">
+      <CloudEdge tone="wine" position="top" />
+      <CloudEdge tone="wine-deep" position="bottom" />
+      <div className="relative z-10 max-w-3xl mx-auto">
         <Chapter index="VII" eyebrow="Répondez s'il vous plaît" title="Confirmation de Présence" script={deadlineLabel} dark />
         <AnimatePresence mode="wait">
           {sent ? (
