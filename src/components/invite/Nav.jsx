@@ -53,7 +53,7 @@ export default function Nav() {
           <button
             data-testid="nav-rsvp-button"
             onClick={() => scrollToId("#rsvp")}
-            className="rounded-full bg-[#4A0E17] text-[#FAF7F2] font-cinzel text-[11px] tracking-[0.2em] uppercase px-5 py-2.5 hover:bg-[#6B1724] hover:shadow-[0_8px_24px_rgba(74,14,23,0.35)] transition-all duration-300"
+            className="animate-blink rounded-full bg-[#4A0E17] text-[#FAF7F2] font-cinzel text-[11px] tracking-[0.2em] uppercase px-5 py-2.5 hover:bg-[#6B1724] transition-colors duration-300"
           >
             Confirmer
           </button>

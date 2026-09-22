@@ -3,6 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { EASE, IMAGES, scrollToId } from "@/lib/invite-data";
 import { usePhoto } from "@/lib/photos";
 import { useSettings } from "@/lib/settings";
+import { Petals } from "./Flowers";
 
 const MaskedLine = ({ children, delay, start }) => (
   <span className="block overflow-hidden pb-2 -mb-2">
@@ -30,6 +31,7 @@ export default function Hero({ start = true }) {
         <img src={heroImg} alt={`${bride} et ${groom}`} className="w-full h-full object-cover" />
       </motion.div>
       <div className="absolute inset-0 vignette-wine" />
+      <Petals count={14} />
 
       <motion.div style={{ opacity: fade }} className="relative z-10 text-center px-6 pt-24 pb-32">
         <motion.div
@@ -82,7 +84,7 @@ export default function Hero({ start = true }) {
         initial={{ opacity: 0 }}
         animate={start ? { opacity: 1 } : { opacity: 0 }}
         transition={{ delay: 2.4, duration: 1 }}
-        className="absolute bottom-28 left-1/2 -translate-x-1/2 z-10 text-[#FAF7F2]/80 hover:text-[#D4AF37] transition-colors"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-[#FAF7F2]/80 hover:text-[#D4AF37] transition-colors"
         aria-label="Défiler"
       >
         <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}>

@@ -99,6 +99,47 @@ body {
     animation: seal-spin 60s linear infinite;
 }
 
+@keyframes blink-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.55); }
+    50% { box-shadow: 0 0 0 14px rgba(212, 175, 55, 0); }
+}
+
+.animate-blink {
+    animation: blink-glow 1.4s ease-out infinite;
+}
+
+@keyframes petal-fall {
+    0% { transform: translate3d(0, -6vh, 0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.85; }
+    100% { transform: translate3d(9vw, 112vh, 0) rotate(340deg); opacity: 0; }
+}
+
+.petal {
+    position: absolute;
+    top: 0;
+    display: block;
+    animation: petal-fall linear infinite;
+}
+
+@keyframes sway {
+    0%, 100% { transform: rotate(-2.5deg); }
+    50% { transform: rotate(2.5deg); }
+}
+
+.animate-sway {
+    animation: sway 7s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes heart-beat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.14); }
+}
+
+.animate-heart-beat {
+    animation: heart-beat 1.6s ease-in-out infinite;
+}
+
 @keyframes eq-bounce {
     0%, 100% { transform: scaleY(0.3); }
     50% { transform: scaleY(1); }
@@ -192,7 +233,7 @@ body {
 
 .vignette-wine {
     background:
-        linear-gradient(to bottom, rgba(42, 5, 11, 0.55) 0%, rgba(42, 5, 11, 0.25) 35%, rgba(42, 5, 11, 0.35) 70%, rgba(250, 247, 242, 1) 100%);
+        linear-gradient(to bottom, rgba(42, 5, 11, 0.6) 0%, rgba(42, 5, 11, 0.38) 35%, rgba(42, 5, 11, 0.45) 65%, rgba(250, 247, 242, 1) 98%);
 }
 
 .clipped-frame {

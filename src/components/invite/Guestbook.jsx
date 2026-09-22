@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Heart, Feather } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Feather, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { getGuestbook, createGuestbook } from "@/lib/api";
 import { EASE } from "@/lib/invite-data";
 import Chapter from "./Chapter";
-import CloudEdge from "./CloudEdge";
 
 const formatDate = (iso) =>
   new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
@@ -15,7 +14,17 @@ export default function Guestbook() {
   const [nom, setNom] = useState("");
   const [message, setMessage] = useState("");
   const [liked, setLiked] = useState({});
+  const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (messages.length < 2) return;
+    const t = setInterval(() => setIndex((i) => (i + 1) % messages.length), 6000);
+    return () => clearInterval(t);
+  }, [messages.length]);
+
+  const prev = () => setIndex((i) => (i - 1 + messages.length) % messages.length);
+  const next = () => setIndex((i) => (i + 1) % messages.length);
 
   useEffect(() => {
     getGuestbook().then(setMessages).catch(() => {});
@@ -39,9 +48,8 @@ export default function Guestbook() {
 
   return (
     <section id="livre-or" className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 bg-[#F3ECE2]" data-testid="guestbook-section">
-      <CloudEdge tone="sand" position="bottom" />
       <div className="relative z-10 max-w-4xl mx-auto">
-        <Chapter index="VIII" eyebrow="Livre d'Or" title="Vos Mots Doux" script="gravez votre passage" />
+        <Chapter index="VII" eyebrow="Livre d'Or" title="Vos Mots Doux" script="gravez votre passage" />
 
         <motion.form
           initial={{ opacity: 0, y: 40 }}
@@ -85,43 +93,71 @@ export default function Guestbook() {
           </button>
         </motion.form>
 
-        <div className="mt-12 grid sm:grid-cols-2 gap-5" data-testid="guestbook-list">
+        <div className="mt-12" data-testid="guestbook-list">
           {messages.length === 0 && (
-            <p className="sm:col-span-2 text-center font-display italic text-xl text-[#8C7B7E]" data-testid="guestbook-empty">
+            <p className="text-center font-display italic text-xl text-[#8C7B7E]" data-testid="guestbook-empty">
               Soyez le premier à laisser une trace d'encre dorée…
             </p>
           )}
-          {messages.map((m, i) => (
-            <motion.article
-              key={m.id || i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: (i % 4) * 0.06, ease: EASE }}
-              className="bg-white border hairline rounded-sm p-6 relative"
-              data-testid={`guestbook-message-${i}`}
-            >
-              <p className="font-display italic text-lg text-[#4A0E17] leading-relaxed">« {m.message} »</p>
-              <div className="mt-4 flex items-center justify-between">
-                <div>
-                  <p className="font-script text-xl text-[#C48B92]">{m.nom}</p>
-                  <p className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#8C7B7E]">{formatDate(m.created_at)}</p>
-                </div>
-                <button
-                  data-testid={`guestbook-like-${i}`}
-                  onClick={() => setLiked({ ...liked, [m.id || i]: !liked[m.id || i] })}
-                  aria-label="Aimer ce message"
-                  className="transition-transform duration-300 hover:scale-125"
-                >
-                  <Heart
-                    size={20}
-                    strokeWidth={1.5}
-                    className={liked[m.id || i] ? "fill-[#6B1724] text-[#6B1724]" : "text-[#C48B92]"}
-                  />
-                </button>
+          {messages.length > 0 && (
+            <div className="relative max-w-2xl mx-auto">
+              <div className="overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.article
+                    key={messages[index]?.id || index}
+                    initial={{ opacity: 0, x: 70 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -70 }}
+                    transition={{ duration: 0.5, ease: EASE }}
+                    className="bg-white border hairline rounded-sm p-8 sm:p-10 text-center shadow-[0_20px_60px_rgba(74,14,23,0.08)]"
+                    data-testid="guestbook-slide"
+                  >
+                    <span className="font-script text-6xl text-[#D4AF37] leading-none">«</span>
+                    <p className="mt-2 font-display italic text-xl sm:text-2xl text-[#4A0E17] leading-relaxed">
+                      {messages[index].message}
+                    </p>
+                    <div className="mt-6 flex items-center justify-center gap-3">
+                      <span className="h-px w-8 bg-[#D4AF37]/60" />
+                      <div>
+                        <p className="font-script text-2xl text-[#C48B92]">{messages[index].nom}</p>
+                        <p className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#8C7B7E]">{formatDate(messages[index].created_at)}</p>
+                      </div>
+                      <span className="h-px w-8 bg-[#D4AF37]/60" />
+                    </div>
+                  </motion.article>
+                </AnimatePresence>
               </div>
-            </motion.article>
-          ))}
+
+              <button
+                data-testid="guestbook-prev-button"
+                onClick={prev}
+                aria-label="Message précédent"
+                className="absolute top-1/2 -translate-y-1/2 -left-3 sm:-left-16 w-11 h-11 rounded-full bg-[#4A0E17] text-[#D4AF37] border hairline-gold flex items-center justify-center shadow-[0_10px_25px_rgba(74,14,23,0.25)] hover:bg-[#6B1724] hover:-translate-x-0.5 transition-all duration-300"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                data-testid="guestbook-next-button"
+                onClick={next}
+                aria-label="Message suivant"
+                className="absolute top-1/2 -translate-y-1/2 -right-3 sm:-right-16 w-11 h-11 rounded-full bg-[#4A0E17] text-[#D4AF37] border hairline-gold flex items-center justify-center shadow-[0_10px_25px_rgba(74,14,23,0.25)] hover:bg-[#6B1724] hover:translate-x-0.5 transition-all duration-300"
+              >
+                <ChevronRight size={18} />
+              </button>
+
+              <div className="mt-7 flex items-center justify-center gap-2" data-testid="guestbook-dots">
+                {messages.map((m, i) => (
+                  <button
+                    key={m.id || i}
+                    data-testid={`guestbook-dot-${i}`}
+                    onClick={() => setIndex(i)}
+                    aria-label={`Aller au message ${i + 1}`}
+                    className={`h-2 rounded-full transition-all duration-300 ${i === index ? "w-6 bg-[#4A0E17]" : "w-2 bg-[#C48B92]/50 hover:bg-[#C48B92]"}`}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

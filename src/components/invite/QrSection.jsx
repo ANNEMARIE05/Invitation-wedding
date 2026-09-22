@@ -1,91 +1,39 @@
 import { motion } from "framer-motion";
-import { QRCodeCanvas } from "qrcode.react";
-import { Download, Share2, Smartphone, Navigation } from "lucide-react";
-import { toast } from "sonner";
+import { QRCodeSVG } from "qrcode.react";
 import { EASE } from "@/lib/invite-data";
-import { useSettings } from "@/lib/settings";
-import Chapter from "./Chapter";
-
-const downloadQr = (canvasId, name) => {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
-  const a = document.createElement("a");
-  a.href = canvas.toDataURL("image/png");
-  a.download = name;
-  a.click();
-  toast.success("QR code téléchargé.");
-};
-
-const QrCard = ({ icon: Icon, title, text, canvasId, value, testId }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-60px" }}
-    transition={{ duration: 0.9, ease: EASE }}
-    className="flex-1 bg-white border hairline rounded-sm shadow-[0_20px_60px_rgba(74,14,23,0.08)] p-8 sm:p-10 text-center"
-    data-testid={`${testId}-card`}
-  >
-    <span className="mx-auto w-12 h-12 rounded-full bg-[#F7E8E9] flex items-center justify-center">
-      <Icon size={20} className="text-[#6B1724]" strokeWidth={1.5} />
-    </span>
-    <h3 className="mt-5 font-display text-2xl text-[#4A0E17]">{title}</h3>
-    <p className="mt-2 text-sm text-[#8C7B7E] leading-relaxed">{text}</p>
-    <div className="mt-6 inline-block p-4 border hairline-gold rounded-sm bg-[#FAF7F2]">
-      <QRCodeCanvas id={canvasId} value={value} size={180} bgColor="#FAF7F2" fgColor="#4A0E17" level="M" includeMargin={false} />
-    </div>
-    <div>
-      <button
-        data-testid={`${testId}-download-button`}
-        onClick={() => downloadQr(canvasId, `${testId}.png`)}
-        className="mt-6 inline-flex items-center gap-2 rounded-full border hairline text-[#4A0E17] font-cinzel text-[11px] tracking-[0.2em] uppercase px-6 py-3 hover:border-[#D4AF37] hover:bg-[#FAF7F2] transition-all duration-300"
-      >
-        <Download size={14} /> Télécharger
-      </button>
-    </div>
-  </motion.div>
-);
 
 export default function QrSection() {
-  const { venue } = useSettings();
-  const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://example.com";
-
-  const share = async () => {
-    await navigator.clipboard.writeText(siteUrl);
-    toast.success("Lien de l'invitation copié — partagez-le à vos proches.");
-  };
+  const url = typeof window !== "undefined" ? window.location.origin : "https://mariage.example.com";
 
   return (
-    <section id="qr" className="py-24 md:py-36 px-5 sm:px-8 lg:px-16" data-testid="qr-section">
-      <div className="max-w-4xl mx-auto">
-        <Chapter index="IX" eyebrow="À partager" title="Les Cartes QR" script="scannez, c'est offert" />
-        <div className="flex flex-col md:flex-row gap-8">
-          <QrCard
-            icon={Smartphone}
-            title="L'Invitation Web"
-            text="Scannez pour ouvrir l'invitation sur n'importe quel smartphone — idéale à glisser dans vos faire-part papier."
-            canvasId="qr-site-canvas"
-            value={siteUrl}
-            testId="qr-site"
-          />
-          <QrCard
-            icon={Navigation}
-            title="L'Itinéraire GPS"
-            text={`Scannez le jour J : Google Maps s'ouvre directement avec le guidage vers ${venue.name}.`}
-            canvasId="qr-map-canvas"
-            value={venue.mapsUrl}
-            testId="qr-map"
-          />
+    <section id="partage" className="relative py-20 md:py-24 px-5 bg-[#F3ECE2] overflow-hidden" data-testid="qr-section">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.9, ease: EASE }}
+        className="max-w-sm mx-auto text-center"
+      >
+        <p className="font-cinzel text-[10px] tracking-[0.4em] uppercase text-[#C48B92]">Un geste, un souvenir</p>
+        <p className="mt-3 font-script text-4xl sm:text-5xl text-[#4A0E17]">Partagez l'invitation</p>
+
+        <div className="relative mt-9 mx-auto w-fit bg-[#FAF7F2] p-7 rounded-sm shadow-[0_20px_50px_rgba(74,14,23,0.12)]">
+          <div className="absolute inset-2 border border-[#D4AF37]/60 pointer-events-none" />
+          <div className="absolute inset-3.5 border border-[#D4AF37]/30 pointer-events-none" />
+          <div className="relative p-2 bg-[#FAF7F2]">
+            <QRCodeSVG value={url} size={150} bgColor="#FAF7F2" fgColor="#4A0E17" level="M" data-testid="qr-code" />
+          </div>
         </div>
-        <div className="mt-10 text-center">
-          <button
-            data-testid="share-link-button"
-            onClick={share}
-            className="inline-flex items-center gap-2 rounded-full bg-[#4A0E17] text-[#FAF7F2] font-cinzel text-[11px] tracking-[0.25em] uppercase px-8 py-4 hover:bg-[#6B1724] transition-all duration-300"
-          >
-            <Share2 size={15} /> Copier le lien de l'invitation
-          </button>
+
+        <div className="mt-7 flex items-center justify-center gap-3">
+          <span className="h-px w-10 bg-[#D4AF37]/70" />
+          <span className="text-[#D4AF37]">✦</span>
+          <span className="h-px w-10 bg-[#D4AF37]/70" />
         </div>
-      </div>
+        <p className="mt-5 font-cinzel text-[10px] tracking-[0.35em] uppercase text-[#8C7B7E]">
+          Scannez pour retrouver l'invitation
+        </p>
+      </motion.div>
     </section>
   );
 }

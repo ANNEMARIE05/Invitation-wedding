@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { CalendarPlus, Church, GlassWater, UtensilsCrossed } from "lucide-react";
 import { toast } from "sonner";
 import { EASE } from "@/lib/invite-data";
 import { useSettings, cap } from "@/lib/settings";
 import Chapter from "./Chapter";
-import CloudEdge from "./CloudEdge";
-
+import { FlowerCorner, Petals } from "./Flowers";
 const compute = (target) => {
   const d = Math.max(0, target - Date.now());
   return {
@@ -82,11 +81,23 @@ export default function BigDay() {
   return (
     <section
       id="grand-jour"
-      className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 bg-[linear-gradient(135deg,#3B0910_0%,#58111A_50%,#2A050B_100%)]"
+      className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 overflow-hidden bg-[linear-gradient(135deg,#3B0910_0%,#58111A_50%,#2A050B_100%)]"
       data-testid="bigday-section"
     >
-      <CloudEdge tone="wine" position="top" />
-      <CloudEdge tone="wine-deep" position="bottom" />
+      <Petals count={10} />
+      <span className="absolute top-16 left-4 sm:left-10 pointer-events-none opacity-50">
+        <FlowerCorner className="w-20 h-20 sm:w-28 sm:h-28 animate-sway" />
+      </span>
+      <span className="absolute top-16 right-4 sm:right-10 pointer-events-none opacity-50 -scale-x-100">
+        <FlowerCorner className="w-20 h-20 sm:w-28 sm:h-28 animate-sway" />
+      </span>
+      <span className="absolute bottom-16 left-4 sm:left-10 pointer-events-none opacity-40 -scale-y-100">
+        <FlowerCorner className="w-20 h-20 sm:w-28 sm:h-28 animate-sway" />
+      </span>
+      <span className="absolute bottom-16 right-4 sm:right-10 pointer-events-none opacity-40 -scale-100">
+        <FlowerCorner className="w-20 h-20 sm:w-28 sm:h-28 animate-sway" />
+      </span>
+
       <div className="relative z-10 max-w-5xl mx-auto">
         <Chapter index="II" eyebrow="Le Grand Jour" title="Le Compte à Rebours" script="plus que quelques instants" dark />
 
@@ -98,12 +109,23 @@ export default function BigDay() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: i * 0.1, ease: EASE }}
-              className="border hairline-gold bg-white/[0.04] backdrop-blur-sm rounded-sm py-8 px-4 text-center"
+              className="relative border hairline-gold bg-white/[0.04] backdrop-blur-sm rounded-sm py-8 px-4 text-center overflow-hidden"
               data-testid={`countdown-${label}`}
             >
-              <p className="font-display text-5xl sm:text-6xl text-[#D4AF37] tabular-nums">
-                {String(value).padStart(2, "0")}
-              </p>
+              <div className="relative h-14 sm:h-16 flex items-center justify-center overflow-hidden">
+                <AnimatePresence mode="popLayout">
+                  <motion.p
+                    key={value}
+                    initial={{ y: -22, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 22, opacity: 0 }}
+                    transition={{ duration: 0.45, ease: EASE }}
+                    className="font-display text-5xl sm:text-6xl text-[#D4AF37] tabular-nums"
+                  >
+                    {String(value).padStart(2, "0")}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
               <p className="mt-2 font-cinzel text-[10px] tracking-[0.35em] uppercase text-[#C48B92]">{label}</p>
             </motion.div>
           ))}
@@ -152,11 +174,23 @@ export default function BigDay() {
                 <span
                   key={day}
                   data-testid={isWeddingDay ? "calendar-wedding-day" : undefined}
-                  className={isWeddingDay
-                    ? "py-1.5 rounded-full bg-[#D4AF37] text-[#2A050B] font-semibold shadow-[0_0_25px_rgba(212,175,55,0.5)]"
-                    : "py-1.5"}
+                  className={isWeddingDay ? "relative inline-flex items-center justify-center py-1.5" : "py-1.5"}
                 >
-                  {day}
+                  {isWeddingDay ? (
+                    <>
+                      <svg viewBox="0 0 24 24" className="absolute -inset-1.5 w-[calc(100%+12px)] h-[calc(100%+12px)] animate-heart-beat" aria-hidden="true">
+                        <path
+                          d="M12 20.5s-7.2-4.7-9.4-9.4C1 7.5 3.5 4 7 4c2.1 0 4 1.1 5 2.9C13 5.1 14.9 4 17 4c3.5 0 6 3.5 4.4 7.1C19.2 15.8 12 20.5 12 20.5z"
+                          fill="rgba(212,175,55,0.10)"
+                          stroke="#D4AF37"
+                          strokeWidth="1.5"
+                        />
+                      </svg>
+                      <span className="relative text-[#D4AF37] font-semibold">{day}</span>
+                    </>
+                  ) : (
+                    day
+                  )}
                 </span>
               );
             })}

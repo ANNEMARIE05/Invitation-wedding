@@ -1,9 +1,17 @@
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { toPng } from "html-to-image";
-import { Download, Printer, MessageCircle } from "lucide-react";
+import { Download } from "lucide-react";
 import { toast } from "sonner";
 import { EASE } from "@/lib/invite-data";
 import { useSettings } from "@/lib/settings";
+import { FlowerCorner } from "./Flowers";
+
+const cardCorners = [
+  "top-6 left-6",
+  "top-6 right-6 -scale-x-100",
+  "bottom-6 left-6 -scale-y-100",
+  "bottom-6 right-6 -scale-100",
+];
 
 export default function InviteCard() {
   const { bride, groom, initials, dateLabel, timeLabel, deadlineLabel, venue } = useSettings();
@@ -35,13 +43,6 @@ export default function InviteCard() {
     }
   };
 
-  const printCard = () => window.print();
-
-  const shareWhatsApp = () => {
-    const text = `Vous êtes invité·e·s au mariage de ${bride} & ${groom} — ${dateLabel} à ${venue.name}. Découvrez l'invitation : ${window.location.origin}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
-  };
-
   return (
     <section id="faire-part" className="py-24 md:py-36 px-5 sm:px-8" data-testid="invite-card-section">
       <motion.div
@@ -69,6 +70,11 @@ export default function InviteCard() {
         >
           <div className="absolute inset-3 border border-[#D4AF37]/60 pointer-events-none" />
           <div className="absolute inset-5 border border-[#D4AF37]/30 pointer-events-none" />
+          {cardCorners.map((pos) => (
+            <span key={pos} className={`absolute ${pos} pointer-events-none opacity-80`}>
+              <FlowerCorner className="w-14 h-14 sm:w-16 sm:h-16 animate-sway" />
+            </span>
+          ))}
           <span className="absolute top-1.5 left-1/2 -translate-x-1/2 text-[#D4AF37] text-xs">✦</span>
           <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[#D4AF37] text-xs">✦</span>
 
@@ -123,21 +129,7 @@ export default function InviteCard() {
             onClick={downloadCard}
             className="inline-flex items-center gap-2 rounded-full bg-[#4A0E17] text-[#FAF7F2] font-cinzel text-[11px] tracking-[0.2em] uppercase px-7 py-3.5 hover:bg-[#6B1724] hover:shadow-[0_10px_30px_rgba(74,14,23,0.3)] transition-all duration-300"
           >
-            <Download size={15} /> Télécharger en image
-          </button>
-          <button
-            data-testid="invite-card-print-button"
-            onClick={printCard}
-            className="inline-flex items-center gap-2 rounded-full border hairline text-[#4A0E17] font-cinzel text-[11px] tracking-[0.2em] uppercase px-7 py-3.5 hover:border-[#D4AF37] hover:bg-[#F3ECE2] transition-all duration-300"
-          >
-            <Printer size={15} /> Imprimer
-          </button>
-          <button
-            data-testid="invite-card-whatsapp-button"
-            onClick={shareWhatsApp}
-            className="inline-flex items-center gap-2 rounded-full border hairline text-[#4A0E17] font-cinzel text-[11px] tracking-[0.2em] uppercase px-7 py-3.5 hover:border-[#D4AF37] hover:bg-[#F3ECE2] transition-all duration-300"
-          >
-            <MessageCircle size={15} /> Envoyer par WhatsApp
+            <Download size={15} /> Télécharger la carte
           </button>
         </motion.div>
       </div>

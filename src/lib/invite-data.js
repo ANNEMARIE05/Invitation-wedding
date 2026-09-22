@@ -1,5 +1,8 @@
 export const EASE = [0.22, 1, 0.36, 1];
 
+// Numéro WhatsApp des mariés (format international sans +) — à personnaliser
+export const WHATSAPP_NUMBER = "33600000000";
+
 export const COUPLE = { bride: "Éléonore", groom: "Augustin" };
 export const WEDDING_DATE_ISO = "2026-10-24T15:30:00+02:00";
 export const WEDDING_DATE_LABEL = "Samedi 24 Octobre 2026";
@@ -49,7 +52,7 @@ export const NAV_LINKS = [
   { label: "Histoire", href: "#histoire" },
   { label: "Programme", href: "#programme" },
   { label: "Lieux", href: "#lieux" },
-  { label: "Galerie", href: "#galerie" },
+  { label: "Tenues", href: "#tenues" },
   { label: "Livre d'Or", href: "#livre-or" },
 ];
 
