@@ -216,10 +216,6 @@ export default function InviteCard() {
         className="mx-auto w-full max-w-[460px]"
       >
         <FairePart />
-        <CardActions
-          cardTestId="invite-card"
-          whatsappText="Bonjour, je vous envoie la carte d'invitation."
-        />
       </motion.div>
     </section>
   );

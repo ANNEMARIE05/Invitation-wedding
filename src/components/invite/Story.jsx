@@ -3,6 +3,7 @@ import { EASE, IMAGES } from "@/lib/invite-data";
 import { usePhoto } from "@/lib/photos";
 import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
+import { FLORALS, Floral } from "./Flowers";
 
 export default function Story() {
   const { bride, groom, story } = useSettings();
@@ -29,6 +30,7 @@ export default function Story() {
             <p className="absolute -bottom-6 right-6 bg-[#4A0E17] text-[#FAF7F2] font-script text-2xl px-6 py-2 shadow-xl">
               pour toujours
             </p>
+            <Floral src={FLORALS.roses} className="absolute left-1 top-1 z-20 w-28 sm:left-2 sm:top-2 sm:w-36" />
           </motion.div>
 
           <div className="space-y-14 pt-4">

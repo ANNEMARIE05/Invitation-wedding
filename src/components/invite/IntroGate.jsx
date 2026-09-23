@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { EASE } from "@/lib/invite-data";
 import { useSettings } from "@/lib/settings";
+import { FLORALS, Floral } from "./Flowers";
 
 export default function IntroGate({ onOpen }) {
   const { bride, groom, initials, dateLabel } = useSettings();
@@ -21,6 +22,25 @@ export default function IntroGate({ onOpen }) {
       className="fixed inset-0 z-[80] flex flex-col items-center justify-center px-5 overflow-hidden bg-[radial-gradient(ellipse_at_center,#FCF6F0_0%,#F4E5E0_100%)]"
       data-testid="intro-gate"
     >
+      <motion.div
+        initial={{ opacity: 0, x: -16 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1.2, delay: 0.2, ease: EASE }}
+        className="pointer-events-none absolute -left-10 -top-8 w-32 sm:-left-6 sm:w-48"
+        aria-hidden="true"
+      >
+        <Floral src={FLORALS.cosmos} className="w-full" />
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2, delay: 0.35, ease: EASE }}
+        className="pointer-events-none absolute -bottom-4 -right-6 w-28 sm:w-44"
+        aria-hidden="true"
+      >
+        <Floral src={FLORALS.pivoines} className="w-full" />
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: opening ? 0 : 1, y: opening ? -16 : 0 }}

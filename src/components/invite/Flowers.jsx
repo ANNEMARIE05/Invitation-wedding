@@ -1,3 +1,22 @@
+export const FLORALS = {
+  cosmos: "/img/fleurs/cosmos.png",
+  roses: "/img/fleurs/roses.png",
+  pivoines: "/img/fleurs/pivoines.png",
+  bouquet: "/img/fleurs/bouquet.png",
+  dahlia: "/img/fleurs/dahlia.png",
+  tige: "/img/fleurs/tige.png",
+};
+
+export const Floral = ({ src, className = "" }) => (
+  <img
+    src={src}
+    alt=""
+    aria-hidden="true"
+    draggable={false}
+    className={`pointer-events-none select-none ${className}`}
+  />
+);
+
 export const Petals = ({ count = 12 }) => (
   <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
     {Array.from({ length: count }).map((_, i) => {
