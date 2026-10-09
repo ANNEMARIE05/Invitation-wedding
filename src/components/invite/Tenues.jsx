@@ -1,120 +1,129 @@
 import { motion } from "framer-motion";
-import { Crown, MessageCircle, Shirt, Sparkles } from "lucide-react";
-import { EASE, WHATSAPP_NUMBER } from "@/lib/invite-data";
+import { Sparkles, Shirt } from "lucide-react";
+import { EASE, WEDDING_PALETTE } from "@/lib/invite-data";
+import { useI18n } from "@/lib/locale";
 import Chapter from "./Chapter";
+import LuxeCard from "./LuxeCard";
+import SparkleField from "./SparkleField";
 
-const PAGNE_MESSAGE = "Bonjour, je souhaite commander un pagne pour le mariage. Pouvez-vous me renseigner ?";
+const GEM = {
+  berry: "h-[5.5rem] w-[5.5rem] sm:h-[6.25rem] sm:w-[6.25rem]",
+  wine: "h-[5rem] w-[5rem] sm:h-[5.75rem] sm:w-[5.75rem]",
+  blush: "h-[5.25rem] w-[5.25rem] sm:h-[6rem] sm:w-[6rem]",
+  silver: "h-[4.75rem] w-[4.75rem] sm:h-[5.5rem] sm:w-[5.5rem]",
+};
 
-const PAGNES = [
-  { id: "royal", name: "Le Royal", porteurs: "Familles & témoins", img: "/img/pagne-royal.jpg" },
-  { id: "tisse", name: "Le Tissé d'Or", porteurs: "Chers invités", img: "/img/pagne-tisse.jpg" },
-];
-
-const COLORS = [
-  { id: "bordeaux", label: "Bordeaux", hex: "#4A0E17" },
-  { id: "rose", label: "Rose poudré", hex: "#E8B4BC" },
-  { id: "blanc", label: "Blanc", hex: "#FFFFFF" },
-];
-
-const DRESSCODE = [
-  { icon: Shirt, label: "Tenue de soirée chic" },
-  { icon: Sparkles, label: "Touches d'or & de rose" },
-  { icon: Crown, label: "Pagne à l'honneur" },
-];
+const gemStyle = (color) => {
+  if (color.metallic) {
+    return {
+      background:
+        "linear-gradient(145deg, #ffffff 0%, #e8eaef 30%, #ffffff 48%, #b8bcc8 55%, #f3f4f6 78%, #c0c0c0 100%)",
+    };
+  }
+  if (color.id === "wine") {
+    return {
+      background: `linear-gradient(145deg, ${color.hex} 0%, #3b0910 100%)`,
+      boxShadow: "inset 0 0 0 2px rgba(255,255,255,0.35)",
+    };
+  }
+  return {
+    background: color.hex,
+    boxShadow: `inset 0 0 0 2px rgba(255,255,255,0.4), 0 16px 36px ${color.hex}44`,
+  };
+};
 
 export default function Tenues() {
+  const { m } = useI18n();
   return (
-    <section id="tenues" className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 overflow-hidden" data-testid="tenues-section">
-      <div className="relative z-10 max-w-4xl mx-auto">
-        <Chapter index="V" eyebrow="Tenues & Pagnes" title="Les Deux Pagnes" script="à l'unisson, avec élégance" />
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-10 sm:gap-14">
-          {PAGNES.map((p, i) => (
-            <motion.figure
-              key={p.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.9, delay: i * 0.15, ease: EASE }}
-              className="text-center"
-              data-testid={`pagne-card-${p.id}`}
-            >
-              <div className="w-64 h-28 sm:w-72 sm:h-32 rounded-full overflow-hidden border-2 border-[#D4AF37]/70 shadow-[0_20px_50px_rgba(74,14,23,0.20)] transition-transform duration-700 ease-out hover:scale-[1.04]">
-                <img src={p.img} alt={`Pagne ${p.name}`} className="w-full h-full object-cover" />
-              </div>
-              <figcaption className="mt-4">
-                <p className="font-script text-3xl text-[#4A0E17]">{p.name}</p>
-                <p className="mt-1 font-cinzel text-[10px] tracking-[0.3em] uppercase text-[#C48B92]">{p.porteurs}</p>
-              </figcaption>
-            </motion.figure>
-          ))}
-        </div>
-
-        <div className="mt-8 flex justify-center">
-          <a
-            data-testid="pagne-whatsapp-button"
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(PAGNE_MESSAGE)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0E17] px-7 py-3.5 font-cinzel text-[11px] uppercase tracking-[0.18em] text-[#FAF7F2] transition-colors duration-300 hover:bg-[#6B1724]"
-          >
-            <MessageCircle size={15} className="text-[#D4AF37]" /> Commander un pagne
-          </a>
-        </div>
+    <section
+      id="tenues"
+      className="relative overflow-hidden py-24 md:py-36 px-5 sm:px-8 lg:px-16"
+      data-testid="tenues-section"
+    >
+      <div className="relative z-10 mx-auto max-w-5xl">
+        <Chapter index="V" eyebrow={m.tenues.chapter} title={m.tenues.title} script={m.tenues.script} />
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 36 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9, ease: EASE }}
-          className="mt-12 text-center"
-          data-testid="wedding-colors"
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 1, ease: EASE }}
+          className="relative mt-12 sm:mt-16"
         >
-          <p className="font-script text-4xl text-[#4A0E17]">Couleurs du mariage</p>
-          <div className="mt-7 flex items-center justify-center gap-8 sm:gap-10">
-            {COLORS.map((c, i) => (
-              <motion.div
-                key={c.id}
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ type: "spring", bounce: 0.45, delay: 0.15 + i * 0.12 }}
-                className="text-center"
-              >
-                <span
-                  className="block w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-[0_10px_25px_rgba(74,14,23,0.18)] border border-[#4A0E17]/15"
-                  style={{ background: c.hex }}
-                  data-testid={`color-${c.id}`}
-                />
-                <span className="mt-2.5 block font-cinzel text-[10px] tracking-[0.2em] uppercase text-[#8C7B7E]">{c.label}</span>
-              </motion.div>
-            ))}
-          </div>
+          <LuxeCard noInset className="relative overflow-hidden !p-0" data-testid="wedding-colors">
+            <SparkleField count={16} />
+            <div className="relative bg-gradient-to-br from-[#FFF0F4] via-[#FFFBFC] to-[#FFE8F0] px-6 py-12 sm:px-10 sm:py-16">
+              <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#ED1E79]/10 blur-3xl" aria-hidden="true" />
+              <div className="pointer-events-none absolute -bottom-20 -left-12 h-56 w-56 rounded-full bg-[#C9A962]/15 blur-3xl" aria-hidden="true" />
+
+              <p className="relative text-center font-cinzel text-[10px] font-bold tracking-[0.45em] uppercase text-[#ED1E79]">
+                {m.tenues.paletteTitle}
+              </p>
+              <p className="relative mx-auto mt-3 max-w-lg text-center font-display text-lg font-medium leading-relaxed text-[#4A1025] sm:text-xl">
+                {m.tenues.paletteText}
+              </p>
+
+              <div className="relative mx-auto mt-12 flex max-w-3xl flex-wrap items-end justify-center gap-x-10 gap-y-10 sm:gap-x-14">
+                {WEDDING_PALETTE.map((color, i) => (
+                  <motion.div
+                    key={color.id}
+                    initial={{ opacity: 0, y: 28, scale: 0.9 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.85, delay: 0.08 * i, ease: EASE }}
+                    whileHover={{ y: -6, scale: 1.04 }}
+                    className="flex flex-col items-center"
+                  >
+                    <div className={`palette-gem-ring ${GEM[color.id] || "h-24 w-24"}`}>
+                      <div
+                        className="palette-gem h-full w-full"
+                        style={gemStyle(color)}
+                        data-testid={`color-${color.id}`}
+                      />
+                    </div>
+                    <span className="mt-4 font-cinzel text-[10px] font-bold tracking-[0.28em] uppercase text-[#5C0A20]">
+                      {m.tenues.colorLabels[color.id] || color.label}
+                    </span>
+                    <span className="mt-1 font-display text-sm font-semibold tracking-wide text-[#7A1538]">{color.hex}</span>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="relative mx-auto mt-12 flex max-w-md items-center gap-3" aria-hidden="true">
+                <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#ED1E79]/65" />
+                <Sparkles size={14} className="text-[#C9A962]" strokeWidth={1.5} />
+                <span className="font-cinzel text-[9px] font-bold tracking-[0.35em] uppercase text-[#9B1B4A]">Berry Love</span>
+                <Sparkles size={14} className="text-[#C9A962]" strokeWidth={1.5} />
+                <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[#ED1E79]/65" />
+              </div>
+            </div>
+          </LuxeCard>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.9, ease: EASE }}
-          className="mt-12 rounded-3xl border hairline-gold bg-[#F3ECE2] p-6 text-center sm:p-7"
+          transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+          className="mt-10 grid gap-4 sm:grid-cols-2"
           data-testid="dresscode-card"
         >
-          <p className="font-cinzel text-[11px] tracking-[0.4em] uppercase text-[#C48B92]">Dress Code</p>
-          <div className="mt-5 flex flex-wrap justify-center gap-3 sm:gap-4">
-            {DRESSCODE.map(({ icon: Icon, label }) => (
-              <span
-                key={label}
-                className="inline-flex items-center gap-2 rounded-full bg-white border hairline px-5 py-2.5 font-cinzel text-[11px] tracking-[0.2em] uppercase text-[#4A0E17]"
-                data-testid={`dresscode-${label.toLowerCase().replace(/[^a-z]/g, "-")}`}
-              >
-                <Icon size={14} className="text-[#D4AF37]" /> {label}
-              </span>
-            ))}
-          </div>
-          <p className="mt-6 text-sm text-[#8C7B7E] leading-relaxed max-w-xl mx-auto">
-            Un pagne vous tente ? Écrivez-nous sur WhatsApp, nous vous répondons directement.
-          </p>
+          {m.tenues.dress.map(({ title, text }, idx) => {
+            const Icon = idx === 0 ? Shirt : Sparkles;
+            return (
+            <LuxeCard key={title} lift className="p-6 sm:p-7">
+              <div className="flex items-start gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#ED1E79]/25 bg-gradient-to-br from-[#FFF0F4] to-[#FFFBFC] text-[#ED1E79] shadow-[0_8px_20px_rgba(237,30,121,0.12)]">
+                  <Icon size={18} strokeWidth={1.5} />
+                </span>
+                <div>
+                  <p className="font-cinzel text-[11px] font-bold tracking-[0.25em] uppercase text-[#7A1538]">{title}</p>
+                  <p className="mt-2 text-sm font-medium leading-relaxed text-[#4A1025]">{text}</p>
+                </div>
+              </div>
+            </LuxeCard>
+            );
+          })}
         </motion.div>
       </div>
     </section>

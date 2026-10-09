@@ -1,161 +1,251 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Feather, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { getGuestbook, createGuestbook } from "@/lib/api";
+import { useStoreSync } from "@/lib/useStoreSync";
 import { EASE } from "@/lib/invite-data";
+import { useI18n } from "@/lib/locale";
+import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
+import LuxeCard from "./LuxeCard";
+import SparkleField from "./SparkleField";
 
-const formatDate = (iso) =>
-  new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+function GuestField({ label, htmlFor, children }) {
+  return (
+    <div className="min-w-0">
+      <label className="rsvp-label" htmlFor={htmlFor}>
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
 
 export default function Guestbook() {
+  const { m } = useI18n();
+  const { locale } = useSettings();
+  const locTag = locale === "en" ? "en-GB" : "fr-FR";
+
+  const formatDate = useCallback(
+    (iso) => {
+      const raw = new Date(iso).toLocaleDateString(locTag, {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+      return locale === "en" ? raw : raw.toLocaleUpperCase(locTag);
+    },
+    [locale, locTag],
+  );
+
   const [messages, setMessages] = useState([]);
   const [nom, setNom] = useState("");
   const [message, setMessage] = useState("");
-  const [liked, setLiked] = useState({});
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [carouselPaused, setCarouselPaused] = useState(false);
 
   useEffect(() => {
-    if (messages.length < 2) return;
-    const t = setInterval(() => setIndex((i) => (i + 1) % messages.length), 6000);
+    if (messages.length < 2 || carouselPaused) return;
+    const t = setInterval(() => setIndex((i) => (i + 1) % messages.length), 7000);
     return () => clearInterval(t);
-  }, [messages.length]);
+  }, [messages.length, carouselPaused]);
 
   const prev = () => setIndex((i) => (i - 1 + messages.length) % messages.length);
   const next = () => setIndex((i) => (i + 1) % messages.length);
 
-  useEffect(() => {
+  const reloadMessages = useCallback(() => {
     getGuestbook().then(setMessages).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    reloadMessages();
+  }, [reloadMessages]);
+
+  useStoreSync("guestbook", reloadMessages);
 
   const submit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const data = await createGuestbook({ nom, message });
-      setMessages([data, ...messages]);
+      setMessages((prevMsgs) => [data, ...prevMsgs]);
+      setIndex(0);
       setNom("");
       setMessage("");
-      toast.success("Votre message a été gravé dans le livre d'or.");
+      toast.success(m.guestbook.toastOk);
     } catch {
-      toast.error("Une erreur est survenue — merci de réessayer.");
+      toast.error(m.guestbook.toastErr);
     } finally {
       setLoading(false);
     }
   };
 
+  const current = messages[index];
+
   return (
-    <section id="livre-or" className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 bg-[#F3ECE2]" data-testid="guestbook-section">
-      <div className="relative z-10 max-w-4xl mx-auto">
-        <Chapter index="VII" eyebrow="Livre d'Or" title="Vos Mots Doux" script="gravez votre passage" />
+    <section
+      id="livre-or"
+      className="guestbook-section relative overflow-hidden px-5 py-24 sm:px-8 md:py-36 lg:px-16"
+      data-testid="guestbook-section"
+    >
+      <SparkleField count={10} className="opacity-45" />
+      <div className="relative z-10 mx-auto max-w-4xl">
+        <Chapter index="VII" eyebrow={m.guestbook.chapter} title={m.guestbook.title} script={m.guestbook.script} />
 
-        <motion.form
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.9, ease: EASE }}
-          onSubmit={submit}
-          className="rounded-3xl border hairline bg-white p-5 shadow-[0_16px_40px_rgba(74,14,23,0.08)] sm:p-6"
-          data-testid="guestbook-form"
-        >
-          <div className="grid gap-3 sm:grid-cols-[1fr_2fr]">
-            <input
-              required
-              data-testid="guestbook-input-nom"
-              placeholder="Votre nom *"
-              value={nom}
-              onChange={(e) => setNom(e.target.value)}
-              className="rounded-2xl border hairline bg-[#FAF7F2] px-3.5 py-2.5 text-sm placeholder:text-[#8C7B7E] transition-all duration-300"
-            />
-            <div className="relative">
-              <textarea
-                required
-                data-testid="guestbook-input-message"
-                rows={2}
-                maxLength={280}
-                placeholder="Un vœu, un souvenir, une déclaration… *"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="w-full resize-none rounded-2xl border hairline bg-[#FAF7F2] px-3.5 py-2.5 text-sm placeholder:text-[#8C7B7E] transition-all duration-300"
-              />
-              <span className="absolute bottom-2.5 right-3 text-[10px] text-[#8C7B7E]" data-testid="guestbook-char-counter">{message.length}/280</span>
+        <LuxeCard animate noInset className="guestbook-form-card px-5 py-6 sm:px-8 sm:py-7">
+          <form onSubmit={submit} data-testid="guestbook-form">
+          <p className="guestbook-form-lead">{m.guestbook.formLead}</p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.65fr)] sm:items-start">
+            <div className="flex flex-col gap-3.5">
+              <GuestField label={m.guestbook.nameLabel} htmlFor="guestbook-nom">
+                <input
+                  id="guestbook-nom"
+                  required
+                  data-testid="guestbook-input-nom"
+                  placeholder={m.guestbook.namePh}
+                  value={nom}
+                  onChange={(e) => setNom(e.target.value)}
+                  className="rsvp-input"
+                  autoComplete="name"
+                />
+              </GuestField>
+              <button
+                type="submit"
+                disabled={loading}
+                data-testid="guestbook-submit-button"
+                className="guestbook-sign-btn mt-auto"
+              >
+                <Feather size={16} strokeWidth={2} aria-hidden />
+                <span>{loading ? m.guestbook.signing : m.guestbook.sign}</span>
+              </button>
             </div>
+            <GuestField label={m.guestbook.messageLabel} htmlFor="guestbook-message">
+              <div className="relative">
+                <textarea
+                  id="guestbook-message"
+                  required
+                  data-testid="guestbook-input-message"
+                  rows={4}
+                  maxLength={280}
+                  placeholder={m.guestbook.messagePh}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="rsvp-input rsvp-input--area guestbook-textarea pr-14"
+                />
+                <span
+                  className="guestbook-char-counter"
+                  data-testid="guestbook-char-counter"
+                  aria-live="polite"
+                >
+                  {message.length}/280
+                </span>
+              </div>
+            </GuestField>
           </div>
-          <button
-            type="submit"
-            disabled={loading}
-            data-testid="guestbook-submit-button"
-            className="mt-3.5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#4A0E17] px-7 py-3 font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#FAF7F2] transition-all duration-300 hover:bg-[#6B1724] disabled:opacity-60 sm:w-auto"
-          >
-            <Feather size={15} /> {loading ? "Gravure…" : "Signer le livre d'or"}
-          </button>
-        </motion.form>
+          </form>
+        </LuxeCard>
 
-        <div className="mt-12" data-testid="guestbook-list">
+        <div className="mt-14 md:mt-16" data-testid="guestbook-list">
           {messages.length === 0 && (
-            <p className="text-center font-display italic text-xl text-[#8C7B7E]" data-testid="guestbook-empty">
-              Soyez le premier à laisser une trace d'encre dorée…
-            </p>
+            <LuxeCard animate className="guestbook-empty-card px-8 py-12 text-center sm:px-12">
+              <span className="font-script text-5xl text-[#D4AF37]/80 leading-none" aria-hidden>
+                ✒
+              </span>
+              <p className="mt-4 font-display text-xl italic leading-relaxed text-[#8C7B7E]" data-testid="guestbook-empty">
+                {m.guestbook.empty}
+              </p>
+            </LuxeCard>
           )}
-          {messages.length > 0 && (
-            <div className="relative max-w-2xl mx-auto">
-              <div className="overflow-hidden">
-                <AnimatePresence mode="wait">
-                  <motion.article
-                    key={messages[index]?.id || index}
-                    initial={{ opacity: 0, x: 70 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -70 }}
-                    transition={{ duration: 0.5, ease: EASE }}
-                    className="rounded-3xl border hairline bg-white p-6 text-center shadow-[0_16px_40px_rgba(74,14,23,0.08)] sm:p-8"
-                    data-testid="guestbook-slide"
+
+          {messages.length > 0 && current && (
+            <div
+              className="guestbook-carousel relative mx-auto max-w-2xl px-2 sm:px-14"
+              onMouseEnter={() => setCarouselPaused(true)}
+              onMouseLeave={() => setCarouselPaused(false)}
+              onFocusCapture={() => setCarouselPaused(true)}
+              onBlurCapture={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget)) setCarouselPaused(false);
+              }}
+            >
+              {messages.length > 1 && (
+                <p className="guestbook-carousel-meta mb-4 text-center" aria-live="polite">
+                  {m.guestbook.messageOf(index + 1, messages.length)}
+                </p>
+              )}
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current.id ?? `${current.nom}-${current.created_at}-${index}`}
+                  initial={{ opacity: 0, y: 18, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -12, scale: 0.98 }}
+                  transition={{ duration: 0.55, ease: EASE }}
+                >
+                  <LuxeCard
+                    lift
+                    animate={false}
+                    className="guestbook-quote-card px-7 py-10 text-center sm:px-12 sm:py-12"
+                    data-testid="guestbook-message"
                   >
-                    <span className="font-script text-6xl text-[#D4AF37] leading-none">«</span>
-                    <p className="mt-2 font-display italic text-xl sm:text-2xl text-[#4A0E17] leading-relaxed">
-                      {messages[index].message}
-                    </p>
-                    <div className="mt-6 flex items-center justify-center gap-3">
-                      <span className="h-px w-8 bg-[#D4AF37]/60" />
-                      <div>
-                        <p className="font-script text-2xl text-[#C48B92]">{messages[index].nom}</p>
-                        <p className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#8C7B7E]">{formatDate(messages[index].created_at)}</p>
+                    <span className="guestbook-quote-mark" aria-hidden>
+                      «
+                    </span>
+                    <blockquote className="guestbook-quote-text font-display italic">
+                      {current.message}
+                    </blockquote>
+                    <footer className="guestbook-quote-footer mt-8">
+                      <div className="guestbook-quote-rule" aria-hidden>
+                        <span className="guestbook-quote-fleuron">✦</span>
                       </div>
-                      <span className="h-px w-8 bg-[#D4AF37]/60" />
-                    </div>
-                  </motion.article>
-                </AnimatePresence>
-              </div>
+                      <p className="font-script text-[1.75rem] leading-tight text-[#C48B92] sm:text-[2rem]">
+                        {current.nom}
+                      </p>
+                      <time
+                        className="mt-1 block font-cinzel text-[10px] tracking-[0.22em] text-[#8C7B7E]"
+                        dateTime={current.created_at}
+                      >
+                        {formatDate(current.created_at)}
+                      </time>
+                    </footer>
+                  </LuxeCard>
+                </motion.div>
+              </AnimatePresence>
 
-              <button
-                data-testid="guestbook-prev-button"
-                onClick={prev}
-                aria-label="Message précédent"
-                className="absolute top-1/2 -translate-y-1/2 -left-3 sm:-left-16 w-11 h-11 rounded-full bg-[#4A0E17] text-[#D4AF37] border hairline-gold flex items-center justify-center shadow-[0_10px_25px_rgba(74,14,23,0.25)] hover:bg-[#6B1724] hover:-translate-x-0.5 transition-all duration-300"
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <button
-                data-testid="guestbook-next-button"
-                onClick={next}
-                aria-label="Message suivant"
-                className="absolute top-1/2 -translate-y-1/2 -right-3 sm:-right-16 w-11 h-11 rounded-full bg-[#4A0E17] text-[#D4AF37] border hairline-gold flex items-center justify-center shadow-[0_10px_25px_rgba(74,14,23,0.25)] hover:bg-[#6B1724] hover:translate-x-0.5 transition-all duration-300"
-              >
-                <ChevronRight size={18} />
-              </button>
-
-              <div className="mt-7 flex items-center justify-center gap-2" data-testid="guestbook-dots">
-                {messages.map((m, i) => (
+              {messages.length > 1 && (
+                <>
                   <button
-                    key={m.id || i}
-                    data-testid={`guestbook-dot-${i}`}
-                    onClick={() => setIndex(i)}
-                    aria-label={`Aller au message ${i + 1}`}
-                    className={`h-2 rounded-full transition-all duration-300 ${i === index ? "w-6 bg-[#4A0E17]" : "w-2 bg-[#C48B92]/50 hover:bg-[#C48B92]"}`}
-                  />
-                ))}
-              </div>
+                    type="button"
+                    aria-label={m.guestbook.prev}
+                    onClick={prev}
+                    className="guestbook-nav-btn guestbook-nav-btn--prev"
+                  >
+                    <ChevronLeft size={20} strokeWidth={2.25} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={m.guestbook.next}
+                    onClick={next}
+                    className="guestbook-nav-btn guestbook-nav-btn--next"
+                  >
+                    <ChevronRight size={20} strokeWidth={2.25} />
+                  </button>
+                  <div className="mt-7 flex justify-center gap-2" role="tablist" aria-label={m.guestbook.chapter}>
+                    {messages.map((msg, i) => (
+                      <button
+                        key={msg.id ?? i}
+                        type="button"
+                        role="tab"
+                        aria-selected={i === index}
+                        aria-label={m.guestbook.messageOf(i + 1, messages.length)}
+                        onClick={() => setIndex(i)}
+                        className={`guestbook-dot ${i === index ? "guestbook-dot--active" : ""}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>

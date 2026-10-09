@@ -7,4 +7,4 @@ export {
   getSettings,
   saveSettings,
   uploadPhoto,
-} from "@/mocks/client";
+} from "@/lib/local-api";

@@ -63,7 +63,8 @@
     "dev": "craco start",
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test"
+    "test": "craco test",
+    "refresh": "npm install && npm run build"
   },
   "browserslist": {
     "production": [

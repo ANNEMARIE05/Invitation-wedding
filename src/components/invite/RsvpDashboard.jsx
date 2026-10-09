@@ -1,18 +1,81 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, RefreshCw, Download, MailCheck, Users, UserX, UserPlus, UtensilsCrossed } from "lucide-react";
+import {
+  ArrowLeft,
+  RefreshCw,
+  Download,
+  MailCheck,
+  Users,
+  UserRound,
+  UserX,
+  UserPlus,
+  UtensilsCrossed,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { toast } from "sonner";
 import { getRsvps } from "@/lib/api";
+import { useStoreSync } from "@/lib/useStoreSync";
+
+const PAGE_SIZE = 6;
 
 const formatDate = (iso) =>
-  new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  new Date(iso).toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+const norm = (s) =>
+  String(s ?? "")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase();
+
+const panel =
+  "rounded-md bg-white ring-1 ring-[#D4C4CA] shadow-[0_2px_10px_rgba(42,5,11,0.07)]";
+
+const surfaceBtn =
+  "rounded-md bg-white ring-1 ring-[#D4C4CA] transition-all hover:ring-[#9B1B4A]/40";
+
+const labelCaps =
+  "font-cinzel text-[10px] font-semibold tracking-[0.14em] uppercase text-[#4A3840]";
+
+const selectCls =
+  "mt-1.5 w-full min-w-[9.5rem] cursor-pointer rounded-md border-0 bg-[#FFFBFC] py-2.5 pl-3 pr-9 text-sm font-medium text-[#1F181A] ring-1 ring-[#D4C4CA] transition-all focus:ring-2 focus:ring-[#9B1B4A]/45 disabled:cursor-not-allowed disabled:bg-[#F5F0F2] disabled:text-[#8C7B7E]";
+
+const thCell =
+  "border-r border-[#E0D0D6] px-4 py-3 font-cinzel text-[10px] font-semibold tracking-[0.12em] uppercase text-[#4A3840] last:border-r-0";
+
+const tdCell =
+  "border-r border-[#EDE4E8] px-4 py-3.5 align-top text-[#1F181A] last:border-r-0";
+
+function PresenceBadge({ present }) {
+  return (
+    <span
+      className={`inline-flex min-w-[2.75rem] justify-center rounded-lg px-2.5 py-1 font-cinzel text-[10px] tracking-[0.1em] uppercase ${
+        present
+          ? "bg-[#9B1B4A]/12 text-[#7A1538] ring-1 ring-[#9B1B4A]/25"
+          : "bg-[#F3E8EA] text-[#5C3038] ring-1 ring-[#C48B92]/45"
+      }`}
+    >
+      {present ? "Oui" : "Non"}
+    </span>
+  );
+}
 
 export default function RsvpDashboard() {
   const [rsvps, setRsvps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
+  const [query, setQuery] = useState("");
+  const [presenceFilter, setPresenceFilter] = useState("all");
+  const [modeFilter, setModeFilter] = useState("all");
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
       setRsvps(await getRsvps());
@@ -21,18 +84,22 @@ export default function RsvpDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
+
+  useStoreSync("rsvps", load);
 
   const presents = rsvps.filter((r) => r.present);
+  const presentiel = presents.filter((r) => (r.mode || "presentiel") !== "zoom");
+  const zoomJoins = presents.filter((r) => r.mode === "zoom");
   const absents = rsvps.filter((r) => !r.present);
-  const accompagnants = presents.reduce((s, r) => s + (r.accompagnants || 0), 0);
-  const totalPersonnes = presents.length + accompagnants;
+  const accompagnants = presentiel.reduce((s, r) => s + (r.accompagnants || 0), 0);
+  const totalPersonnes = presentiel.length + accompagnants;
   const regimes = {};
-  presents.forEach((r) => {
+  presentiel.forEach((r) => {
     if (r.regime && r.regime !== "Aucun") {
       const key = r.regime.replace(" (préciser en message)", "");
       regimes[key] = (regimes[key] || 0) + 1 + (r.accompagnants || 0);
@@ -40,17 +107,46 @@ export default function RsvpDashboard() {
   });
   const regimeEntries = Object.entries(regimes);
 
-  const pageSize = 8;
-  const pageCount = Math.ceil(rsvps.length / pageSize);
-  const safePage = Math.min(page, Math.max(0, pageCount - 1));
-  const pageRsvps = rsvps.slice(safePage * pageSize, (safePage + 1) * pageSize);
+  const filtered = useMemo(() => {
+    const q = norm(query.trim());
+    return rsvps.filter((r) => {
+      if (presenceFilter === "yes" && !r.present) return false;
+      if (presenceFilter === "no" && r.present) return false;
+      if (presenceFilter !== "no" && modeFilter !== "all" && r.present) {
+        const mode = r.mode === "zoom" ? "zoom" : "presentiel";
+        if (modeFilter !== mode) return false;
+      }
+      if (presenceFilter === "no" && modeFilter !== "all") return false;
+      if (!q) return true;
+      const hay = norm(`${r.nom} ${r.telephone || ""} ${r.email || ""} ${r.message || ""} ${r.chanson || ""}`);
+      return hay.includes(q);
+    });
+  }, [rsvps, query, presenceFilter, modeFilter]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [query, presenceFilter, modeFilter]);
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount - 1);
+  const pageStart = safePage * PAGE_SIZE;
+  const pageRsvps = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+  const rangeFrom = filtered.length === 0 ? 0 : pageStart + 1;
+  const rangeTo = Math.min(pageStart + PAGE_SIZE, filtered.length);
 
   const exportCsv = () => {
     const rows = [
-      ["Nom", "WhatsApp", "Présent", "Accompagnants", "Régime", "Chanson", "Message", "Date"],
-      ...rsvps.map((r) => [
-        r.nom, r.telephone || r.email, r.present ? "Oui" : "Non", r.accompagnants, r.regime, r.chanson,
-        (r.message || "").replace(/[\r\n;]+/g, " "), formatDate(r.created_at),
+      ["Nom", "WhatsApp", "Présent", "Mode", "Accompagnants", "Régime", "Chanson", "Message", "Date"],
+      ...filtered.map((r) => [
+        r.nom,
+        r.telephone || r.email,
+        r.present ? "Oui" : "Non",
+        r.present ? (r.mode === "zoom" ? "Zoom" : "Présentiel") : "",
+        r.accompagnants,
+        r.regime,
+        r.chanson,
+        (r.message || "").replace(/[\r\n;]+/g, " "),
+        formatDate(r.created_at),
       ]),
     ];
     const csv = "﻿" + rows.map((row) => row.map((c) => `"${String(c ?? "").replace(/"/g, '""')}"`).join(";")).join("\r\n");
@@ -60,134 +156,239 @@ export default function RsvpDashboard() {
     a.download = "reponses-mariage.csv";
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("Liste des réponses téléchargée (CSV, compatible Excel).");
+    toast.success("Liste exportée (filtres appliqués).");
   };
 
   const stats = [
-    { icon: Users, label: "Présents", value: presents.length, testId: "stat-presents" },
+    { icon: Users, label: "Présentiel", value: presentiel.length, testId: "stat-presents" },
+    {
+      icon: UserRound,
+      label: "Accompagnants",
+      value: accompagnants,
+      testId: "stat-accompagnants",
+    },
+    { icon: MailCheck, label: "Sur Zoom", value: zoomJoins.length, testId: "stat-zoom" },
     { icon: UserX, label: "Absents", value: absents.length, testId: "stat-absents" },
-    { icon: UserPlus, label: "Accompagnants", value: accompagnants, testId: "stat-accompagnants" },
-    { icon: MailCheck, label: "Total attendu", value: totalPersonnes, testId: "stat-total" },
+    { icon: UserPlus, label: "Total sur place", value: totalPersonnes, testId: "stat-total" },
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#1C1617] px-4 sm:px-10 py-6 sm:py-10" data-testid="rsvp-dashboard">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+    <div
+      className="admin-dashboard-light min-h-screen w-full text-[#1F181A] px-5 py-9 sm:px-7 sm:py-10 lg:px-9"
+      data-testid="rsvp-dashboard"
+    >
+      <div className="mx-auto w-full max-w-[96rem]">
+        <div className="flex flex-wrap items-start justify-between gap-4 sm:gap-6">
           <div>
-            <Link to="/" data-testid="dashboard-back-link" className="inline-flex items-center gap-2 font-cinzel text-[10px] sm:text-[11px] tracking-[0.25em] uppercase text-[#C48B92] hover:text-[#6B1724] transition-colors">
-              <ArrowLeft size={13} /> Retour à l'invitation
+            <Link
+              to="/espace-maries"
+              data-testid="dashboard-back-link"
+              className="inline-flex items-center gap-1.5 font-cinzel text-[10px] font-medium tracking-[0.18em] uppercase text-[#7A1538] transition-colors hover:text-[#5C0A20]"
+            >
+              <ArrowLeft size={14} strokeWidth={1.5} /> Espace mariés
             </Link>
-            <h1 className="mt-3 font-display text-3xl sm:text-5xl text-[#4A0E17]">Bilan des réponses</h1>
-            <p className="mt-0.5 font-script text-xl sm:text-2xl text-[#C48B92]">qui sera des nôtres</p>
+            <h1 className="mt-2 font-display text-[1.75rem] font-semibold leading-tight tracking-[-0.02em] text-[#5C0A20] sm:text-[2rem]">
+              Bilan des réponses
+            </h1>
+            <p className="mt-0.5 font-display text-base italic text-[#6B1230]">Qui sera des nôtres</p>
           </div>
-          <div className="flex gap-2 sm:gap-3">
+          <div className="flex flex-wrap gap-2">
             <button
+              type="button"
               data-testid="dashboard-refresh-button"
               onClick={load}
-              className="inline-flex items-center gap-2 rounded-full border hairline px-4 py-2.5 sm:px-6 sm:py-3 font-cinzel text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-[#4A0E17] hover:border-[#D4AF37] transition-all"
+              className={`inline-flex items-center gap-2 px-3.5 py-2 font-cinzel text-[10px] tracking-[0.14em] uppercase text-[#5C0A20] ${surfaceBtn}`}
             >
-              <RefreshCw size={13} /> Actualiser
+              <RefreshCw size={14} strokeWidth={1.5} /> Actualiser
             </button>
             <button
+              type="button"
               data-testid="dashboard-export-button"
               onClick={exportCsv}
-              disabled={rsvps.length === 0}
-              className="inline-flex items-center gap-2 rounded-full bg-[#4A0E17] text-[#FAF7F2] px-4 py-2.5 sm:px-6 sm:py-3 font-cinzel text-[10px] sm:text-[11px] tracking-[0.2em] uppercase hover:bg-[#6B1724] transition-all disabled:opacity-50"
+              disabled={filtered.length === 0}
+              className="inline-flex items-center gap-2 rounded-md bg-[#9B1B4A] px-3.5 py-2 font-cinzel text-[10px] tracking-[0.14em] uppercase text-white transition-all hover:bg-[#7A1538] disabled:opacity-45"
             >
-              <Download size={13} /> Exporter
+              <Download size={14} strokeWidth={1.5} /> Exporter
             </button>
           </div>
         </div>
 
-        <div className="mt-6 sm:mt-10 grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4" data-testid="dashboard-stats">
+        <div className="mt-9 grid grid-cols-2 gap-3.5 sm:grid-cols-3 sm:gap-4 xl:grid-cols-5" data-testid="dashboard-stats">
           {stats.map(({ icon: Icon, label, value, testId }) => (
-            <div key={label} className="rounded-2xl border hairline bg-white p-3.5 text-center shadow-[0_10px_30px_rgba(74,14,23,0.06)] sm:p-6" data-testid={testId}>
-              <Icon size={16} className="mx-auto text-[#D4AF37] sm:hidden" strokeWidth={1.5} />
-              <Icon size={20} className="mx-auto text-[#D4AF37] hidden sm:block" strokeWidth={1.5} />
-              <p className="mt-1.5 sm:mt-3 font-display text-2xl sm:text-4xl text-[#4A0E17] tabular-nums">{value}</p>
-              <p className="mt-0.5 sm:mt-1 font-cinzel text-[8px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.25em] uppercase text-[#8C7B7E]">{label}</p>
+            <div key={label} className={`${panel} p-4 text-center sm:p-5`} data-testid={testId}>
+              <Icon size={18} className="mx-auto text-[#A8842E]" strokeWidth={1.75} />
+              <p className="mt-2 font-display text-3xl font-semibold tabular-nums leading-none text-[#3D0818]">{value}</p>
+              <p className={`mt-1.5 ${labelCaps}`}>{label}</p>
             </div>
           ))}
         </div>
 
-        <div className="mt-3 flex items-center gap-3 rounded-2xl border hairline bg-white px-4 py-3.5 sm:mt-6 sm:gap-4 sm:px-6 sm:py-5" data-testid="dashboard-regimes">
-          <UtensilsCrossed size={18} className="text-[#D4AF37] shrink-0" strokeWidth={1.5} />
+        <div className={`${panel} mt-7 flex items-center gap-3 px-5 py-4`} data-testid="dashboard-regimes">
+          <UtensilsCrossed size={17} className="shrink-0 text-[#A8842E]" strokeWidth={1.75} />
           {regimeEntries.length === 0 ? (
-            <p className="text-xs sm:text-sm text-[#8C7B7E]">Aucun régime particulier signalé pour le moment.</p>
+            <p className="text-sm font-medium leading-snug text-[#4A3840]">Aucun régime particulier signalé.</p>
           ) : (
-            <p className="text-xs sm:text-sm text-[#5C4F51]">
-              <span className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.25em] uppercase text-[#8C7B7E] mr-2 sm:mr-3">Repas :</span>
+            <p className="text-sm font-medium leading-snug text-[#1F181A]">
+              <span className={`mr-2 ${labelCaps}`}>Repas</span>
               {regimeEntries.map(([k, v]) => `${v} ${k.toLowerCase()}`).join(" · ")}
             </p>
           )}
         </div>
 
-        <div className="mt-3 overflow-hidden rounded-2xl border hairline bg-white sm:mt-6" data-testid="dashboard-table">
-          {loading && <p className="p-6 sm:p-8 text-center font-display italic text-lg sm:text-xl text-[#8C7B7E]">Chargement des réponses…</p>}
+        <div className={`${panel} mt-7 p-5 sm:p-6`} data-testid="dashboard-filters">
+          <p className={labelCaps}>Filtrer</p>
+          <div className="mt-3.5 grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_11rem_11rem] lg:items-end">
+            <label className="block sm:col-span-2 lg:col-span-1">
+              <span className={labelCaps}>Recherche</span>
+              <div className="relative mt-1.5">
+                <Search
+                  size={18}
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9B1B4A]/70"
+                  strokeWidth={1.5}
+                />
+                <input
+                  type="search"
+                  data-testid="dashboard-search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Nom, téléphone, message…"
+                  className="w-full rounded-md border-0 bg-[#FFFBFC] py-2.5 pl-10 pr-3 text-sm font-medium text-[#1F181A] placeholder:font-normal placeholder:text-[#6B5A60] ring-1 ring-[#D4C4CA] transition-all focus:ring-2 focus:ring-[#9B1B4A]/45"
+                />
+              </div>
+            </label>
+            <label className="block">
+              <span className={labelCaps}>Présence</span>
+              <select
+                data-testid="dashboard-filter-presence"
+                value={presenceFilter}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setPresenceFilter(v);
+                  if (v === "no") setModeFilter("all");
+                }}
+                className={selectCls}
+              >
+                <option value="all">Tous</option>
+                <option value="yes">Présents</option>
+                <option value="no">Absents</option>
+              </select>
+            </label>
+            <label className="block">
+              <span className={labelCaps}>Mode</span>
+              <select
+                data-testid="dashboard-filter-mode"
+                value={modeFilter}
+                onChange={(e) => setModeFilter(e.target.value)}
+                disabled={presenceFilter === "no"}
+                className={selectCls}
+              >
+                <option value="all">Tous</option>
+                <option value="presentiel">Présentiel</option>
+                <option value="zoom">Sur Zoom</option>
+              </select>
+            </label>
+          </div>
+          <p className="mt-4 text-sm text-[#4A3840]">
+            <span className="font-semibold tabular-nums text-[#3D0818]">{filtered.length}</span>
+            {" "}réponse{filtered.length !== 1 ? "s" : ""} sur {rsvps.length}
+          </p>
+        </div>
+
+        <div className={`${panel} mt-7 overflow-hidden`} data-testid="dashboard-table">
+          {loading && (
+            <p className="p-6 text-center font-display text-base text-[#4A3840]">Chargement des réponses…</p>
+          )}
           {!loading && rsvps.length === 0 && (
-            <p className="p-6 sm:p-8 text-center font-display italic text-lg sm:text-xl text-[#8C7B7E]" data-testid="dashboard-empty">
+            <p className="p-6 text-center font-display text-base text-[#4A3840]" data-testid="dashboard-empty">
               Aucune réponse pour le moment — les premières ne vont pas tarder.
             </p>
           )}
-          {!loading && rsvps.length > 0 && (
+          {!loading && rsvps.length > 0 && filtered.length === 0 && (
+            <p className="p-6 text-center text-sm font-medium text-[#4A3840]" data-testid="dashboard-no-match">
+              Aucun résultat pour ces filtres. Essayez d&apos;élargir la recherche.
+            </p>
+          )}
+          {!loading && filtered.length > 0 && (
             <>
-              {/* fiches compactes — mobile */}
-              <div className="sm:hidden divide-y divide-[#D4AF37]/15">
+              <div className="divide-y divide-[#EDE4E8] sm:hidden">
                 {pageRsvps.map((r, i) => (
-                  <div key={r.id || i} className="px-4 py-3.5" data-testid={`dashboard-rsvp-${i}`}>
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-medium text-[#1C1617] truncate">{r.nom}</p>
-                      <span className={`shrink-0 rounded-full px-3 py-0.5 font-cinzel text-[9px] tracking-[0.15em] uppercase ${r.present ? "bg-[#4A0E17] text-[#D4AF37]" : "border border-[#C48B92]/50 text-[#C48B92]"}`}>
-                        {r.present ? "Oui" : "Non"}
-                      </span>
+                  <div key={r.id || i} className="px-5 py-4" data-testid={`dashboard-rsvp-${i}`}>
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="font-display text-base font-semibold text-[#1F181A]">{r.nom}</p>
+                        <p className="mt-0.5 text-sm text-[#4A3840]">{r.telephone || r.email}</p>
+                        <p className="mt-0.5 text-[10px] font-cinzel font-medium uppercase tracking-[0.08em] text-[#6B5A60]">
+                          {formatDate(r.created_at)}
+                        </p>
+                      </div>
+                      <PresenceBadge present={r.present} />
                     </div>
-                    <p className="mt-1 text-[11px] text-[#8C7B7E] truncate">{r.telephone || r.email} · {formatDate(r.created_at)}</p>
-                    <p className="mt-1 text-[11px] text-[#5C4F51]">
+                    <p className="mt-2 text-sm text-[#1F181A]">
                       {[
-                        r.present && r.accompagnants > 0 ? `+${r.accompagnants} accomp.` : "",
+                        r.present ? (r.mode === "zoom" ? "Zoom" : "Présentiel") : "Absent",
+                        r.present && r.mode !== "zoom" && r.accompagnants > 0 ? `+${r.accompagnants} accompagnant(s)` : "",
                         r.regime && r.regime !== "Aucun" ? r.regime.replace(" (préciser en message)", "") : "",
-                      ].filter(Boolean).join(" · ") || "Sans précision"}
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
                     </p>
-                    {(r.chanson || r.message) && (
-                      <p className="mt-1 text-[11px] italic text-[#8C7B7E] line-clamp-2">
-                        {r.chanson ? `♪ ${r.chanson}` : ""}{r.chanson && r.message ? " — " : ""}{r.message ? `« ${r.message} »` : ""}
+                    {r.chanson && (
+                      <p className="mt-1.5 text-sm font-medium text-[#5C0A20]">♪ {r.chanson}</p>
+                    )}
+                    {r.message && (
+                      <p className="mt-1 text-[15px] font-medium leading-relaxed text-[#1F181A]">
+                        « {r.message} »
                       </p>
                     )}
                   </div>
                 ))}
               </div>
 
-              {/* tableau — tablette & ordinateur */}
-              <div className="hidden sm:block overflow-x-auto">
-                <table className="w-full text-left text-sm min-w-[640px]">
+              <div className="hidden overflow-x-auto sm:block">
+                <table className="w-full min-w-[720px] border-collapse text-left">
                   <thead>
-                    <tr className="border-b hairline font-cinzel text-[10px] tracking-[0.25em] uppercase text-[#8C7B7E]">
-                      <th className="px-5 py-4">Invité</th>
-                      <th className="px-4 py-4">Présence</th>
-                      <th className="px-4 py-4">Accomp.</th>
-                      <th className="px-4 py-4">Régime</th>
-                      <th className="px-5 py-4">Chanson & message</th>
+                    <tr className="border-b-2 border-[#E0D0D6] bg-[#FBF7F9]">
+                      <th className={`${thCell} pl-4`}>Invité</th>
+                      <th className={thCell}>Présence</th>
+                      <th className={thCell}>Mode</th>
+                      <th className={thCell}>Accomp.</th>
+                      <th className={thCell}>Régime</th>
+                      <th className={`${thCell} pr-4`}>Chanson & message</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="text-sm">
                     {pageRsvps.map((r, i) => (
-                      <tr key={r.id || i} className="border-b hairline last:border-0 align-top" data-testid={`dashboard-rsvp-row-${i}`}>
-                        <td className="px-5 py-4">
-                          <p className="font-medium text-[#1C1617]">{r.nom}</p>
-                          <p className="text-xs text-[#8C7B7E]">{r.telephone || r.email}</p>
-                          <p className="mt-0.5 text-[10px] font-cinzel tracking-[0.15em] uppercase text-[#8C7B7E]/70">{formatDate(r.created_at)}</p>
+                      <tr
+                        key={r.id || i}
+                        className="border-b border-[#EDE4E8] transition-colors hover:bg-[#FBF7F9]"
+                        data-testid={`dashboard-rsvp-row-${i}`}
+                      >
+                        <td className={`${tdCell} pl-4`}>
+                          <p className="font-display text-[15px] font-semibold leading-snug text-[#1F181A]">{r.nom}</p>
+                          <p className="mt-0.5 text-sm text-[#4A3840]">{r.telephone || r.email}</p>
+                          <p className="mt-0.5 text-[10px] font-cinzel font-medium uppercase tracking-[0.08em] text-[#6B5A60]">
+                            {formatDate(r.created_at)}
+                          </p>
                         </td>
-                        <td className="px-4 py-4">
-                          <span className={`inline-block rounded-full px-3.5 py-1 font-cinzel text-[10px] tracking-[0.15em] uppercase ${r.present ? "bg-[#4A0E17] text-[#D4AF37]" : "border border-[#C48B92]/50 text-[#C48B92]"}`}>
-                            {r.present ? "Oui" : "Non"}
-                          </span>
+                        <td className={tdCell}>
+                          <PresenceBadge present={r.present} />
                         </td>
-                        <td className="px-4 py-4 tabular-nums">{r.present && r.accompagnants > 0 ? `+${r.accompagnants}` : "—"}</td>
-                        <td className="px-4 py-4">{r.regime && r.regime !== "Aucun" ? r.regime.replace(" (préciser en message)", "") : "—"}</td>
-                        <td className="px-5 py-4 text-[#5C4F51]">
-                          {r.chanson && <p>♪ {r.chanson}</p>}
-                          {r.message && <p className="italic">« {r.message} »</p>}
+                        <td className={`${tdCell} font-cinzel text-[11px] font-medium uppercase tracking-[0.06em] text-[#3D2A30]`}>
+                          {r.present ? (r.mode === "zoom" ? "Zoom" : "Présentiel") : "—"}
+                        </td>
+                        <td className={`${tdCell} tabular-nums font-medium`}>
+                          {r.present && r.mode !== "zoom" && r.accompagnants > 0 ? `+${r.accompagnants}` : "—"}
+                        </td>
+                        <td className={`${tdCell} font-medium`}>
+                          {r.regime && r.regime !== "Aucun" ? r.regime.replace(" (préciser en message)", "") : "—"}
+                        </td>
+                        <td className={`${tdCell} pr-4 leading-snug text-[#1F181A]`}>
+                          {r.chanson && <p className="text-sm font-semibold text-[#5C0A20]">♪ {r.chanson}</p>}
+                          {r.message && (
+                            <p className="mt-1 text-[15px] font-medium leading-relaxed text-[#1F181A]">
+                              « {r.message} »
+                            </p>
+                          )}
                           {!r.chanson && !r.message && "—"}
                         </td>
                       </tr>
@@ -199,35 +400,66 @@ export default function RsvpDashboard() {
           )}
         </div>
 
-        {pageCount > 1 && (
-          <div className="mt-4 flex items-center justify-center gap-2" data-testid="dashboard-pagination">
-            <button
-              data-testid="dashboard-prev-page"
-              onClick={() => setPage((p) => Math.max(0, p - 1))}
-              disabled={safePage === 0}
-              className="rounded-full border hairline px-4 py-2 font-cinzel text-[10px] tracking-[0.2em] uppercase text-[#4A0E17] disabled:opacity-40 hover:border-[#D4AF37] transition-all"
-            >
-              ← Préc.
-            </button>
-            {Array.from({ length: pageCount }).map((_, p) => (
+        {!loading && filtered.length > 0 && (
+          <div
+            className={`${panel} mt-6 flex flex-col items-center justify-between gap-3 px-5 py-3.5 sm:flex-row`}
+            data-testid="dashboard-pagination"
+          >
+            <p className="text-sm text-[#4A3840]">
+              Affichage{" "}
+              <span className="font-semibold tabular-nums text-[#3D0818]">
+                {rangeFrom}–{rangeTo}
+              </span>{" "}
+              sur{" "}
+              <span className="font-semibold tabular-nums text-[#3D0818]">{filtered.length}</span>
+              {pageCount > 1 && (
+                <span className="text-[#6B5A60]">
+                  {" "}
+                  · page {safePage + 1}/{pageCount}
+                </span>
+              )}
+            </p>
+            <div className="flex items-center gap-2">
               <button
-                key={p}
-                data-testid={`dashboard-page-${p}`}
-                onClick={() => setPage(p)}
-                aria-label={`Page ${p + 1}`}
-                className={`w-8 h-8 rounded-full font-cinzel text-[10px] transition-all ${p === safePage ? "bg-[#4A0E17] text-[#D4AF37]" : "border hairline text-[#8C7B7E] hover:border-[#D4AF37]"}`}
+                type="button"
+                data-testid="dashboard-prev-page"
+                onClick={() => setPage((p) => Math.max(0, p - 1))}
+                disabled={safePage === 0}
+                className={`inline-flex items-center gap-1 px-3 py-2 font-cinzel text-[10px] tracking-[0.12em] uppercase text-[#5C0A20] disabled:opacity-40 ${surfaceBtn}`}
               >
-                {p + 1}
+                <ChevronLeft size={16} /> Préc.
               </button>
-            ))}
-            <button
-              data-testid="dashboard-next-page"
-              onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-              disabled={safePage === pageCount - 1}
-              className="rounded-full border hairline px-4 py-2 font-cinzel text-[10px] tracking-[0.2em] uppercase text-[#4A0E17] disabled:opacity-40 hover:border-[#D4AF37] transition-all"
-            >
-              Suiv. →
-            </button>
+              {pageCount <= 7 ? (
+                Array.from({ length: pageCount }).map((_, p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    data-testid={`dashboard-page-${p}`}
+                    onClick={() => setPage(p)}
+                    aria-label={`Page ${p + 1}`}
+                    aria-current={p === safePage ? "page" : undefined}
+                    className={`flex h-8 min-w-[2rem] items-center justify-center rounded-md font-cinzel text-[10px] tabular-nums transition-all ${
+                      p === safePage
+                        ? "bg-[#9B1B4A] text-white"
+                        : "bg-white text-[#3D2A30] ring-1 ring-[#D4C4CA] hover:ring-[#9B1B4A]/35"
+                    }`}
+                  >
+                    {p + 1}
+                  </button>
+                ))
+              ) : (
+                <span className="px-2 font-cinzel text-xs font-medium text-[#4A3840]">{safePage + 1} / {pageCount}</span>
+              )}
+              <button
+                type="button"
+                data-testid="dashboard-next-page"
+                onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+                disabled={safePage >= pageCount - 1}
+                className={`inline-flex items-center gap-1 px-3 py-2 font-cinzel text-[10px] tracking-[0.12em] uppercase text-[#5C0A20] disabled:opacity-40 ${surfaceBtn}`}
+              >
+                Suiv. <ChevronRight size={16} />
+              </button>
+            </div>
           </div>
         )}
       </div>
