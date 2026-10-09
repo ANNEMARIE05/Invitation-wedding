@@ -4,8 +4,20 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { EASE } from "@/lib/invite-data";
 import { useSettings } from "@/lib/settings";
+import WeddingPetals from "@/components/invite/WeddingPetals";
 
-export default function CoupleAuthShell({ children, backLabel, backTo = "/", narrow = false }) {
+const SHELL_ORBS = [
+  { className: "hero-orb hero-orb--magenta left-[10%] top-[12%] h-[min(40vw,280px)] w-[min(40vw,280px)]", delay: 0 },
+  { className: "hero-orb hero-orb--wine right-[8%] bottom-[18%] h-[min(44vw,320px)] w-[min(44vw,320px)]", delay: 3 },
+];
+
+export default function CoupleAuthShell({
+  children,
+  backLabel,
+  backTo = "/",
+  narrow = false,
+  showCoupleBanner = true,
+}) {
   const { bride, groom, initials } = useSettings();
 
   useEffect(() => {
@@ -29,17 +41,20 @@ export default function CoupleAuthShell({ children, backLabel, backTo = "/", nar
       className={`couple-auth-page ${pageClass} text-[#FAF7F2] antialiased`}
       data-testid="couple-auth-shell"
     >
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_85%_55%_at_50%_0%,rgba(237,30,121,0.28),transparent_50%),radial-gradient(ellipse_70%_50%_at_50%_100%,rgba(212,175,55,0.12),transparent_55%),linear-gradient(168deg,#4A1224_0%,#6B2440_42%,#8B3550_100%)]"
-        aria-hidden
-      />
-      <div className="grain-overlay opacity-[0.03]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 hero-atmosphere" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 hero-grid opacity-20" aria-hidden />
+      {SHELL_ORBS.map((o) => (
+        <div key={o.className} className={`pointer-events-none absolute ${o.className}`} style={{ animationDelay: `${o.delay}s` }} aria-hidden />
+      ))}
+      <div className="pointer-events-none absolute inset-0 hero-veil" aria-hidden />
+      <div className="grain-overlay opacity-[0.04]" aria-hidden />
+      {narrow && <WeddingPetals active density={12} variant="hero" />}
 
-      <div className="pointer-events-none absolute inset-5 sm:inset-10" aria-hidden>
-        <span className="absolute top-0 left-0 h-14 w-14 border-l border-t border-[#D4AF37]/35 sm:h-20 sm:w-20" />
-        <span className="absolute top-0 right-0 h-14 w-14 border-r border-t border-[#C0C0C0]/25 sm:h-20 sm:w-20" />
-        <span className="absolute bottom-0 left-0 h-14 w-14 border-b border-l border-[#C0C0C0]/25 sm:h-20 sm:w-20" />
-        <span className="absolute bottom-0 right-0 h-14 w-14 border-b border-r border-[#D4AF37]/35 sm:h-20 sm:w-20" />
+      <div className="hero-corners couple-auth-corners pointer-events-none absolute z-[1]" aria-hidden>
+        <span className="hero-corner hero-corner--tl" />
+        <span className="hero-corner hero-corner--tr" />
+        <span className="hero-corner hero-corner--bl" />
+        <span className="hero-corner hero-corner--br" />
       </div>
 
       <div
@@ -75,16 +90,18 @@ export default function CoupleAuthShell({ children, backLabel, backTo = "/", nar
         <div
           className={`mx-auto flex w-full min-h-0 flex-1 flex-col items-center justify-center ${narrow ? "max-w-md" : "max-w-4xl"}`}
         >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.85, delay: 0.08, ease: EASE }}
-            className="mb-4 shrink-0 text-center sm:mb-5"
-          >
-            <p className="font-cinzel text-[9px] tracking-[0.32em] uppercase text-[#C48B92] sm:text-[10px] sm:tracking-[0.42em]">
-              {bride} & {groom}
-            </p>
-          </motion.div>
+          {showCoupleBanner && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.08, ease: EASE }}
+              className="mb-4 shrink-0 text-center sm:mb-5"
+            >
+              <p className="font-cinzel text-[9px] tracking-[0.32em] uppercase text-[#C48B92] sm:text-[10px] sm:tracking-[0.42em]">
+                {bride} & {groom}
+              </p>
+            </motion.div>
+          )}
           {children}
         </div>
       </div>
