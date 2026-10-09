@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
@@ -43,13 +42,6 @@ export default function Footer() {
         </div>
         <p className="mt-6 font-cinzel text-[11px] tracking-[0.4em] uppercase text-[#C48B92]">{dateLabel}</p>
         <p className="mt-10 text-xs text-[#FAF7F2]/40">{m.footer.thanks}</p>
-        <Link
-          to="/espace-maries"
-          data-testid="footer-espace-maries"
-          className="mt-6 inline-block font-cinzel text-[10px] tracking-[0.3em] uppercase text-[#C48B92]/60 hover:text-[#D4AF37] transition-colors"
-        >
-          {m.footer.admin}
-        </Link>
       </div>
     </footer>
   );

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import { EASE } from "@/lib/invite-data";
@@ -56,9 +57,9 @@ export default function CoupleLogin() {
         <span className="faire-part-gold-point faire-part-gold-point--br couple-classic-card__corner" aria-hidden />
 
         <div className="relative px-7 py-10 sm:px-9 sm:py-11">
-          <p className="text-center font-cinzel text-[9px] tracking-[0.38em] uppercase text-[#9B1B4A]/80">{t.subtitle}</p>
+          <p className="couple-classic-card__kicker text-center tracking-[0.34em]">{t.subtitle}</p>
 
-          <h1 className="mt-3 text-center font-display text-[2rem] font-medium italic leading-tight text-[#2A050B] sm:text-[2.35rem]">
+          <h1 className="couple-classic-card__title mt-3 text-center font-display text-[2rem] font-medium italic leading-tight sm:text-[2.35rem]">
             {t.title}
           </h1>
 
@@ -66,7 +67,7 @@ export default function CoupleLogin() {
 
           <form onSubmit={submit} className="mt-8">
             <fieldset className="border-0 p-0">
-              <legend className="mx-auto mb-4 block w-full text-center font-cinzel text-[9px] tracking-[0.32em] uppercase text-[#6B2440]">
+              <legend className="couple-classic-card__legend mx-auto mb-4 block w-full text-center">
                 {t.passwordLabel}
               </legend>
 
@@ -83,18 +84,22 @@ export default function CoupleLogin() {
                   }}
                   disabled={busy}
                   placeholder={t.passwordPh}
-                  className="couple-classic-field couple-auth-input couple-auth-input--paper w-full"
+                  className="couple-classic-field couple-classic-field--with-toggle couple-auth-input couple-auth-input--paper w-full"
                 />
-              </div>
-
-              <div className="mt-3 flex justify-center">
                 <button
                   type="button"
                   data-testid="couple-password-toggle"
                   onClick={() => setShow((v) => !v)}
-                  className="font-cinzel text-[9px] tracking-[0.22em] uppercase text-[#9B1B4A]/65 underline-offset-[3px] transition-colors hover:text-[#ED1E79] hover:underline"
+                  disabled={busy}
+                  aria-label={show ? t.hidePassword : t.showPassword}
+                  aria-pressed={show}
+                  className="couple-classic-field-toggle"
                 >
-                  {show ? t.hidePassword : t.showPassword}
+                  {show ? (
+                    <EyeOff className="h-[1.05rem] w-[1.05rem]" strokeWidth={1.5} aria-hidden />
+                  ) : (
+                    <Eye className="h-[1.05rem] w-[1.05rem]" strokeWidth={1.5} aria-hidden />
+                  )}
                 </button>
               </div>
             </fieldset>
@@ -117,13 +122,13 @@ export default function CoupleLogin() {
               type="submit"
               data-testid="couple-login-submit"
               disabled={busy || !password.trim()}
-              className="btn-couple-classic w-full disabled:cursor-not-allowed disabled:opacity-40"
+              className="btn-couple-classic w-full"
             >
               {busy ? t.submitting : t.submit}
             </button>
           </form>
 
-          <p className="couple-classic-footnote mt-8 text-center font-cinzel text-[8px] leading-relaxed tracking-[0.2em] uppercase text-[#6B2440]/50">
+          <p className="couple-classic-footnote mt-8 text-center">
             {t.privateNote}
           </p>
         </div>

@@ -455,16 +455,16 @@ body {
 /* Hero — lumière framboise, zéro photo */
 .hero-atmosphere {
     background:
-        radial-gradient(ellipse 90% 70% at 72% 8%, rgba(237, 30, 121, 0.42), transparent 52%),
-        radial-gradient(ellipse 75% 60% at 8% 92%, rgba(92, 10, 32, 0.92), transparent 48%),
-        radial-gradient(ellipse 55% 45% at 50% 42%, rgba(155, 27, 74, 0.35), transparent 62%),
-        radial-gradient(ellipse 35% 28% at 22% 18%, rgba(232, 234, 239, 0.12), transparent 70%),
-        linear-gradient(165deg, #0d0206 0%, #2a050b 32%, #5c0a20 58%, #3b0910 82%, #1a0308 100%);
+        radial-gradient(ellipse 90% 70% at 72% 8%, rgba(255, 120, 175, 0.38), transparent 52%),
+        radial-gradient(ellipse 75% 60% at 8% 92%, rgba(155, 27, 74, 0.55), transparent 48%),
+        radial-gradient(ellipse 55% 45% at 50% 42%, rgba(237, 30, 121, 0.28), transparent 62%),
+        radial-gradient(ellipse 40% 32% at 22% 18%, rgba(255, 251, 252, 0.22), transparent 70%),
+        linear-gradient(165deg, #3b0910 0%, #5c0a20 28%, #7a1538 52%, #9b1b4a 78%, #5c0a20 100%);
 }
 
 .hero-veil {
     background:
-        linear-gradient(180deg, rgba(13, 2, 6, 0.15) 0%, transparent 35%, rgba(42, 5, 11, 0.35) 100%);
+        linear-gradient(180deg, rgba(255, 251, 252, 0.06) 0%, transparent 40%, rgba(42, 5, 11, 0.18) 100%);
 }
 
 .hero-grid {
@@ -1455,26 +1455,24 @@ body {
         flex-direction: column;
         align-items: center;
         width: 100%;
-        perspective: none;
-        transform-style: flat;
     }
 
     .faire-part-stack {
         width: 100%;
         max-width: 100%;
-        padding: clamp(1.25rem, 5.5cqi, 1.85rem) clamp(1.1rem, 5cqi, 1.5rem);
-        transform: translateY(clamp(-10px, -2.5cqi, -16px));
+        padding: clamp(1.25rem, 5.5cqi, 1.85rem) clamp(1.25rem, 5.5cqi, 1.65rem);
+        transform: translateY(clamp(-14px, -3.5cqi, -22px)) translateX(clamp(8px, 2cqi, 14px));
     }
 
     .faire-part-gold-ring {
         top: clamp(1.25rem, 5.5cqi, 1.85rem);
-        right: clamp(1.1rem, 5cqi, 1.5rem);
-        left: clamp(1.1rem, 5cqi, 1.5rem);
-        transform: rotate(-5deg) translate(0, clamp(12px, 3cqi, 20px)) scale(1.03);
+        right: clamp(1.25rem, 5.5cqi, 1.65rem);
+        left: clamp(1.25rem, 5.5cqi, 1.65rem);
+        transform: rotate(-9.25deg) translate(clamp(-16px, -4cqi, -24px), clamp(18px, 4.5cqi, 28px)) scale(1.055);
     }
 
     .faire-part-shell:not(.faire-part-shell--flat) {
-        transform: rotate(1.75deg) translate(0, 0);
+        transform: rotate(3.15deg) translate(2px, -2px);
     }
 
     .faire-part-aura {
@@ -1622,10 +1620,33 @@ input:focus, select:focus, textarea:focus {
 
 .couple-classic-card {
     position: relative;
+    color: #2a050b;
     background: linear-gradient(180deg, #fffdfb 0%, #fff5f8 48%, #fffbfc 100%);
     box-shadow:
         0 32px 80px rgba(0, 0, 0, 0.48),
         0 0 0 1px rgba(212, 175, 55, 0.28);
+}
+
+.couple-classic-card__kicker {
+    color: #5c0a20;
+    font-family: 'Cinzel', serif;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+}
+
+.couple-classic-card__title {
+    color: #2a050b;
+}
+
+.couple-classic-card__legend {
+    color: #2a050b;
+    font-family: 'Cinzel', serif;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
 }
 
 .couple-classic-card__frame {
@@ -1668,6 +1689,40 @@ input:focus, select:focus, textarea:focus {
     background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.35), transparent) bottom / 100% 1px no-repeat;
 }
 
+.couple-classic-field--with-toggle {
+    padding-right: 2.35rem;
+}
+
+.couple-classic-field-toggle {
+    position: absolute;
+    right: 0.15rem;
+    top: 0.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem;
+    border: none;
+    background: transparent;
+    color: #5c0a20;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.couple-classic-field-toggle:hover:not(:disabled) {
+    color: #ed1e79;
+}
+
+.couple-classic-field-toggle:focus-visible {
+    outline: 2px solid rgba(237, 30, 121, 0.45);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+.couple-classic-field-toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+}
+
 .couple-classic-field {
     border: none !important;
     border-radius: 0 !important;
@@ -1684,11 +1739,12 @@ input:focus, select:focus, textarea:focus {
 
 .couple-classic-field::placeholder {
     font-style: normal;
-    font-size: 0.72rem;
-    letter-spacing: 0.28em;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     font-family: 'Cinzel', serif;
-    color: rgba(107, 36, 64, 0.42);
+    color: rgba(42, 5, 11, 0.58);
 }
 
 .couple-classic-field:focus {
@@ -1706,9 +1762,9 @@ input:focus, select:focus, textarea:focus {
     border: 1px solid rgba(42, 5, 11, 0.85);
     background: transparent;
     font-family: 'Cinzel', serif;
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.34em;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
     color: #2a050b;
     transition:
@@ -1730,13 +1786,26 @@ input:focus, select:focus, textarea:focus {
     outline-offset: 3px;
 }
 
+.btn-couple-classic:disabled {
+    color: rgba(42, 5, 11, 0.42);
+    border-color: rgba(42, 5, 11, 0.38);
+    cursor: not-allowed;
+}
+
 .couple-classic-footnote {
     max-width: 16rem;
     margin-inline: auto;
+    color: rgba(42, 5, 11, 0.72);
+    font-family: 'Cinzel', serif;
+    font-size: 0.5625rem;
+    font-weight: 500;
+    line-height: 1.55;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
 }
 
 .intro-gate-vignette {
-    background: radial-gradient(ellipse 75% 70% at 50% 50%, transparent 42%, rgba(13, 2, 6, 0.55) 100%);
+    background: radial-gradient(ellipse 75% 70% at 50% 50%, transparent 48%, rgba(42, 5, 11, 0.32) 100%);
 }
 
 .intro-envelope-stage {

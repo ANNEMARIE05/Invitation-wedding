@@ -36,16 +36,16 @@ const norm = (s) =>
     .toLowerCase();
 
 const panel =
-  "rounded-md bg-white ring-1 ring-[#D4C4CA] shadow-[0_2px_10px_rgba(42,5,11,0.07)]";
+  "rounded-md bg-[#FDFAF8] ring-1 ring-[#DDD2D8] shadow-[0_2px_8px_rgba(42,5,11,0.04)]";
 
 const surfaceBtn =
-  "rounded-md bg-white ring-1 ring-[#D4C4CA] transition-all hover:ring-[#9B1B4A]/40";
+  "rounded-md bg-[#FDFAF8] ring-1 ring-[#DDD2D8] transition-all hover:ring-[#935065]/30";
 
 const labelCaps =
   "font-cinzel text-[10px] font-semibold tracking-[0.14em] uppercase text-[#4A3840]";
 
 const selectCls =
-  "mt-1.5 w-full min-w-[9.5rem] cursor-pointer rounded-md border-0 bg-[#FFFBFC] py-2.5 pl-3 pr-9 text-sm font-medium text-[#1F181A] ring-1 ring-[#D4C4CA] transition-all focus:ring-2 focus:ring-[#9B1B4A]/45 disabled:cursor-not-allowed disabled:bg-[#F5F0F2] disabled:text-[#8C7B7E]";
+  "mt-1.5 w-full min-w-[9.5rem] cursor-pointer rounded-md border-0 bg-[#FFFBFC] py-2.5 pl-3 pr-9 text-sm font-medium text-[#1F181A] ring-1 ring-[#DDD2D8] transition-all focus:ring-2 focus:ring-[#935065]/30 disabled:cursor-not-allowed disabled:bg-[#F5F0F2] disabled:text-[#8C7B7E]";
 
 const thCell =
   "border-r border-[#E0D0D6] px-4 py-3 font-cinzel text-[10px] font-semibold tracking-[0.12em] uppercase text-[#4A3840] last:border-r-0";
@@ -58,7 +58,7 @@ function PresenceBadge({ present }) {
     <span
       className={`inline-flex min-w-[2.75rem] justify-center rounded-lg px-2.5 py-1 font-cinzel text-[10px] tracking-[0.1em] uppercase ${
         present
-          ? "bg-[#9B1B4A]/12 text-[#7A1538] ring-1 ring-[#9B1B4A]/25"
+          ? "bg-[#935065]/10 text-[#865563] ring-1 ring-[#935065]/18"
           : "bg-[#F3E8EA] text-[#5C3038] ring-1 ring-[#C48B92]/45"
       }`}
     >
@@ -183,21 +183,21 @@ export default function RsvpDashboard() {
             <Link
               to="/espace-maries"
               data-testid="dashboard-back-link"
-              className="inline-flex items-center gap-1.5 font-cinzel text-[10px] font-medium tracking-[0.18em] uppercase text-[#7A1538] transition-colors hover:text-[#5C0A20]"
+              className="inline-flex items-center gap-1.5 font-cinzel text-[10px] font-medium tracking-[0.18em] uppercase text-[#865563] transition-colors hover:text-[#5A3840]"
             >
               <ArrowLeft size={14} strokeWidth={1.5} /> Espace mariés
             </Link>
-            <h1 className="mt-2 font-display text-[1.75rem] font-semibold leading-tight tracking-[-0.02em] text-[#5C0A20] sm:text-[2rem]">
+            <h1 className="mt-2 font-display text-[1.75rem] font-semibold leading-tight tracking-[-0.02em] text-[#5A3840] sm:text-[2rem]">
               Bilan des réponses
             </h1>
-            <p className="mt-0.5 font-display text-base italic text-[#6B1230]">Qui sera des nôtres</p>
+            <p className="mt-0.5 font-display text-base italic text-[#755057]">Qui sera des nôtres</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               data-testid="dashboard-refresh-button"
               onClick={load}
-              className={`inline-flex items-center gap-2 px-3.5 py-2 font-cinzel text-[10px] tracking-[0.14em] uppercase text-[#5C0A20] ${surfaceBtn}`}
+              className={`inline-flex items-center gap-2 px-3.5 py-2 font-cinzel text-[10px] tracking-[0.14em] uppercase text-[#5A3840] ${surfaceBtn}`}
             >
               <RefreshCw size={14} strokeWidth={1.5} /> Actualiser
             </button>
@@ -206,7 +206,7 @@ export default function RsvpDashboard() {
               data-testid="dashboard-export-button"
               onClick={exportCsv}
               disabled={filtered.length === 0}
-              className="inline-flex items-center gap-2 rounded-md bg-[#9B1B4A] px-3.5 py-2 font-cinzel text-[10px] tracking-[0.14em] uppercase text-white transition-all hover:bg-[#7A1538] disabled:opacity-45"
+              className="inline-flex items-center gap-2 rounded-md bg-[#935065] px-3.5 py-2 font-cinzel text-[10px] tracking-[0.14em] uppercase text-white transition-all hover:bg-[#7F5562] disabled:opacity-45"
             >
               <Download size={14} strokeWidth={1.5} /> Exporter
             </button>
@@ -216,15 +216,15 @@ export default function RsvpDashboard() {
         <div className="mt-9 grid grid-cols-2 gap-3.5 sm:grid-cols-3 sm:gap-4 xl:grid-cols-5" data-testid="dashboard-stats">
           {stats.map(({ icon: Icon, label, value, testId }) => (
             <div key={label} className={`${panel} p-4 text-center sm:p-5`} data-testid={testId}>
-              <Icon size={18} className="mx-auto text-[#A8842E]" strokeWidth={1.75} />
-              <p className="mt-2 font-display text-3xl font-semibold tabular-nums leading-none text-[#3D0818]">{value}</p>
+              <Icon size={18} className="mx-auto text-[#A89573]" strokeWidth={1.75} />
+              <p className="mt-2 font-display text-3xl font-semibold tabular-nums leading-none text-[#4A3539]">{value}</p>
               <p className={`mt-1.5 ${labelCaps}`}>{label}</p>
             </div>
           ))}
         </div>
 
         <div className={`${panel} mt-7 flex items-center gap-3 px-5 py-4`} data-testid="dashboard-regimes">
-          <UtensilsCrossed size={17} className="shrink-0 text-[#A8842E]" strokeWidth={1.75} />
+          <UtensilsCrossed size={17} className="shrink-0 text-[#A89573]" strokeWidth={1.75} />
           {regimeEntries.length === 0 ? (
             <p className="text-sm font-medium leading-snug text-[#4A3840]">Aucun régime particulier signalé.</p>
           ) : (
@@ -243,7 +243,7 @@ export default function RsvpDashboard() {
               <div className="relative mt-1.5">
                 <Search
                   size={18}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9B1B4A]/70"
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#935065]/50"
                   strokeWidth={1.5}
                 />
                 <input
@@ -252,7 +252,7 @@ export default function RsvpDashboard() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Nom, téléphone, message…"
-                  className="w-full rounded-md border-0 bg-[#FFFBFC] py-2.5 pl-10 pr-3 text-sm font-medium text-[#1F181A] placeholder:font-normal placeholder:text-[#6B5A60] ring-1 ring-[#D4C4CA] transition-all focus:ring-2 focus:ring-[#9B1B4A]/45"
+                  className="w-full rounded-md border-0 bg-[#FFFBFC] py-2.5 pl-10 pr-3 text-sm font-medium text-[#1F181A] placeholder:font-normal placeholder:text-[#6B5A60] ring-1 ring-[#DDD2D8] transition-all focus:ring-2 focus:ring-[#935065]/30"
                 />
               </div>
             </label>
@@ -289,7 +289,7 @@ export default function RsvpDashboard() {
             </label>
           </div>
           <p className="mt-4 text-sm text-[#4A3840]">
-            <span className="font-semibold tabular-nums text-[#3D0818]">{filtered.length}</span>
+            <span className="font-semibold tabular-nums text-[#4A3539]">{filtered.length}</span>
             {" "}réponse{filtered.length !== 1 ? "s" : ""} sur {rsvps.length}
           </p>
         </div>
@@ -333,7 +333,7 @@ export default function RsvpDashboard() {
                         .join(" · ")}
                     </p>
                     {r.chanson && (
-                      <p className="mt-1.5 text-sm font-medium text-[#5C0A20]">♪ {r.chanson}</p>
+                      <p className="mt-1.5 text-sm font-medium text-[#5A3840]">♪ {r.chanson}</p>
                     )}
                     {r.message && (
                       <p className="mt-1 text-[15px] font-medium leading-relaxed text-[#1F181A]">
@@ -383,7 +383,7 @@ export default function RsvpDashboard() {
                           {r.regime && r.regime !== "Aucun" ? r.regime.replace(" (préciser en message)", "") : "—"}
                         </td>
                         <td className={`${tdCell} pr-4 leading-snug text-[#1F181A]`}>
-                          {r.chanson && <p className="text-sm font-semibold text-[#5C0A20]">♪ {r.chanson}</p>}
+                          {r.chanson && <p className="text-sm font-semibold text-[#5A3840]">♪ {r.chanson}</p>}
                           {r.message && (
                             <p className="mt-1 text-[15px] font-medium leading-relaxed text-[#1F181A]">
                               « {r.message} »
@@ -407,11 +407,11 @@ export default function RsvpDashboard() {
           >
             <p className="text-sm text-[#4A3840]">
               Affichage{" "}
-              <span className="font-semibold tabular-nums text-[#3D0818]">
+              <span className="font-semibold tabular-nums text-[#4A3539]">
                 {rangeFrom}–{rangeTo}
               </span>{" "}
               sur{" "}
-              <span className="font-semibold tabular-nums text-[#3D0818]">{filtered.length}</span>
+              <span className="font-semibold tabular-nums text-[#4A3539]">{filtered.length}</span>
               {pageCount > 1 && (
                 <span className="text-[#6B5A60]">
                   {" "}
@@ -425,7 +425,7 @@ export default function RsvpDashboard() {
                 data-testid="dashboard-prev-page"
                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                 disabled={safePage === 0}
-                className={`inline-flex items-center gap-1 px-3 py-2 font-cinzel text-[10px] tracking-[0.12em] uppercase text-[#5C0A20] disabled:opacity-40 ${surfaceBtn}`}
+                className={`inline-flex items-center gap-1 px-3 py-2 font-cinzel text-[10px] tracking-[0.12em] uppercase text-[#5A3840] disabled:opacity-40 ${surfaceBtn}`}
               >
                 <ChevronLeft size={16} /> Préc.
               </button>
@@ -440,8 +440,8 @@ export default function RsvpDashboard() {
                     aria-current={p === safePage ? "page" : undefined}
                     className={`flex h-8 min-w-[2rem] items-center justify-center rounded-md font-cinzel text-[10px] tabular-nums transition-all ${
                       p === safePage
-                        ? "bg-[#9B1B4A] text-white"
-                        : "bg-white text-[#3D2A30] ring-1 ring-[#D4C4CA] hover:ring-[#9B1B4A]/35"
+                        ? "bg-[#935065] text-white"
+                        : "bg-[#FDFAF8] text-[#3D2A30] ring-1 ring-[#DDD2D8] hover:ring-[#935065]/28"
                     }`}
                   >
                     {p + 1}
@@ -455,7 +455,7 @@ export default function RsvpDashboard() {
                 data-testid="dashboard-next-page"
                 onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
                 disabled={safePage >= pageCount - 1}
-                className={`inline-flex items-center gap-1 px-3 py-2 font-cinzel text-[10px] tracking-[0.12em] uppercase text-[#5C0A20] disabled:opacity-40 ${surfaceBtn}`}
+                className={`inline-flex items-center gap-1 px-3 py-2 font-cinzel text-[10px] tracking-[0.12em] uppercase text-[#5A3840] disabled:opacity-40 ${surfaceBtn}`}
               >
                 Suiv. <ChevronRight size={16} />
               </button>
