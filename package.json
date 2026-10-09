@@ -2,6 +2,9 @@
   "name": "frontoffice",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "dependencies": {
     "@hookform/resolvers": "5.0.1",
     "@radix-ui/react-accordion": "1.2.8",
@@ -33,6 +36,10 @@
     "@radix-ui/react-tooltip": "1.2.4",
     "ajv": "^8.17.1",
     "class-variance-authority": "0.7.1",
+    "concurrently": "^9.1.2",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "clsx": "2.1.1",
     "cmdk": "1.1.1",
     "cra-template": "1.2.0",
@@ -60,8 +67,11 @@
     "zod": "3.24.4"
   },
   "scripts": {
-    "dev": "craco start",
-    "start": "craco start",
+    "dev": "concurrently -n api,web -c magenta,cyan \"npm run server\" \"npm run start:web\"",
+    "start": "npm run dev",
+    "start:web": "craco start",
+    "server": "node server/index.js",
+    "start:api": "node server/index.js",
     "build": "craco build",
     "test": "craco test",
     "refresh": "npm install && npm run build"

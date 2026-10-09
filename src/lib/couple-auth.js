@@ -1,40 +1,36 @@
-const SESSION_KEY = "wedding.couple.session";
-const SESSION_MS = 1000 * 60 * 60 * 12;
-
-export function getExpectedPassword() {
-  return (process.env.REACT_APP_COUPLE_PASSWORD || "").trim();
-}
+import { coupleLoginApi, coupleLogoutApi, getAuthStatus } from "./api";
 
 export function isPasswordConfigured() {
-  return getExpectedPassword().length > 0;
+  return true;
 }
 
-export function isCoupleAuthenticated() {
+export async function isCoupleAuthenticated() {
   try {
-    const raw = sessionStorage.getItem(SESSION_KEY);
-    if (!raw) return false;
-    const { exp } = JSON.parse(raw);
-    if (!exp || Date.now() > exp) {
-      sessionStorage.removeItem(SESSION_KEY);
-      return false;
-    }
-    return true;
+    const { authenticated } = await getAuthStatus();
+    return Boolean(authenticated);
   } catch {
     return false;
   }
 }
 
-/** @returns {{ ok: true } | { ok: false, reason: 'invalid' | 'no_password' }} */
-export function coupleLogin(password) {
-  const expected = getExpectedPassword();
-  if (!expected) return { ok: false, reason: "no_password" };
-  if (password !== expected) return { ok: false, reason: "invalid" };
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ exp: Date.now() + SESSION_MS }));
-  window.dispatchEvent(new Event("couple-auth-change"));
-  return { ok: true };
+/** @returns {Promise<{ ok: true } | { ok: false, reason: 'invalid' | 'no_password' | 'network' }>} */
+export async function coupleLogin(password) {
+  try {
+    await coupleLoginApi(password);
+    window.dispatchEvent(new Event("couple-auth-change"));
+    return { ok: true };
+  } catch (e) {
+    if (e.code === "no_password") return { ok: false, reason: "no_password" };
+    if (e.status === 401) return { ok: false, reason: "invalid" };
+    return { ok: false, reason: "network" };
+  }
 }
 
-export function coupleLogout() {
-  sessionStorage.removeItem(SESSION_KEY);
+export async function coupleLogout() {
+  try {
+    await coupleLogoutApi();
+  } catch {
+    /* ignore */
+  }
   window.dispatchEvent(new Event("couple-auth-change"));
 }

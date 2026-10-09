@@ -18,7 +18,7 @@ export const useSettings = () => {
   const dateIso = merged.date_iso;
   const d = new Date(dateIso);
   const deadline = new Date(d);
-  deadline.setMonth(deadline.getMonth() - 2);
+  deadline.setDate(deadline.getDate() - 14);
   const venueName = merged.venue_name;
   const venueAddress = merged.venue_address;
   const q = encodeURIComponent(`${venueName} ${venueAddress}`);

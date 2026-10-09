@@ -1,0 +1,14 @@
+# Déploiement API + SQLite sur Railway (https://railway.app)
+# 1. Nouveau projet → Deploy from GitHub → ce repo
+# 2. Variables : COUPLE_PASSWORD, ALLOWED_ORIGINS (= URL Vercel), DATABASE_PATH=/data/wedding.db
+# 3. Volume : monter un volume sur /data (Settings → Volumes → Mount path /data)
+# 4. Healthcheck : /api/health
+
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "npm run start:api"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"

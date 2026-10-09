@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Check, MessageCircle, Sparkles } from "lucide-react";
+import { Send, Check, MessageCircle, Sparkles, Search } from "lucide-react";
 import { toast } from "sonner";
-import { createRsvp } from "@/lib/api";
+import { ApiError, createRsvp, findRsvpByPhone } from "@/lib/api";
 import { EASE, WHATSAPP_NUMBER } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
@@ -11,62 +11,6 @@ import InviteCardModal from "./InviteCardModal";
 import LuxeCard from "./LuxeCard";
 
 const partySize = (d) => (d.present ? 1 + Number(d.accompagnants || 0) : 0);
-const RSVP_GUEST_KEY = "wedding.guest.rsvp-last";
-const RSVP_LEGACY_SESSION_KEY = "wedding.guest.rsvp-last";
-
-function isValidSavedRsvp(data) {
-  return (
-    data &&
-    typeof data === "object" &&
-    !Array.isArray(data) &&
-    typeof data.nom === "string" &&
-    data.nom.trim().length > 0 &&
-    typeof data.telephone === "string" &&
-    data.telephone.trim().length > 0 &&
-    typeof data.present === "boolean"
-  );
-}
-
-function clearGuestRsvpStorage() {
-  try {
-    localStorage.removeItem(RSVP_GUEST_KEY);
-    sessionStorage.removeItem(RSVP_LEGACY_SESSION_KEY);
-  } catch {
-    /* ignore */
-  }
-}
-
-function persistGuestRsvp(data) {
-  if (!isValidSavedRsvp(data)) return;
-  try {
-    localStorage.setItem(RSVP_GUEST_KEY, JSON.stringify(data));
-  } catch {
-    /* localStorage indisponible */
-  }
-}
-
-function loadGuestRsvp() {
-  try {
-    let raw = localStorage.getItem(RSVP_GUEST_KEY);
-    if (!raw) {
-      raw = sessionStorage.getItem(RSVP_LEGACY_SESSION_KEY);
-      if (raw) {
-        localStorage.setItem(RSVP_GUEST_KEY, raw);
-        sessionStorage.removeItem(RSVP_LEGACY_SESSION_KEY);
-      }
-    }
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (!isValidSavedRsvp(parsed)) {
-      clearGuestRsvpStorage();
-      return null;
-    }
-    return parsed;
-  } catch {
-    clearGuestRsvpStorage();
-    return null;
-  }
-}
 
 const initial = {
   nom: "",
@@ -78,6 +22,24 @@ const initial = {
   chanson: "",
   message: "",
 };
+
+function regimeIdxFromLabel(regimes, label) {
+  const i = regimes.indexOf(label);
+  return i >= 0 ? i : 0;
+}
+
+function rsvpToForm(rsvp, regimes) {
+  return {
+    nom: rsvp.nom || "",
+    telephone: rsvp.telephone || "",
+    present: Boolean(rsvp.present),
+    mode: rsvp.mode || "presentiel",
+    accompagnants: Number(rsvp.accompagnants) || 0,
+    regimeIdx: regimeIdxFromLabel(regimes, rsvp.regime),
+    chanson: rsvp.chanson || "",
+    message: rsvp.message || "",
+  };
+}
 
 function RsvpField({ label, htmlFor, children }) {
   return (
@@ -102,14 +64,14 @@ export default function Rsvp() {
   const [form, setForm] = useState(initial);
   const [sent, setSent] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [lookupPhone, setLookupPhone] = useState("");
+  const [lookupBusy, setLookupBusy] = useState(false);
+  const [editLocked, setEditLocked] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const [cardModalOpen, setCardModalOpen] = useState(false);
 
-  useEffect(() => {
-    const saved = loadGuestRsvp();
-    if (saved) setSent(saved);
-  }, []);
-
   const set = (k) => (e) => setForm({ ...form, [k]: e.target ? e.target.value : e });
+  const firstName = (name) => String(name || "").trim().split(/\s+/)[0] || "";
 
   const buildWaMessage = (d) => {
     const modeLabel = d.mode === "zoom" ? m.rsvp.onZoom : m.rsvp.inPerson;
@@ -128,8 +90,44 @@ export default function Rsvp() {
       .join("\n");
   };
 
+  const lookup = async (e) => {
+    e?.preventDefault?.();
+    const phone = lookupPhone.trim() || form.telephone.trim();
+    if (!phone) return;
+    setLookupBusy(true);
+    try {
+      const result = await findRsvpByPhone(phone);
+      if (!result?.rsvp) {
+        setForm({ ...initial, telephone: phone });
+        setIsUpdate(false);
+        setEditLocked(false);
+        toast.message(m.rsvp.lookupNotFound);
+        return;
+      }
+      setEditLocked(Boolean(result.edit_locked));
+      if (result.edit_locked) {
+        setSent(result.rsvp);
+        setIsUpdate(false);
+        toast.error(m.rsvp.lookupLocked);
+        return;
+      }
+      setForm(rsvpToForm(result.rsvp, m.rsvp.regimes));
+      setIsUpdate(true);
+      setSent(null);
+      toast.success(m.rsvp.lookupFound(firstName(result.rsvp.nom)));
+    } catch {
+      toast.error(m.rsvp.toastErr);
+    } finally {
+      setLookupBusy(false);
+    }
+  };
+
   const submit = async (e) => {
     e.preventDefault();
+    if (editLocked && isUpdate) {
+      toast.error(m.rsvp.toastLocked);
+      return;
+    }
     setLoading(true);
     try {
       const payload = {
@@ -138,22 +136,47 @@ export default function Rsvp() {
         accompagnants: Number(form.accompagnants),
       };
       delete payload.regimeIdx;
-      const data = await createRsvp(payload);
+      const data = await createRsvp(payload, { update: isUpdate });
       setSent(data);
-      persistGuestRsvp(data);
+      setIsUpdate(true);
+      setEditLocked(false);
       if (data.present && data.mode === "presentiel") {
         setCardModalOpen(true);
       }
       toast.success(data.present ? m.rsvp.toastPresent : m.rsvp.toastAbsent);
-    } catch {
+    } catch (err) {
+      if (err instanceof ApiError) {
+        if (err.code === "rsvp_locked") {
+          setEditLocked(true);
+          toast.error(m.rsvp.toastLocked);
+          return;
+        }
+        if (err.code === "rsvp_exists" && err.payload?.existing) {
+          setForm(rsvpToForm(err.payload.existing, m.rsvp.regimes));
+          setIsUpdate(true);
+          toast.message(m.rsvp.toastExists);
+          return;
+        }
+      }
       toast.error(m.rsvp.toastErr);
     } finally {
       setLoading(false);
     }
   };
 
-  const firstName = (name) => String(name || "").trim().split(/\s+/)[0] || "";
-  const confirmed = sent && isValidSavedRsvp(sent) ? sent : null;
+  const startEdit = () => {
+    if (editLocked) {
+      toast.error(m.rsvp.toastLocked);
+      return;
+    }
+    if (sent) {
+      setForm(rsvpToForm(sent, m.rsvp.regimes));
+      setIsUpdate(true);
+      setSent(null);
+    }
+  };
+
+  const confirmed = sent;
 
   return (
     <section
@@ -185,6 +208,18 @@ export default function Rsvp() {
                         ? m.rsvp.cardThanks(confirmed.nom, partySize(confirmed))
                         : m.rsvp.absentThanks}
                   </p>
+
+                  {!editLocked ? (
+                    <button
+                      type="button"
+                      onClick={startEdit}
+                      className="mt-5 text-sm text-[#4A0E17] underline decoration-[#D4AF37]/50 underline-offset-4 hover:decoration-[#D4AF37]"
+                    >
+                      {m.rsvp.editMyRsvp}
+                    </button>
+                  ) : (
+                    <p className="mx-auto mt-5 max-w-md text-xs text-[#5C4F51]/90">{m.rsvp.lookupLocked}</p>
+                  )}
 
                   {confirmed.present && confirmed.mode === "presentiel" ? (
                     <>
@@ -243,6 +278,31 @@ export default function Rsvp() {
               transition={{ duration: 0.9, ease: EASE }}
             >
               <Frame>
+                <div className="mb-5 rounded-2xl border border-[#D4AF37]/25 bg-[#FFF8FA]/80 px-4 py-4">
+                  <p className="font-cinzel text-[10px] uppercase tracking-[0.2em] text-[#9B1B4A]">{m.rsvp.lookupTitle}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#5C4F51]">{m.rsvp.lookupHint}</p>
+                  <form onSubmit={lookup} className="mt-3 flex flex-col gap-2 sm:flex-row">
+                    <input
+                      type="tel"
+                      inputMode="tel"
+                      value={lookupPhone}
+                      onChange={(e) => setLookupPhone(e.target.value)}
+                      placeholder={m.rsvp.phonePh}
+                      className="rsvp-input flex-1"
+                      data-testid="rsvp-lookup-phone"
+                    />
+                    <button
+                      type="submit"
+                      disabled={lookupBusy || !lookupPhone.trim()}
+                      className="inline-flex items-center justify-center gap-2 rounded-full border border-[#4A0E17]/20 bg-white px-5 py-2.5 font-cinzel text-[10px] uppercase tracking-[0.16em] text-[#4A0E17] disabled:opacity-50"
+                      data-testid="rsvp-lookup-submit"
+                    >
+                      <Search size={14} />
+                      {lookupBusy ? m.rsvp.lookupBusy : m.rsvp.lookupAction}
+                    </button>
+                  </form>
+                </div>
+
                 <form onSubmit={submit} className="space-y-3.5" data-testid="rsvp-form">
                   <div className="grid items-start gap-3.5 sm:grid-cols-2">
                     <RsvpField label={m.rsvp.name} htmlFor="rsvp-nom">
@@ -269,6 +329,9 @@ export default function Rsvp() {
                         placeholder={m.rsvp.phonePh}
                         value={form.telephone}
                         onChange={set("telephone")}
+                        onBlur={() => {
+                          if (form.telephone.trim() && !lookupPhone) setLookupPhone(form.telephone);
+                        }}
                         className="rsvp-input"
                       />
                     </RsvpField>
@@ -381,7 +444,7 @@ export default function Rsvp() {
                     className="animate-blink inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#4A0E17] px-7 py-3.5 font-cinzel text-xs uppercase tracking-[0.22em] text-[#FAF7F2] transition-colors duration-300 hover:bg-[#6B1724] disabled:opacity-60"
                   >
                     <Send size={15} className="text-[#D4AF37]" />
-                    {loading ? m.rsvp.submitting : m.rsvp.submit}
+                    {loading ? m.rsvp.submitting : isUpdate ? m.rsvp.submitUpdate : m.rsvp.submit}
                   </button>
                 </form>
               </Frame>

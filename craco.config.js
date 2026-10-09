@@ -76,5 +76,15 @@ module.exports = {
       return webpackConfig;
     },
   },
-  devServer: (devServerConfig) => makeDevServerV5Compatible(devServerConfig),
+  devServer: (devServerConfig) =>
+    makeDevServerV5Compatible({
+      ...devServerConfig,
+      proxy: [
+        {
+          context: ["/api"],
+          target: "http://localhost:3001",
+          changeOrigin: true,
+        },
+      ],
+    }),
 };

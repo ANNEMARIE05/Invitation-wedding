@@ -10,5 +10,6 @@ export const fileUrl = (path) => {
 
 export const usePhoto = (slot, fallback) => {
   const map = useContext(PhotosContext);
-  return map[slot] ? fileUrl(map[slot]) : fallback;
+  const custom = map && typeof map === "object" ? map[slot] : undefined;
+  return custom ? fileUrl(custom) : fallback;
 };

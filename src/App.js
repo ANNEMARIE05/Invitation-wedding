@@ -35,14 +35,10 @@ import CoupleSpace from "@/components/invite/CoupleSpace";
 import RequireCoupleAuth from "@/components/invite/RequireCoupleAuth";
 import { SETTINGS_CHANGE_EVENT } from "@/lib/invite-defaults";
 import { useStoreSync } from "@/lib/useStoreSync";
-import { ensureStoreReady } from "@/lib/storage";
 
 /** Paramètres partagés (espace mariés & pages admin hors invitation). */
 function SharedSettings({ children }) {
   const [settings, setSettings] = useState(null);
-  useEffect(() => {
-    ensureStoreReady();
-  }, []);
   useEffect(() => {
     const load = () => getSettings().then(setSettings).catch(() => {});
     load();
@@ -85,9 +81,13 @@ function Invitation() {
   const [photos, setPhotos] = useState({});
   const [settings, setSettings] = useState(null);
 
+  const loadPhotos = () =>
+    getPhotos()
+      .then((data) => setPhotos(data && typeof data === "object" && !Array.isArray(data) ? data : {}))
+      .catch(() => setPhotos({}));
+
   useEffect(() => {
-    ensureStoreReady();
-    getPhotos().then(setPhotos).catch(() => {});
+    loadPhotos();
     getSettings().then(setSettings).catch(() => {});
   }, []);
 
@@ -98,7 +98,7 @@ function Invitation() {
   }, []);
 
   useStoreSync(["settings", "photos"], () => {
-    getPhotos().then(setPhotos).catch(() => {});
+    loadPhotos();
     getSettings().then(setSettings).catch(() => {});
   });
 

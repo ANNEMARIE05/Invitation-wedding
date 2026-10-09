@@ -20,20 +20,21 @@ export default function CoupleLogin() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     if (busy) return;
     setError("");
     setBusy(true);
-    const result = coupleLogin(password.trim());
+    const result = await coupleLogin(password.trim());
     setBusy(false);
     if (result.ok) {
-      refresh();
+      await refresh();
       const dest = location.state?.from || "/espace-maries";
       navigate(dest, { replace: true });
       return;
     }
     if (result.reason === "no_password") setError(t.errConfig);
+    else if (result.reason === "network") setError(t.errNetwork || t.errInvalid);
     else setError(t.errInvalid);
     setPassword("");
   };

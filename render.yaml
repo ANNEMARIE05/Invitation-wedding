@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: invitation-wedding-api
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run start:api
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_PATH
+        value: ./data/wedding.db
+      - key: ALLOWED_ORIGINS
+        value: https://invitation-wedding-eta.vercel.app
+      - key: COUPLE_PASSWORD
+        value: Hesed-MS-13

@@ -56,7 +56,9 @@ export default function Guestbook() {
   const next = () => setIndex((i) => (i + 1) % messages.length);
 
   const reloadMessages = useCallback(() => {
-    getGuestbook().then(setMessages).catch(() => {});
+    getGuestbook()
+      .then((rows) => setMessages(Array.isArray(rows) ? rows : []))
+      .catch(() => setMessages([]));
   }, []);
 
   useEffect(() => {

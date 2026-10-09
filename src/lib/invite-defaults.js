@@ -104,7 +104,7 @@ export function resolvePhotoSlot(slot, uploads = {}) {
   return { src: def?.fallback || "", customized: false };
 }
 
-/** Payload localStorage depuis le formulaire admin. */
+/** Payload SQLite depuis le formulaire admin. */
 export function settingsFromForm(form) {
   return {
     bride: form.bride.trim(),
@@ -148,7 +148,7 @@ export function formFromSettings(stored) {
   };
 }
 
-/** Valeurs enregistrables (localStorage) alignées sur invite-data.js */
+/** Valeurs enregistrables (SQLite) alignées sur invite-data.js */
 export function codeDefaultSettings() {
   return settingsFromForm(formFromSettings({}));
 }
