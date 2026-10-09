@@ -14,6 +14,6 @@ services:
       - key: DATABASE_PATH
         value: ./data/wedding.db
       - key: ALLOWED_ORIGINS
-        value: https://invitation-wedding-eta.vercel.app
+        value: https://invitation-wedding-eta.vercel.app,https://stephane-et-marie.site,https://www.stephane-et-marie.site
       - key: COUPLE_PASSWORD
         value: Hesed-MS-13
