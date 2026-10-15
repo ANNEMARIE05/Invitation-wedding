@@ -104,9 +104,9 @@ export const scrollToId = (href) => {
 
 /** Bande-son YouTube (iframe cachée — contrôles via MusicPlayer) */
 export const WEDDING_SONG = {
-  youtubeId: "2Vv-BfVoq4g",
-  startSeconds: 20,
-  track: "Perfect",
-  artist: "Ed Sheeran",
-  thumbUrl: "https://i.ytimg.com/vi/2Vv-BfVoq4g/hqdefault.jpg",
+  youtubeId: "hLQl3WQQoQ0",
+  startSeconds: 14,
+  track: "Someone Like You",
+  artist: "Adele",
+  thumbUrl: "https://i.ytimg.com/vi/hLQl3WQQoQ0/hqdefault.jpg",
 };
