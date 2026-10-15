@@ -104,9 +104,9 @@ export const scrollToId = (href) => {
 
 /** Bande-son YouTube (iframe cachée — contrôles via MusicPlayer) */
 export const WEDDING_SONG = {
-  youtubeId: "5UrUEt-Evno",
-  startSeconds: 0,
-  track: "If It Is Love",
-  artist: "Laura Alden",
-  thumbUrl: "https://i.ytimg.com/vi/5UrUEt-Evno/hqdefault.jpg",
+  youtubeId: "2Vv-BfVoq4g",
+  startSeconds: 20,
+  track: "Perfect",
+  artist: "Ed Sheeran",
+  thumbUrl: "https://i.ytimg.com/vi/2Vv-BfVoq4g/hqdefault.jpg",
 };
