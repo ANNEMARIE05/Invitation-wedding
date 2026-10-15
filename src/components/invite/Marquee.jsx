@@ -2,9 +2,9 @@ import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 
 export default function Marquee() {
-  const { bride, groom, dateShort, venue } = useSettings();
+  const { coupleLabel, dateShort, venue } = useSettings();
   const { m } = useI18n();
-  const items = [m.marquee.saveTheDate, dateShort, venue.name, `${bride} & ${groom}`];
+  const items = [m.marquee.saveTheDate, dateShort, venue.name, coupleLabel];
   const row = [...items, ...items];
   return (
     <div className="relative overflow-hidden border-y border-[#ED1E79]/12 bg-gradient-to-r from-[#FFF0F4] via-[#FFFBFC] to-[#FFF0F4] py-4 backdrop-blur-sm" data-testid="marquee-ribbon">

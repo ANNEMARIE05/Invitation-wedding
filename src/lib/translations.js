@@ -2,10 +2,10 @@
 export const messages = {
   fr: {
     seo: {
-      title: (b, g) => `${b} & ${g} — Mariage`,
-      description: (b, g) =>
-        `Invitation au mariage de ${b} & ${g} — vendredi 4 décembre 2026 à Cocody. Mariage civil, discours, collation ou Zoom. Confirmation de présence.`,
-      eventName: (b, g) => `Mariage de ${b} & ${g}`,
+      title: (g, b) => `${g} et ${b} — Mariage`,
+      description: (g, b) =>
+        `Invitation au mariage de ${g} et ${b} — vendredi 4 décembre 2026 à Cocody. Mariage civil, discours, collation ou Zoom. Confirmation de présence.`,
+      eventName: (g, b) => `Mariage de ${g} et ${b}`,
       eventDescription:
         "Mariage civil à l'hôtel communal de Cocody, discours à la Salle du Royaume et collation — présentiel ou Zoom.",
     },
@@ -45,6 +45,11 @@ export const messages = {
       persons: "personnes",
       joy: "Avec joie ✦",
       at: "à",
+      /** Contenu strict de la carte faire-part (aucun autre texte d’événement). */
+      cardEvents: [
+        { time: "12h15", place: "Hôtel communal de Cocody" },
+        { time: "13h30", place: "Salle du Royaume — Cocody Danga" },
+      ],
       downloadBusy: "Préparation…",
       download: "Télécharger ma carte",
       downloadOk: "Carte téléchargée.",
@@ -57,13 +62,13 @@ export const messages = {
     verses: {
       chapter: "Paroles du cœur",
       title: "Nos Versets",
-      script: "Berry Love — une touche d'argenté",
+      script: "",
       items: [
         {
           who: "Stéphane",
           lines: [
             { text: "Ma belle Marie", quote: false },
-            { text: "« Femme extrêmement favorisée, Jéhova est avec toi »", quote: true },
+            { text: "« Femme extrêmement favorisée, Jéhovah est avec toi »", quote: true },
           ],
           ref: "Luc 1 : 28",
         },
@@ -73,7 +78,7 @@ export const messages = {
             { text: "Mon cœur est rempli d'amour,", quote: false },
             { text: "« J'ai trouvé celui que j'aime. »", quote: true },
           ],
-          ref: "Cantique des Cantiques 3 : 4",
+          ref: "Chant de Salomon 3 : 4",
         },
       ],
     },
@@ -88,7 +93,7 @@ export const messages = {
       googleCalendar: "Google Agenda",
       icsOk: "Événement téléchargé — ouvrez-le pour l'ajouter à votre calendrier.",
       icsDescription: "Mariage civil, discours de mariage et collation — Cocody.",
-      icsSummary: (b, g) => `Mariage de ${b} & ${g}`,
+      icsSummary: (g, b) => `Mariage de ${g} et ${b}`,
     },
     program: {
       chapter: "Déroulé",
@@ -98,13 +103,15 @@ export const messages = {
           time: "12h15",
           title: "Mariage civil",
           text: "Hôtel communal de Cocody — célébration officielle du mariage civil.",
+          cardWhere: "Hôtel communal de Cocody",
           sticker: "civil",
         },
         {
           time: "13h30",
           title: "Discours de mariage",
           text: "Salle du Royaume des Témoins de Jéhovah de Cocody Danga.",
-          sticker: "church",
+          cardWhere: "Salle du Royaume — Cocody Danga",
+          sticker: "civil",
         },
         {
           time: "Après la cérémonie",
@@ -151,12 +158,23 @@ export const messages = {
       chapter: "Couleurs & Tenues",
       title: "Berry Love",
       script: "framboise, bordeaux & argent",
-      paletteTitle: "Palette du mariage",
-      paletteText: "Habillez-vous dans ces tonalités — une touche d'argent pour faire briller la fête.",
+      paletteTitle: "Code couleur",
+      paletteText:
+        "Costume, robe, combinaison, polo ou imprimé : portez ce dans quoi vous vous sentez élégants. L’essentiel, c’est de reprendre les couleurs de la session — framboise, bordeaux, rose poudré, crème ou beige — pour que nous formions un même tableau ce jour-là.",
+      paletteRibbonCaption: "Les tons qui marquent la session",
+      inspirationAlt:
+        "Collage d’invités en tenues variées — robes, costumes, polos — dans les couleurs framboise, bordeaux, rose et crème",
       colorLabels: { berry: "Framboise", wine: "Bordeaux", blush: "Rose poudré", silver: "Argenté" },
+      colorHints: {
+        berry: "Robe, costume, cravate ou foulard dans ce rose profond.",
+        wine: "Parfait en costume, robe longue ou manteau bordeaux.",
+        blush: "Douceur : robe claire, chemise ou accessoire rose pâle.",
+        silver: "Bijoux, chaussures, pochette ou ceinture — en accent, pas obligatoire.",
+      },
+      colorRoles: { berry: "Couleur phare", wine: "Couleur phare", blush: "Alternative douce", silver: "Accent" },
       dress: [
-        { title: "Tenue élégante", text: "Costume, robe ou tenue de cérémonie soignée." },
-        { title: "Touches d'argent", text: "Accessoires, bijoux ou détails argentés bienvenus." },
+        { title: "Liberté de style", text: "Robe longue, costume, combinaison, polo, imprimé floral ou smart casual : tout est possible, tant que c’est soigné." },
+        { title: "Couleurs de la session", text: "Framboise, bordeaux, rose poudré, crème ou beige en fil rouge. Vert olive, marine ou noir en complément ; une touche d’argent reste la bienvenue." },
       ],
     },
     rsvp: {
@@ -212,7 +230,7 @@ export const messages = {
       toastLocked: "Les modifications sont closes — contactez les mariés si besoin.",
       toastExists: "Ce numéro est déjà enregistré — modifiez votre réponse ci-dessous.",
       regimes: ["Aucun", "Végétarien", "Sans gluten", "Allergies (préciser en message)"],
-      waHeader: "Confirmation de présence — Mariage Marie & Stéphane",
+      waHeader: "Confirmation de présence — Mariage Stéphane et Marie",
       waName: "Nom",
       waPhone: "WhatsApp",
       waPresent: "Présence",
@@ -299,10 +317,10 @@ export const messages = {
   },
   en: {
     seo: {
-      title: (b, g) => `${b} & ${g} — Wedding`,
-      description: (b, g) =>
-        `Wedding invitation for ${b} & ${g} — Friday, 4 December 2026 in Cocody. Civil ceremony, wedding talk, reception or Zoom. RSVP.`,
-      eventName: (b, g) => `Wedding of ${b} & ${g}`,
+      title: (g, b) => `${g} & ${b} — Wedding`,
+      description: (g, b) =>
+        `Wedding invitation for ${g} & ${b} — Friday, 4 December 2026 in Cocody. Civil ceremony, wedding talk, reception or Zoom. RSVP.`,
+      eventName: (g, b) => `Wedding of ${g} & ${b}`,
       eventDescription:
         "Civil ceremony at Cocody town hall, wedding discourse at the Kingdom Hall, then reception — in person or on Zoom.",
     },
@@ -342,6 +360,10 @@ export const messages = {
       persons: "guests",
       joy: "With joy ✦",
       at: "at",
+      cardEvents: [
+        { time: "12:15 PM", place: "Cocody town hall" },
+        { time: "1:30 PM", place: "Kingdom Hall — Cocody Danga" },
+      ],
       downloadBusy: "Preparing…",
       download: "Download my card",
       downloadOk: "Card downloaded.",
@@ -354,7 +376,7 @@ export const messages = {
     verses: {
       chapter: "Words from the heart",
       title: "Our Verses",
-      script: "Berry Love — with a touch of silver",
+      script: "",
       items: [
         {
           who: "Stéphane",
@@ -385,7 +407,7 @@ export const messages = {
       googleCalendar: "Google Calendar",
       icsOk: "Event downloaded — open the file to add it to your calendar.",
       icsDescription: "Civil ceremony, wedding discourse and reception — Cocody.",
-      icsSummary: (b, g) => `Wedding of ${b} & ${g}`,
+      icsSummary: (g, b) => `Wedding of ${g} & ${b}`,
     },
     program: {
       chapter: "Schedule",
@@ -395,13 +417,15 @@ export const messages = {
           time: "12:15 PM",
           title: "Civil ceremony",
           text: "Cocody town hall — official civil marriage celebration.",
+          cardWhere: "Cocody town hall",
           sticker: "civil",
         },
         {
           time: "1:30 PM",
           title: "Wedding discourse",
           text: "Kingdom Hall of Jehovah's Witnesses, Cocody Danga.",
-          sticker: "church",
+          cardWhere: "Kingdom Hall — Cocody Danga",
+          sticker: "civil",
         },
         {
           time: "After the ceremony",
@@ -448,12 +472,23 @@ export const messages = {
       chapter: "Colours & Attire",
       title: "Berry Love",
       script: "berry, burgundy & silver",
-      paletteTitle: "Wedding palette",
-      paletteText: "Dress in these tones — a touch of silver to make the celebration shine.",
+      paletteTitle: "Dress code colours",
+      paletteText:
+        "Suit, dress, jumpsuit, polo or floral print — wear what makes you feel elegant. What matters is picking the session colours — berry, burgundy, blush, cream or beige — so we look united on the day.",
+      paletteRibbonCaption: "The shades that mark the session",
+      inspirationAlt:
+        "Collage of guests in varied outfits — dresses, suits, polos — in berry, burgundy, blush and cream tones",
       colorLabels: { berry: "Berry", wine: "Burgundy", blush: "Blush pink", silver: "Silver" },
+      colorHints: {
+        berry: "Dress, suit, tie or scarf in this rich berry tone.",
+        wine: "Great for suits, long dresses or a burgundy coat.",
+        blush: "Softer option: light dress, shirt or blush accessory.",
+        silver: "Jewellery, shoes, pocket square or belt — accent only, optional.",
+      },
+      colorRoles: { berry: "Hero colour", wine: "Hero colour", blush: "Soft option", silver: "Accent" },
       dress: [
-        { title: "Elegant attire", text: "Suit, dress or refined ceremony outfit." },
-        { title: "Silver accents", text: "Silver accessories, jewellery or details welcome." },
+        { title: "Your style", text: "Long dress, suit, jumpsuit, polo, floral print or smart casual — all welcome, as long as it’s polished." },
+        { title: "Session colours", text: "Berry, burgundy, blush, cream or beige as your thread. Olive, navy or black work too; a touch of silver is welcome." },
       ],
     },
     rsvp: {
@@ -509,7 +544,7 @@ export const messages = {
       toastLocked: "Updates are closed — please contact the couple if needed.",
       toastExists: "This number is already registered — update your reply below.",
       regimes: ["None", "Vegetarian", "Gluten-free", "Allergies (specify in message)"],
-      waHeader: "RSVP — Marie & Stéphane Wedding",
+      waHeader: "RSVP — Stéphane & Marie Wedding",
       waName: "Name",
       waPhone: "WhatsApp",
       waPresent: "Attending",

@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Play, Pause, Plus, Minus, Music } from "lucide-react";
 
-const VIDEO_ID = "rtOvBOTyX00";
+const VIDEO_ID = "5UrUEt-Evno";
+const START_SECONDS = 0;
 
 export default function MusicPlayer({ opened }) {
   const playerRef = useRef(null);
@@ -17,6 +18,7 @@ export default function MusicPlayer({ opened }) {
     if (!wantPlay.current || userPaused.current || !player) return;
     if (typeof player.unMute === "function") player.unMute();
     if (typeof player.setVolume === "function") player.setVolume(volumeRef.current);
+    if (typeof player.seekTo === "function") player.seekTo(START_SECONDS, true);
     if (typeof player.playVideo === "function") player.playVideo();
   };
 
@@ -33,7 +35,7 @@ export default function MusicPlayer({ opened }) {
       try {
         playerRef.current = new window.YT.Player("yt-hidden-player", {
           videoId: VIDEO_ID,
-          playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: VIDEO_ID, playsinline: 1 },
+          playerVars: { autoplay: 0, controls: 0, playsinline: 1, start: START_SECONDS },
           events: {
             onReady: (e) => {
               if (!alive) return;
@@ -43,6 +45,10 @@ export default function MusicPlayer({ opened }) {
             },
             onStateChange: (e) => {
               if (!alive) return;
+              if (e.data === window.YT.PlayerState.ENDED) {
+                e.target.seekTo(START_SECONDS, true);
+                e.target.playVideo();
+              }
               setPlaying(e.data === window.YT.PlayerState.PLAYING);
             },
           },

@@ -18,7 +18,7 @@ export default function CoupleAuthShell({
   narrow = false,
   showCoupleBanner = true,
 }) {
-  const { bride, groom, initials } = useSettings();
+  const { coupleLabel, initials } = useSettings();
 
   useEffect(() => {
     if (!narrow) return undefined;
@@ -98,7 +98,7 @@ export default function CoupleAuthShell({
               className="mb-4 shrink-0 text-center sm:mb-5"
             >
               <p className="font-cinzel text-[9px] tracking-[0.32em] uppercase text-[#C48B92] sm:text-[10px] sm:tracking-[0.42em]">
-                {bride} & {groom}
+                {coupleLabel}
               </p>
             </motion.div>
           )}

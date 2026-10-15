@@ -6,6 +6,9 @@ import Chapter from "./Chapter";
 import LuxeCard from "./LuxeCard";
 import ProgramSticker from "./ProgramSticker";
 
+/** Évite une coupure de ligne au milieu de « Jéhovah » sur mobile. */
+const protectJehovah = (text) => text.replace(/Jéhovah/g, "Jéh\u2060ovah");
+
 export default function Program() {
   const { m } = useI18n();
   const { dateLabel } = useSettings();
@@ -42,7 +45,7 @@ export default function Program() {
                   ) : null}
                   <p className="font-display text-2xl font-semibold italic text-[#9B1B4A] lining-nums tabular-nums sm:text-3xl">{p.time}</p>
                   <h3 className="mt-1 font-display text-xl font-semibold text-[#2A050B] sm:text-2xl">{p.title}</h3>
-                  <p className="mt-2 text-sm font-medium leading-relaxed text-[#4A1025] sm:text-base">{p.text}</p>
+                  <p className="mt-2 text-sm font-medium leading-relaxed text-[#4A1025] sm:text-base">{protectJehovah(p.text)}</p>
                 </LuxeCard>
               </motion.div>
             ))}

@@ -171,6 +171,59 @@ body {
     background: radial-gradient(circle, rgba(232, 234, 239, 0.22) 0%, transparent 72%);
 }
 
+/* Coins floraux (PNG fond noir) */
+.hero-floral-corner,
+.faire-part-floral-corner {
+    pointer-events: none;
+    position: absolute;
+    z-index: 15;
+    height: auto;
+    mix-blend-mode: screen;
+    user-select: none;
+}
+
+.hero-floral-corner {
+    width: min(46vw, 300px);
+    opacity: 0.9;
+    filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.35));
+}
+
+.hero-floral-corner--tl {
+    top: -0.5rem;
+    left: -0.25rem;
+}
+
+.hero-floral-corner--br {
+    right: -0.25rem;
+    bottom: -0.5rem;
+}
+
+.faire-part-floral-corner {
+    width: min(38cqi, 140px);
+    opacity: 0.88;
+    z-index: 4;
+}
+
+.faire-part-floral-corner--tl {
+    top: 0;
+    left: 0;
+}
+
+.faire-part-floral-corner--br {
+    right: 0;
+    bottom: 0;
+}
+
+@media (min-width: 640px) {
+    .hero-floral-corner {
+        width: min(38vw, 340px);
+    }
+
+    .faire-part-floral-corner {
+        width: min(34cqi, 168px);
+    }
+}
+
 @keyframes petal-fall {
     0% { transform: translate3d(0, -6vh, 0) rotate(0deg); opacity: 0; }
     10% { opacity: 0.85; }
@@ -213,8 +266,14 @@ body {
 }
 
 @keyframes sparkle-twinkle {
-    0%, 100% { opacity: 0.15; transform: scale(0.8); }
-    50% { opacity: 1; transform: scale(1.15); }
+    0%, 100% {
+        opacity: 0.15;
+        transform: scale(calc(var(--sparkle-scale, 1) * 0.8));
+    }
+    50% {
+        opacity: 1;
+        transform: scale(calc(var(--sparkle-scale, 1) * 1.15));
+    }
 }
 
 @keyframes aura-pulse {
@@ -275,6 +334,252 @@ body {
     border-radius: 50%;
     box-shadow: 0 0 12px rgba(255, 214, 224, 0.9), 0 0 4px rgba(201, 169, 98, 0.8);
     animation: sparkle-twinkle 2.8s ease-in-out infinite;
+    transform: scale(var(--sparkle-scale, 1));
+}
+
+.sparkle-star--diamond {
+    width: 7px;
+    height: 7px;
+    border-radius: 1px;
+    background: linear-gradient(145deg, #fff 0%, #e8d5a8 45%, #c9a962 100%);
+    box-shadow: 0 0 14px rgba(232, 213, 168, 0.95), 0 0 6px rgba(255, 255, 255, 0.75);
+    animation: sparkle-twinkle-diamond 3.2s ease-in-out infinite;
+}
+
+.sparkle-field--on-light .sparkle-star {
+    background: linear-gradient(135deg, #fff 0%, #e8d5a8 42%, #ed1e79 100%);
+    box-shadow: 0 0 10px rgba(201, 169, 98, 0.75), 0 0 4px rgba(237, 30, 121, 0.35);
+}
+
+.sparkle-field--on-light .sparkle-star--diamond {
+    background: linear-gradient(145deg, #ffd6e0 0%, #e8d5a8 50%, #9b1b4a 100%);
+}
+
+@keyframes sparkle-twinkle-diamond {
+    0%, 100% {
+        opacity: 0.2;
+        transform: scale(calc(var(--sparkle-scale, 1) * 0.75)) rotate(45deg);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(calc(var(--sparkle-scale, 1) * 1.2)) rotate(45deg);
+    }
+}
+
+/* Grand Jour — cadre & cœur chic */
+.bigday-panel-frame {
+    position: relative;
+    padding: clamp(1.1rem, 4vw, 1.75rem);
+}
+
+@media (max-width: 639px) {
+    .bigday-panel-frame {
+        padding: 0.45rem;
+    }
+
+    .bigday-countdown__unit {
+        min-width: clamp(2.35rem, 21vw, 3.15rem);
+    }
+
+    .bigday-countdown__value {
+        font-size: clamp(1.45rem, 5.2vw, 1.85rem);
+    }
+
+    .bigday-countdown__sep {
+        font-size: clamp(1.45rem, 5.2vw, 1.85rem);
+    }
+
+    .bigday-countdown__label {
+        font-size: clamp(7px, 2vw, 8px);
+        letter-spacing: 0.1em;
+    }
+}
+
+.bigday-panel-corner {
+    position: absolute;
+    width: clamp(2.75rem, 10vw, 4.25rem);
+    height: clamp(2.75rem, 10vw, 4.25rem);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.bigday-panel-corner--tl {
+    top: 0;
+    left: 0;
+    border-top: 2px solid rgba(232, 213, 168, 0.92);
+    border-left: 2px solid rgba(232, 213, 168, 0.92);
+}
+
+.bigday-panel-corner--tr {
+    top: 0;
+    right: 0;
+    border-top: 2px solid rgba(255, 214, 224, 0.88);
+    border-right: 2px solid rgba(255, 214, 224, 0.88);
+}
+
+.bigday-panel-corner--bl {
+    bottom: 0;
+    left: 0;
+    border-bottom: 2px solid rgba(255, 214, 224, 0.75);
+    border-left: 2px solid rgba(255, 214, 224, 0.75);
+}
+
+.bigday-panel-corner--br {
+    bottom: 0;
+    right: 0;
+    border-bottom: 2px solid rgba(201, 169, 98, 0.9);
+    border-right: 2px solid rgba(201, 169, 98, 0.9);
+}
+
+.bigday-panel-corner::after {
+    content: "◆";
+    position: absolute;
+    font-family: 'Cinzel', serif;
+    font-size: 0.45rem;
+    letter-spacing: 0;
+    color: rgba(232, 213, 168, 0.95);
+    text-shadow: 0 0 10px rgba(255, 214, 224, 0.65);
+}
+
+.bigday-panel-corner--tl::after { top: 0.35rem; left: 0.45rem; }
+.bigday-panel-corner--tr::after { top: 0.35rem; right: 0.45rem; }
+.bigday-panel-corner--bl::after { bottom: 0.35rem; left: 0.45rem; color: rgba(255, 214, 224, 0.9); }
+.bigday-panel-corner--br::after { bottom: 0.35rem; right: 0.45rem; }
+
+.bigday-card {
+    position: relative;
+    isolation: isolate;
+}
+
+.bigday-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 2px;
+    padding: 1.5px;
+    background: linear-gradient(
+        135deg,
+        rgba(201, 169, 98, 0.95) 0%,
+        rgba(255, 214, 224, 0.85) 35%,
+        rgba(122, 21, 56, 0.55) 70%,
+        rgba(201, 169, 98, 0.9) 100%
+    );
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 3;
+    animation: bigday-border-glimmer 5.5s ease-in-out infinite;
+}
+
+@keyframes bigday-border-glimmer {
+    0%, 100% { opacity: 0.78; filter: brightness(0.95); }
+    50% { opacity: 1; filter: brightness(1.08); }
+}
+
+.bigday-card::after {
+    content: "";
+    position: absolute;
+    inset: 0.85rem;
+    border: 1px solid rgba(122, 21, 56, 0.14);
+    border-radius: 1px;
+    pointer-events: none;
+    z-index: 3;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+}
+
+.bigday-card-corner {
+    position: absolute;
+    width: 1.65rem;
+    height: 1.65rem;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.bigday-card-corner--tl {
+    top: 0.55rem;
+    left: 0.55rem;
+    border-top: 1.5px solid rgba(201, 169, 98, 0.85);
+    border-left: 1.5px solid rgba(201, 169, 98, 0.85);
+}
+
+.bigday-card-corner--tr {
+    top: 0.55rem;
+    right: 0.55rem;
+    border-top: 1.5px solid rgba(155, 27, 74, 0.45);
+    border-right: 1.5px solid rgba(155, 27, 74, 0.45);
+}
+
+.bigday-card-corner--bl {
+    bottom: 0.55rem;
+    left: 0.55rem;
+    border-bottom: 1.5px solid rgba(155, 27, 74, 0.4);
+    border-left: 1.5px solid rgba(155, 27, 74, 0.4);
+}
+
+.bigday-card-corner--br {
+    bottom: 0.55rem;
+    right: 0.55rem;
+    border-bottom: 1.5px solid rgba(201, 169, 98, 0.85);
+    border-right: 1.5px solid rgba(201, 169, 98, 0.85);
+}
+
+.bigday-card-ornament {
+    position: absolute;
+    left: 0.85rem;
+    right: 0.85rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(122, 21, 56, 0.22) 20%, rgba(201, 169, 98, 0.55) 50%, rgba(122, 21, 56, 0.22) 80%, transparent);
+    pointer-events: none;
+    z-index: 4;
+}
+
+.bigday-card-ornament--top { top: 0.85rem; }
+.bigday-card-ornament--bottom { bottom: 0.85rem; }
+
+.bigday-chic-heart {
+    position: absolute;
+    inset: -0.45rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: center center;
+    pointer-events: none;
+}
+
+.bigday-chic-heart__svg {
+    width: calc(100% + 14px);
+    height: calc(100% + 14px);
+    max-width: 2.85rem;
+    max-height: 2.85rem;
+    overflow: visible;
+    filter: drop-shadow(0 2px 10px rgba(201, 169, 98, 0.4));
+}
+
+.bigday-chic-heart__outer {
+    fill: none;
+    stroke-width: 1.15;
+    stroke-linejoin: round;
+}
+
+.bigday-chic-heart__inner {
+    stroke-width: 0.65;
+    stroke-linejoin: round;
+}
+
+.bigday-chic-heart__shine {
+    transform-origin: 12px 7.2px;
+    animation: bigday-heart-shine 2.6s ease-in-out infinite;
+}
+
+@keyframes bigday-heart-shine {
+    0%, 100% { opacity: 0.35; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1.05); }
 }
 
 /* Hero — cadre sous la nav pour que les coins du haut restent visibles */
@@ -546,6 +851,64 @@ body {
     overflow: visible;
 }
 
+@media (max-width: 639px) {
+    .bible-verse-card.luxe-card {
+        border-radius: 1.45rem 0.45rem 1.45rem 0.45rem;
+        max-width: min(100%, 21.5rem);
+        margin-inline: auto;
+    }
+
+    .bible-verse-card.luxe-card::after {
+        inset: 0.5rem;
+        border-radius: 1.05rem 0.32rem 1.05rem 0.32rem;
+    }
+
+    .bible-verse-ribbon {
+        top: -1.05rem;
+        width: 1.15rem;
+        height: 4.35rem;
+    }
+
+    .bible-verse-ribbon--right {
+        right: 1.1rem;
+    }
+
+    .bible-verse-ribbon--left {
+        left: 1.1rem;
+    }
+
+    .bible-verse-lead {
+        margin-top: 0.75rem;
+        font-size: 1.1rem;
+        line-height: 1.4;
+    }
+
+    .bible-verse-scripture {
+        margin-top: 0.85rem;
+        padding: 0.95rem 0.75rem 0.9rem 1.05rem;
+    }
+
+    .bible-verse-scripture::before {
+        font-size: 2.15rem;
+        top: 0.05rem;
+        left: 0.4rem;
+    }
+
+    .bible-verse-scripture::after {
+        font-size: 1.25rem;
+        right: 0.45rem;
+        bottom: 0.25rem;
+    }
+
+    .bible-ref-nums {
+        font-size: 1.15rem;
+    }
+
+    .bible-ref-rule {
+        margin-bottom: 0.45rem;
+    }
+}
+
 .bible-verse-inner {
     position: relative;
     z-index: 2;
@@ -626,7 +989,7 @@ body {
 .bible-verse-lead {
     margin-top: 1.15rem;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
+    font-size: 1.28rem;
     font-weight: 500;
     line-height: 1.45;
     color: #4a1025;
@@ -634,7 +997,7 @@ body {
 
 @media (min-width: 640px) {
     .bible-verse-lead {
-        font-size: 1.28rem;
+        font-size: 1.38rem;
     }
 }
 
@@ -764,15 +1127,304 @@ body {
     opacity: 0.55;
 }
 
-/* RSVP — pilules + emojis (style carte invitation) */
-.rsvp-card {
-    background: linear-gradient(165deg, #fff8fa 0%, #fff5f8 55%, #fffbfc 100%) !important;
+/* RSVP — carte-réponse (même esprit que la lettre d’intro) */
+.rsvp-reply-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+    background: #fffbfc;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
 }
 
-.rsvp-card.luxe-card::after {
-    border-color: rgba(237, 30, 121, 0.12);
+.rsvp-reply-card__frame {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 2px;
 }
 
+.rsvp-reply-card__frame--gold {
+    inset: 6px;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.rsvp-reply-card__frame--rose {
+    inset: 10px;
+    border: 1px solid rgba(237, 30, 121, 0.16);
+}
+
+.rsvp-reply-card__body {
+    position: relative;
+    padding: 2rem 1.65rem 1.75rem;
+}
+
+@media (min-width: 640px) {
+    .rsvp-reply-card__body {
+        padding: 2.35rem 2.5rem 2rem;
+    }
+}
+
+.rsvp-reply-lead {
+    margin: 0;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    line-height: 1.55;
+    color: #6b5560;
+}
+
+.rsvp-reply-rule {
+    margin: 1.25rem auto 1.75rem;
+    max-width: 11rem;
+}
+
+.rsvp-reply-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.rsvp-reply-section + .rsvp-reply-section {
+    padding-top: 0.15rem;
+}
+
+.rsvp-reply-section-title {
+    margin: 0 0 1.1rem;
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #9b1b4a;
+}
+
+.rsvp-reply-field {
+    min-width: 0;
+}
+
+.rsvp-reply-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2a050b;
+}
+
+.rsvp-reply-hint {
+    margin: 0.4rem 0 0;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: #8a7580;
+}
+
+.rsvp-reply-question {
+    margin: 0 0 0.65rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: #5c4f51;
+}
+
+.rsvp-line {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid rgba(155, 27, 74, 0.35);
+    border-radius: 0;
+    background: transparent;
+    padding: 0.45rem 0 0.55rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: #2a050b;
+    transition: border-color 0.25s ease;
+}
+
+.rsvp-line--compact {
+    font-size: 1rem;
+    padding: 0.35rem 0 0.45rem;
+}
+
+.rsvp-line--select {
+    appearance: none;
+    padding-right: 1.5rem;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%239B1B4A' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.1rem center;
+}
+
+.rsvp-line::placeholder {
+    color: #c4a0ad;
+    font-style: italic;
+    font-weight: 400;
+}
+
+.rsvp-line:focus {
+    outline: none;
+    border-bottom-color: rgba(212, 175, 55, 0.85);
+}
+
+.rsvp-line--area {
+    resize: vertical;
+    min-height: 4.5rem;
+    max-height: 12rem;
+    border: 1px solid rgba(155, 27, 74, 0.2);
+    border-radius: 2px;
+    padding: 0.65rem 0.75rem;
+    line-height: 1.55;
+    background: rgba(255, 255, 255, 0.55);
+}
+
+.rsvp-line--area:focus {
+    border-color: rgba(212, 175, 55, 0.55);
+}
+
+.rsvp-radio-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.rsvp-radio {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 0.55rem 0;
+    text-align: left;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.rsvp-radio:hover {
+    opacity: 0.88;
+}
+
+.rsvp-radio-mark {
+    flex-shrink: 0;
+    width: 1.05rem;
+    height: 1.05rem;
+    margin-top: 0.2rem;
+    border: 1.5px solid rgba(155, 27, 74, 0.45);
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: inset 0 0 0 2px #fffbfc;
+    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.rsvp-radio--active .rsvp-radio-mark {
+    border-color: #4a0e17;
+    background: radial-gradient(circle at center, #d4af37 0%, #d4af37 38%, #4a0e17 42%, #4a0e17 100%);
+}
+
+.rsvp-radio-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.12rem;
+    line-height: 1.45;
+    color: #2a050b;
+}
+
+.rsvp-radio--active .rsvp-radio-text {
+    font-weight: 600;
+}
+
+.rsvp-reply-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.35rem;
+}
+
+.rsvp-reply-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.85rem;
+    padding: 0.75rem 2.25rem;
+    border: none;
+    border-radius: 9999px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #faf7f2;
+    background: #4a0e17;
+    box-shadow: 0 12px 32px rgba(74, 14, 23, 0.28);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rsvp-reply-submit:hover:not(:disabled) {
+    background: #6b1724;
+    box-shadow: 0 14px 36px rgba(74, 14, 23, 0.34);
+}
+
+.rsvp-reply-submit:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.rsvp-recall {
+    margin-top: 2rem;
+    padding-top: 1.35rem;
+    border-top: 1px dashed rgba(155, 27, 74, 0.22);
+}
+
+.rsvp-recall-title {
+    margin: 0;
+    font-family: 'Cinzel', serif;
+    font-size: 8px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #9b1b4a;
+}
+
+.rsvp-recall-hint {
+    margin: 0.35rem 0 0.85rem;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: #8a7580;
+}
+
+.rsvp-recall-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.65rem 1rem;
+}
+
+.rsvp-recall-form .rsvp-line--compact {
+    flex: 1;
+    min-width: 10rem;
+}
+
+.rsvp-recall-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: none;
+    background: transparent;
+    padding: 0.35rem 0;
+    font-family: 'Cinzel', serif;
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #4a0e17;
+    text-decoration: underline;
+    text-decoration-color: rgba(212, 175, 55, 0.55);
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+.rsvp-recall-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* Champs partagés (livre d’or, etc.) */
 .rsvp-label {
     display: block;
     margin-bottom: 0.35rem;
@@ -786,7 +1438,7 @@ body {
 
 .rsvp-input {
     width: 100%;
-    border: 1.5px solid rgba(237, 30, 121, 0.38);
+    border: 1.5px solid rgba(237, 30, 121, 0.32);
     border-radius: 9999px;
     background: #fff;
     padding: 0.62rem 1rem;
@@ -814,42 +1466,6 @@ body {
     line-height: 1.45;
 }
 
-.rsvp-choices {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.45rem;
-}
-
-@media (max-width: 380px) {
-    .rsvp-choices {
-        grid-template-columns: 1fr;
-    }
-}
-
-.rsvp-choice {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    min-height: 2.5rem;
-    border: 1.5px solid rgba(237, 30, 121, 0.38);
-    border-radius: 9999px;
-    background: #fff;
-    padding: 0.45rem 0.65rem;
-    font-family: 'Cinzel', serif;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #5c4f51;
-    transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
-}
-
-.rsvp-choice--active {
-    border-color: #4a0e17;
-    background: #4a0e17;
-    color: #faf7f2;
-}
-
 /* Livre d'or — formulaire + carousel */
 .guestbook-section {
     background:
@@ -874,6 +1490,41 @@ body {
     font-style: italic;
     line-height: 1.55;
     color: #6b5560;
+}
+
+.guestbook-form-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-areas:
+        "name"
+        "message"
+        "submit";
+}
+
+.guestbook-form-name {
+    grid-area: name;
+}
+
+.guestbook-form-message {
+    grid-area: message;
+}
+
+.guestbook-form-submit {
+    grid-area: submit;
+}
+
+@media (min-width: 640px) {
+    .guestbook-form-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.65fr);
+        grid-template-areas:
+            "name message"
+            "submit message";
+        align-items: stretch;
+    }
+
+    .guestbook-form-submit {
+        align-self: end;
+    }
 }
 
 .guestbook-textarea {
@@ -1406,6 +2057,27 @@ body {
     }
 }
 
+.faire-part-floral {
+    position: absolute;
+    z-index: 2;
+    width: 38%;
+    max-width: 11rem;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.92;
+}
+
+.faire-part-floral--tl {
+    top: 0;
+    left: 0;
+}
+
+.faire-part-floral--br {
+    right: 0;
+    bottom: 0;
+}
+
 .faire-part-bg {
     position: absolute;
     inset: 0;
@@ -1489,6 +2161,10 @@ body {
     .wedding-petal--toss,
     .wedding-spark,
     .sparkle-star,
+    .sparkle-star--diamond,
+    .animate-heart-beat,
+    .bigday-chic-heart__shine,
+    .bigday-card::before,
     .faire-part-aura {
         animation: none;
     }
@@ -1823,6 +2499,15 @@ input:focus, select:focus, textarea:focus {
     background: radial-gradient(ellipse 60% 50% at 50% 55%, rgba(237, 30, 121, 0.38), transparent 68%);
     filter: blur(22px);
     animation: aura-pulse 5.5s ease-in-out infinite;
+}
+
+.hero-intro-letter {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.hero-letter-glow {
+    animation: aura-pulse 6s ease-in-out infinite;
 }
 
 .intro-gate-corners,

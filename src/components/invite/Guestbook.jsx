@@ -11,9 +11,9 @@ import Chapter from "./Chapter";
 import LuxeCard from "./LuxeCard";
 import SparkleField from "./SparkleField";
 
-function GuestField({ label, htmlFor, children }) {
+function GuestField({ label, htmlFor, className = "", children }) {
   return (
-    <div className="min-w-0">
+    <div className={`min-w-0 ${className}`.trim()}>
       <label className="rsvp-label" htmlFor={htmlFor}>
         {label}
       </label>
@@ -99,31 +99,28 @@ export default function Guestbook() {
         <LuxeCard animate noInset className="guestbook-form-card px-5 py-6 sm:px-8 sm:py-7">
           <form onSubmit={submit} data-testid="guestbook-form">
           <p className="guestbook-form-lead">{m.guestbook.formLead}</p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.65fr)] sm:items-start">
-            <div className="flex flex-col gap-3.5">
-              <GuestField label={m.guestbook.nameLabel} htmlFor="guestbook-nom">
-                <input
-                  id="guestbook-nom"
-                  required
-                  data-testid="guestbook-input-nom"
-                  placeholder={m.guestbook.namePh}
-                  value={nom}
-                  onChange={(e) => setNom(e.target.value)}
-                  className="rsvp-input"
-                  autoComplete="name"
-                />
-              </GuestField>
-              <button
-                type="submit"
-                disabled={loading}
-                data-testid="guestbook-submit-button"
-                className="guestbook-sign-btn mt-auto"
-              >
-                <Feather size={16} strokeWidth={2} aria-hidden />
-                <span>{loading ? m.guestbook.signing : m.guestbook.sign}</span>
-              </button>
-            </div>
-            <GuestField label={m.guestbook.messageLabel} htmlFor="guestbook-message">
+          <div className="guestbook-form-grid mt-4">
+            <GuestField
+              label={m.guestbook.nameLabel}
+              htmlFor="guestbook-nom"
+              className="guestbook-form-name"
+            >
+              <input
+                id="guestbook-nom"
+                required
+                data-testid="guestbook-input-nom"
+                placeholder={m.guestbook.namePh}
+                value={nom}
+                onChange={(e) => setNom(e.target.value)}
+                className="rsvp-input"
+                autoComplete="name"
+              />
+            </GuestField>
+            <GuestField
+              label={m.guestbook.messageLabel}
+              htmlFor="guestbook-message"
+              className="guestbook-form-message"
+            >
               <div className="relative">
                 <textarea
                   id="guestbook-message"
@@ -145,13 +142,22 @@ export default function Guestbook() {
                 </span>
               </div>
             </GuestField>
+            <button
+              type="submit"
+              disabled={loading}
+              data-testid="guestbook-submit-button"
+              className="guestbook-sign-btn guestbook-form-submit"
+            >
+              <Feather size={16} strokeWidth={2} aria-hidden />
+              <span>{loading ? m.guestbook.signing : m.guestbook.sign}</span>
+            </button>
           </div>
           </form>
         </LuxeCard>
 
         <div className="mt-14 md:mt-16" data-testid="guestbook-list">
           {messages.length === 0 && (
-            <LuxeCard animate className="guestbook-empty-card px-8 py-12 text-center sm:px-12">
+            <LuxeCard animate className="guestbook-empty-card px-6 py-10 text-center sm:px-12 sm:py-12">
               <span className="font-script text-5xl text-[#D4AF37]/80 leading-none" aria-hidden>
                 ✒
               </span>
@@ -188,7 +194,7 @@ export default function Guestbook() {
                   <LuxeCard
                     lift
                     animate={false}
-                    className="guestbook-quote-card px-7 py-10 text-center sm:px-12 sm:py-12"
+                    className="guestbook-quote-card px-6 py-8 text-center sm:px-12 sm:py-12"
                     data-testid="guestbook-message"
                   >
                     <span className="guestbook-quote-mark" aria-hidden>

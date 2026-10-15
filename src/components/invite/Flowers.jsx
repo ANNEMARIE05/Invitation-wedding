@@ -1,4 +1,32 @@
-/** Accents décoratifs — sans motifs floraux */
+/** Accents décoratifs + coins floraux (PNG fond noir → blend screen) */
+
+const PUBLIC = process.env.PUBLIC_URL || "";
+export const FLORAL_CORNER_TL = `${PUBLIC}/images/floral-corner-tl.png`;
+export const FLORAL_CORNER_BR = `${PUBLIC}/images/floral-corner-br.png`;
+
+export function FloralCornerOverlay({ variant = "hero", className = "" }) {
+  const base = variant === "hero" ? "hero-floral-corner" : "faire-part-floral-corner";
+  return (
+    <>
+      <img
+        src={FLORAL_CORNER_TL}
+        alt=""
+        aria-hidden
+        decoding="async"
+        draggable={false}
+        className={`${base} ${base}--tl ${className}`.trim()}
+      />
+      <img
+        src={FLORAL_CORNER_BR}
+        alt=""
+        aria-hidden
+        decoding="async"
+        draggable={false}
+        className={`${base} ${base}--br ${className}`.trim()}
+      />
+    </>
+  );
+}
 
 export const CornerAccent = ({ className = "", flip = "" }) => (
   <span

@@ -20,7 +20,7 @@ export default function Verses() {
       <div className="relative z-10 mx-auto max-w-4xl">
         <Chapter index="I" eyebrow={m.verses.chapter} title={m.verses.title} script={m.verses.script} />
 
-        <div className="grid items-stretch gap-10 md:grid-cols-2 md:gap-12">
+        <div className="grid items-stretch gap-7 sm:gap-10 md:grid-cols-2 md:gap-12">
           {m.verses.items.map((v, i) => {
             const scripture = parseScriptureRef(v.ref);
             const leadLines = v.lines.filter((line) => !line.quote);
@@ -28,7 +28,7 @@ export default function Verses() {
             return (
               <motion.div
                 key={v.who}
-                className="flex h-full pt-3"
+                className="flex h-full pt-2 sm:pt-3"
                 initial={{ opacity: 0, y: 36 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
@@ -38,12 +38,12 @@ export default function Verses() {
                   as="blockquote"
                   lift
                   animate={false}
-                  className="bible-verse-card flex h-full min-h-[22rem] w-full flex-col p-8 pt-9 sm:min-h-[24rem] sm:p-9 sm:pt-10"
+                  className="bible-verse-card flex h-full min-h-0 w-full flex-col p-6 pt-7 sm:min-h-[24rem] sm:p-9 sm:pt-10"
                   data-testid={`verse-${v.who.toLowerCase()}`}
                 >
                   <span className="bible-verse-ribbon bible-verse-ribbon--right" aria-hidden="true" />
                   <div className="bible-verse-inner flex flex-1 flex-col">
-                    <header className="pr-7">
+                    <header className="pr-5 sm:pr-7">
                       <p className="bible-verse-who">{v.who}</p>
                       {leadLines.map((line) => (
                         <p key={line.text} className="bible-verse-lead">
@@ -57,20 +57,15 @@ export default function Verses() {
                         {quoteLines.map((line) => (
                           <p
                             key={line.text}
-                            className="bible-verse-quote font-display text-xl font-semibold italic text-[#2A050B] sm:text-[1.35rem]"
+                            className="bible-verse-quote font-display text-[1.08rem] font-semibold italic text-[#2A050B] sm:text-[1.45rem]"
                           >
-                            {scripture.chapter && scripture.verse ? (
-                              <span className="bible-verse-num" aria-hidden="true">
-                                {scripture.chapter}:{scripture.verse}
-                              </span>
-                            ) : null}
                             {line.text.replace(/^«\s*/, "").replace(/\s*»$/, "")}
                           </p>
                         ))}
                       </div>
                     ) : null}
 
-                    <footer className="bible-ref mt-auto pt-8">
+                    <footer className="bible-ref mt-auto pt-5 sm:pt-8">
                       <div className="bible-ref-rule" aria-hidden="true">
                         <span className="bible-ref-fleuron">✦</span>
                       </div>

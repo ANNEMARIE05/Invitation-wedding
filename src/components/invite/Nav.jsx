@@ -5,7 +5,7 @@ import { useSettings } from "@/lib/settings";
 import LangToggle from "./LangToggle";
 
 export default function Nav() {
-  const { bride, groom } = useSettings();
+  const { initials } = useSettings();
   const { m } = useI18n();
   return (
     <motion.header
@@ -21,9 +21,7 @@ export default function Nav() {
           onClick={() => scrollToId("#hero")}
           className="font-display text-xl font-medium tracking-[0.08em] text-[#2A050B] leading-none pt-0.5"
         >
-          {bride.charAt(0).toUpperCase()}
-          <span className="mx-1.5 font-cinzel text-xs tracking-[0.35em] text-[#D4AF37] align-middle">&</span>
-          {groom.charAt(0).toUpperCase()}
+          {initials}
         </button>
         <nav className="hidden md:flex items-center gap-8">
           {m.nav.links.map((l) => (

@@ -4,6 +4,7 @@ import { EASE, scrollToId } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import WeddingPetals from "./WeddingPetals";
+import { FloralCornerOverlay } from "./Flowers";
 
 const MaskedLine = ({ children, delay, start }) => (
   <span className="block overflow-hidden pb-2 -mb-2">
@@ -45,6 +46,7 @@ export default function Hero({ start = true }) {
         />
       ))}
       <div className="absolute inset-0 hero-veil" aria-hidden="true" />
+      <FloralCornerOverlay variant="hero" />
       <WeddingPetals active={start} density={16} variant="hero" />
 
       <motion.div
@@ -72,11 +74,11 @@ export default function Hero({ start = true }) {
           data-testid="hero-monogram"
         >
           <p className="font-display text-[2.15rem] sm:text-[2.5rem] font-medium tracking-[0.12em] text-[#FFFBFC]">
-            {letterBride}
+            {letterGroom}
             <span className="mx-2 sm:mx-3 inline-block font-cinzel text-sm sm:text-base font-normal tracking-[0.55em] text-[#FFD6E0] align-middle">
               &
             </span>
-            {letterGroom}
+            {letterBride}
           </p>
         </motion.div>
 
@@ -88,13 +90,13 @@ export default function Hero({ start = true }) {
 
         <h1 className="mt-6 font-display text-[#FAF7F2] leading-[0.95]" data-testid="hero-names">
           <MaskedLine delay={0.85} start={start}>
-            <span className="hero-name text-6xl italic font-medium sm:text-7xl lg:text-8xl bg-gradient-to-br from-[#FFFBFC] via-[#FFD6E0] to-[#FFFBFC] bg-clip-text text-transparent">{bride}</span>
+            <span className="hero-name text-6xl italic font-medium sm:text-7xl lg:text-8xl bg-gradient-to-br from-[#FFFBFC] via-[#FFD6E0] to-[#FFFBFC] bg-clip-text text-transparent">{groom}</span>
           </MaskedLine>
           <MaskedLine delay={1.05} start={start}>
             <span className="hero-amp my-1 inline-block font-display text-3xl not-italic font-normal tracking-[0.2em] text-[#ED1E79] sm:text-4xl">&</span>
           </MaskedLine>
           <MaskedLine delay={1.25} start={start}>
-            <span className="hero-name text-6xl italic font-medium sm:text-7xl lg:text-8xl text-[#FFFBFC]">{groom}</span>
+            <span className="hero-name text-6xl italic font-medium sm:text-7xl lg:text-8xl text-[#FFFBFC]">{bride}</span>
           </MaskedLine>
         </h1>
 

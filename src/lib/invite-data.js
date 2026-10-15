@@ -1,4 +1,9 @@
+import coupleIllustration from "@/assets/couple-illustration.jpg";
+import weddingArchSketch from "@/assets/wedding-arch-sketch.jpg";
+
 export const EASE = [0.22, 1, 0.36, 1];
+
+const publicImage = (file) => `${process.env.PUBLIC_URL || ""}/images/${file}`;
 
 export const WHATSAPP_NUMBER = "2250172317983";
 
@@ -21,16 +26,14 @@ export const VENUE_MEDIA = [
     address: "Cocody, Abidjan — Côte d'Ivoire",
     mapsUrl: "https://maps.app.goo.gl/jEqFhD6qW3Y7rPAQ8?g_st=aw",
     embedUrl: "https://www.google.com/maps?q=H%C3%B4tel+communal+de+Cocody+Abidjan&output=embed",
-    image:
-      "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop",
+    image: publicImage("mairie-cocody.jpg"),
   },
   {
     id: "ceremony",
     address: "Cocody Danga, Abidjan — Côte d'Ivoire",
     mapsUrl: "https://maps.app.goo.gl/RxudqMYFj3jEBCua7?g_st=aw",
     embedUrl: "https://www.google.com/maps?q=Salle+du+Royaume+T%C3%A9moins+J%C3%A9hovah+Cocody+Danga&output=embed",
-    image:
-      "https://images.pexels.com/photos/169193/pexels-photo-169193.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=700&w=1000",
+    image: publicImage("salle-temoins-jehovah.jpg"),
   },
 ];
 
@@ -61,7 +64,7 @@ export const VERSES = [
     who: "Stéphane",
     lines: [
       { text: "Ma belle Marie", quote: false },
-      { text: "« Femme extrêmement favorisée, Jéhova est avec toi »", quote: true },
+      { text: "« Femme extrêmement favorisée, Jéhovah est avec toi »", quote: true },
     ],
     ref: "Luc 1 : 28",
   },
@@ -71,14 +74,16 @@ export const VERSES = [
       { text: "Mon cœur est rempli d'amour,", quote: false },
       { text: "« J'ai trouvé celui que j'aime. »", quote: true },
     ],
-    ref: "Cantique des Cantiques 3 : 4",
+    ref: "Chant de Salomon 3 : 4",
   },
 ];
 
 export const IMAGES = {
   hero: "https://images.unsplash.com/photo-1519167758481-83f550bb49b8?q=80&w=1920&auto=format&fit=crop",
   portrait: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?q=80&w=900&auto=format&fit=crop",
-  footerPhoto: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?q=80&w=800&auto=format&fit=crop",
+  footerPhoto: coupleIllustration,
+  dresscodeInspiration: publicImage("dresscode-inspiration.png"),
+  weddingArch: weddingArchSketch,
   venue: "https://images.pexels.com/photos/169193/pexels-photo-169193.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=700&w=1000",
   venueAerial: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000&auto=format&fit=crop",
 };

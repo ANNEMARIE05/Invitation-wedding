@@ -25,11 +25,13 @@ export const useSettings = () => {
   const hours = String(d.getHours()).padStart(2, "0");
   const mins = String(d.getMinutes()).padStart(2, "0");
   const monthYear = deadline.toLocaleDateString(locTag, { month: "long", year: "numeric" });
+  const coupleLabel = locale === "en" ? `${groom} & ${bride}` : `${groom} et ${bride}`;
   return {
     bride,
     groom,
+    coupleLabel,
     locale,
-    initials: `${bride.charAt(0).toUpperCase()} & ${groom.charAt(0).toUpperCase()}`,
+    initials: `${groom.charAt(0).toUpperCase()} & ${bride.charAt(0).toUpperCase()}`,
     dateIso,
     dateLabel: cap(d.toLocaleDateString(locTag, { weekday: "long", day: "numeric", month: "long", year: "numeric" })),
     dateShort: `${String(d.getDate()).padStart(2, "0")} . ${String(d.getMonth() + 1).padStart(2, "0")} . ${d.getFullYear()}`,

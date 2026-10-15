@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Fragment, useEffect, useId, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { CalendarPlus } from "lucide-react";
 import { toast } from "sonner";
 import { EASE } from "@/lib/invite-data";
@@ -7,6 +7,7 @@ import { useI18n } from "@/lib/locale";
 import { useSettings, cap } from "@/lib/settings";
 import Chapter from "./Chapter";
 import { CornerAccent } from "./Flowers";
+import SparkleField from "./SparkleField";
 const compute = (target) => {
   const d = Math.max(0, target - Date.now());
   return {
@@ -18,6 +19,52 @@ const compute = (target) => {
 };
 
 const toIcs = (date) => date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+
+function ChicWeddingHeart() {
+  const rawId = useId();
+  const uid = rawId.replace(/:/g, "");
+  return (
+    <span className="bigday-chic-heart animate-heart-beat" aria-hidden="true">
+      <svg viewBox="0 0 24 24" className="bigday-chic-heart__svg">
+        <defs>
+          <linearGradient id={`${uid}-gold`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFF8E7" />
+            <stop offset="45%" stopColor="#C9A962" />
+            <stop offset="100%" stopColor="#7A1538" />
+          </linearGradient>
+          <linearGradient id={`${uid}-rose`} x1="12" y1="5" x2="12" y2="21" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#FFD6E0" />
+            <stop offset="55%" stopColor="#ED1E79" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#9B1B4A" stopOpacity="0.12" />
+          </linearGradient>
+          <radialGradient id={`${uid}-glint`} cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(12 7.2) rotate(90) scale(4.5)">
+            <stop stopColor="#FFFFFF" stopOpacity="0.95" />
+            <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <g transform="translate(12 12) scale(1.14) translate(-12 -12)">
+          <path
+            className="bigday-chic-heart__outer"
+            d="M12 20.5s-7.2-4.7-9.4-9.4C1 7.5 3.5 4 7 4c2.1 0 4 1.1 5 2.9C13 5.1 14.9 4 17 4c3.5 0 6 3.5 4.4 7.1C19.2 15.8 12 20.5 12 20.5z"
+            stroke={`url(#${uid}-gold)`}
+          />
+        </g>
+        <path
+          className="bigday-chic-heart__inner"
+          d="M12 20.5s-7.2-4.7-9.4-9.4C1 7.5 3.5 4 7 4c2.1 0 4 1.1 5 2.9C13 5.1 14.9 4 17 4c3.5 0 6 3.5 4.4 7.1C19.2 15.8 12 20.5 12 20.5z"
+          fill={`url(#${uid}-rose)`}
+          stroke={`url(#${uid}-gold)`}
+        />
+        <circle className="bigday-chic-heart__shine" cx="12" cy="7.2" r="0.95" fill={`url(#${uid}-glint)`} />
+        <path
+          d="M12 5.4l0.45 0.9 1 0.15-0.72 0.7 0.17 1-0.9-0.48-0.9 0.48 0.17-1-0.72-0.7 1-0.15z"
+          fill="#E8D5A8"
+          opacity="0.92"
+        />
+      </svg>
+    </span>
+  );
+}
 
 export default function BigDay() {
   const { bride, groom, dateIso, dateLabel, venue, locale } = useSettings();
@@ -59,7 +106,7 @@ export default function BigDay() {
       `DTSTAMP:${toIcs(new Date())}`,
       `DTSTART:${toIcs(start)}`,
       `DTEND:${toIcs(end)}`,
-      `SUMMARY:${m.bigDay.icsSummary(bride, groom)}`,
+      `SUMMARY:${m.bigDay.icsSummary(groom, bride)}`,
       `LOCATION:${venue.name}`,
       `DESCRIPTION:${m.bigDay.icsDescription.replace(/,/g, "\\,")}`,
       "END:VEVENT", "END:VCALENDAR",
@@ -75,7 +122,7 @@ export default function BigDay() {
 
   const googleUrl = `https://calendar.google.com/calendar/render?${new URLSearchParams({
     action: "TEMPLATE",
-    text: m.bigDay.icsSummary(bride, groom),
+    text: m.bigDay.icsSummary(groom, bride),
     dates: `${toIcs(start)}/${toIcs(end)}`,
     details: m.bigDay.icsDescription,
     location: `${venue.name} ${venue.address}`,
@@ -84,77 +131,93 @@ export default function BigDay() {
   return (
     <section
       id="grand-jour"
-      className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 overflow-hidden bg-[linear-gradient(135deg,#5C0A20_0%,#9B1B4A_45%,#7A1538_100%)]"
+      className="relative py-24 md:py-36 px-2.5 sm:px-8 lg:px-16 overflow-hidden bg-[linear-gradient(135deg,#5C0A20_0%,#9B1B4A_45%,#7A1538_100%)]"
       data-testid="bigday-section"
     >
-      <span className="absolute top-12 left-4 sm:left-10 pointer-events-none opacity-70">
+      <SparkleField count={18} chic className="z-[1] opacity-75" />
+      <span className="absolute top-12 left-4 sm:left-10 pointer-events-none opacity-60">
         <CornerAccent />
       </span>
-      <span className="absolute top-12 right-4 sm:right-10 pointer-events-none opacity-70 -scale-x-100">
+      <span className="absolute top-12 right-4 sm:right-10 pointer-events-none opacity-60 -scale-x-100">
         <CornerAccent />
       </span>
-      <span className="absolute bottom-12 left-4 sm:left-10 pointer-events-none opacity-50 -scale-y-100">
+      <span className="absolute bottom-12 left-4 sm:left-10 pointer-events-none opacity-40 -scale-y-100">
         <CornerAccent />
       </span>
-      <span className="absolute bottom-12 right-4 sm:right-10 pointer-events-none opacity-50 -scale-100">
+      <span className="absolute bottom-12 right-4 sm:right-10 pointer-events-none opacity-40 -scale-100">
         <CornerAccent />
       </span>
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.07]"
         aria-hidden="true"
         style={{
-          backgroundImage: "radial-gradient(circle at 20% 30%, #FFD6E0 0%, transparent 45%), radial-gradient(circle at 80% 70%, #FFD6E0 0%, transparent 40%)",
+          backgroundImage:
+            "radial-gradient(circle at 20% 30%, #FFD6E0 0%, transparent 45%), radial-gradient(circle at 80% 70%, #FFD6E0 0%, transparent 40%)",
         }}
       />
 
-      <div className="relative z-10 max-w-5xl mx-auto">
+      <div className="relative z-10 w-full max-w-2xl mx-auto">
         <Chapter index="II" eyebrow={m.bigDay.chapter} title={m.bigDay.title} script={m.bigDay.script} dark />
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6" data-testid="countdown-grid">
-          {countdownRows.map(({ key, label, value }, i) => (
-            <motion.div
-              key={key}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: i * 0.1, ease: EASE }}
-              className="relative border hairline-gold bg-white/[0.04] backdrop-blur-sm rounded-sm py-8 px-4 text-center overflow-hidden"
-              data-testid={`countdown-${key}`}
-            >
-              <div className="relative h-14 sm:h-16 flex items-center justify-center overflow-hidden">
-                <AnimatePresence mode="popLayout">
-                  <motion.p
-                    key={value}
-                    initial={{ y: -22, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: 22, opacity: 0 }}
-                    transition={{ duration: 0.45, ease: EASE }}
-                    className="font-display text-5xl sm:text-6xl text-[#FFD6E0] tabular-nums"
-                  >
-                    {String(value).padStart(2, "0")}
-                  </motion.p>
-                </AnimatePresence>
-              </div>
-              <p className="mt-2 font-cinzel text-[10px] font-semibold tracking-[0.35em] uppercase text-[#FFFBFC]/90">{label}</p>
-            </motion.div>
-          ))}
-        </div>
+        <div className="bigday-panel-frame">
+          <span className="bigday-panel-corner bigday-panel-corner--tl" aria-hidden="true" />
+          <span className="bigday-panel-corner bigday-panel-corner--tr" aria-hidden="true" />
+          <span className="bigday-panel-corner bigday-panel-corner--bl" aria-hidden="true" />
+          <span className="bigday-panel-corner bigday-panel-corner--br" aria-hidden="true" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
+        <motion.article
+          initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.9, ease: EASE }}
-          className="mt-14 mx-auto max-w-sm border hairline-gold bg-white/[0.04] backdrop-blur-sm rounded-sm p-6 sm:p-8"
+          className="bigday-card relative overflow-hidden rounded-sm bg-[#FFFBFC] text-[#2A050B] shadow-[0_24px_70px_rgba(0,0,0,0.35)] px-3 py-10 sm:px-11 sm:py-12"
           data-testid="calendar-card"
         >
-          <p className="text-center font-cinzel text-xs font-semibold tracking-[0.4em] uppercase text-[#FFD6E0]">{cal.label}</p>
-          <div className="mt-4 grid grid-cols-7 gap-1 text-center font-cinzel text-[10px] font-medium tracking-widest text-[#FFFBFC]/80">
+          <span className="bigday-card-corner bigday-card-corner--tl" aria-hidden="true" />
+          <span className="bigday-card-corner bigday-card-corner--tr" aria-hidden="true" />
+          <span className="bigday-card-corner bigday-card-corner--bl" aria-hidden="true" />
+          <span className="bigday-card-corner bigday-card-corner--br" aria-hidden="true" />
+          <span className="bigday-card-ornament bigday-card-ornament--top" aria-hidden="true" />
+          <span className="bigday-card-ornament bigday-card-ornament--bottom" aria-hidden="true" />
+          <SparkleField count={14} chic onLight className="z-0 opacity-90" />
+          <div className="relative z-[1]">
+          <div
+            className="bigday-countdown flex flex-nowrap justify-center items-baseline gap-x-0.5 sm:gap-x-2.5"
+            data-testid="countdown-grid"
+          >
+            {countdownRows.map(({ key, label, value }, i) => (
+              <Fragment key={key}>
+                {i > 0 ? (
+                  <span
+                    className="bigday-countdown__sep font-display text-[1.65rem] sm:text-[2.75rem] text-[#7A1538] leading-none select-none shrink-0"
+                    aria-hidden="true"
+                  >
+                    :
+                  </span>
+                ) : null}
+                <div className="bigday-countdown__unit text-center shrink-0" data-testid={`countdown-${key}`}>
+                  <p className="bigday-countdown__value font-display text-[1.65rem] sm:text-[2.75rem] font-semibold text-[#5C0A20] tabular-nums leading-none">
+                    {key === "days" ? String(value) : String(value).padStart(2, "0")}
+                  </p>
+                  <p className="bigday-countdown__label mt-2 sm:mt-2.5 font-cinzel text-[8px] sm:text-[10px] font-semibold tracking-[0.14em] sm:tracking-[0.32em] uppercase text-[#6B2440]/90">
+                    {label}
+                  </p>
+                </div>
+              </Fragment>
+            ))}
+          </div>
+
+          <div className="my-9 sm:my-10 h-px bg-gradient-to-r from-transparent via-[#7A1538]/20 to-transparent" />
+
+          <p className="text-center font-cinzel text-[11px] font-semibold tracking-[0.38em] uppercase text-[#7A1538]">
+            {cal.label}
+          </p>
+          <div className="mt-4 grid grid-cols-7 gap-1 text-center font-cinzel text-[10px] font-medium tracking-widest text-[#6B2440]/75">
             {m.bigDay.weekdays.map((d, i) => (
               <span key={i} className="py-1">{d}</span>
             ))}
           </div>
-          <div className="grid grid-cols-7 gap-1 text-center font-display text-lg text-[#FAF7F2]/85">
+          <div className="grid grid-cols-7 gap-1 text-center font-display text-lg text-[#2A050B]/80">
             {[...Array(cal.first)].map((_, i) => <span key={`empty-${i}`} />)}
             {[...Array(cal.days)].map((_, i) => {
               const day = i + 1;
@@ -167,15 +230,8 @@ export default function BigDay() {
                 >
                   {isWeddingDay ? (
                     <>
-                      <svg viewBox="0 0 24 24" className="absolute -inset-1.5 w-[calc(100%+12px)] h-[calc(100%+12px)] animate-heart-beat" aria-hidden="true">
-                        <path
-                          d="M12 20.5s-7.2-4.7-9.4-9.4C1 7.5 3.5 4 7 4c2.1 0 4 1.1 5 2.9C13 5.1 14.9 4 17 4c3.5 0 6 3.5 4.4 7.1C19.2 15.8 12 20.5 12 20.5z"
-                          fill="rgba(212,175,55,0.10)"
-                          stroke="#FFD6E0"
-                          strokeWidth="1.5"
-                        />
-                      </svg>
-                      <span className="relative text-[#FFD6E0] font-semibold">{day}</span>
+                      <ChicWeddingHeart />
+                      <span className="relative z-[1] font-display text-lg font-semibold text-[#5C0A20]">{day}</span>
                     </>
                   ) : (
                     day
@@ -184,35 +240,32 @@ export default function BigDay() {
               );
             })}
           </div>
-          <p className="mt-5 text-center font-cinzel text-[10px] font-medium tracking-[0.3em] uppercase text-[#FFFBFC]/85">
+          <p className="mt-6 text-center font-cinzel text-[10px] font-medium tracking-[0.28em] uppercase text-[#6B2440]/85 leading-relaxed">
             {m.bigDay.calendarFooter(dateLabel)}
           </p>
-        </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="mt-12 flex flex-wrap justify-center gap-4"
-        >
-          <button
-            data-testid="download-ics-button"
-            onClick={downloadIcs}
-            className="inline-flex items-center gap-2 rounded-full bg-[#FFFBFC] text-[#5C0A20] font-cinzel text-[11px] font-semibold tracking-[0.2em] uppercase px-7 py-3.5 hover:bg-[#FFD6E0] hover:shadow-[0_10px_30px_rgba(255,214,224,0.35)] transition-all duration-300"
-          >
-            <CalendarPlus size={16} /> {m.bigDay.addCalendar}
-          </button>
-          <a
-            data-testid="google-calendar-link"
-            href={googleUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border hairline-gold text-[#FAF7F2] font-cinzel text-[11px] tracking-[0.2em] uppercase px-7 py-3.5 hover:bg-white/10 transition-all duration-300"
-          >
-            {m.bigDay.googleCalendar}
-          </a>
-        </motion.div>
+          <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+            <button
+              type="button"
+              data-testid="download-ics-button"
+              onClick={downloadIcs}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#7A1538] text-[#FFFBFC] font-cinzel text-[10px] font-semibold tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-[#5C0A20] transition-colors duration-300"
+            >
+              <CalendarPlus size={15} strokeWidth={1.5} /> {m.bigDay.addCalendar}
+            </button>
+            <a
+              data-testid="google-calendar-link"
+              href={googleUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#7A1538]/35 text-[#5C0A20] font-cinzel text-[10px] tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-[#FFF0F4] transition-colors duration-300"
+            >
+              {m.bigDay.googleCalendar}
+            </a>
+          </div>
+          </div>
+        </motion.article>
+        </div>
       </div>
     </section>
   );

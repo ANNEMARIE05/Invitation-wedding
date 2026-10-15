@@ -7,8 +7,8 @@ import { EASE, WHATSAPP_NUMBER } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
+import ClassicRule from "./ClassicRule";
 import InviteCardModal from "./InviteCardModal";
-import LuxeCard from "./LuxeCard";
 
 const partySize = (d) => (d.present ? 1 + Number(d.accompagnants || 0) : 0);
 
@@ -41,21 +41,48 @@ function rsvpToForm(rsvp, regimes) {
   };
 }
 
-function RsvpField({ label, htmlFor, children }) {
+function RsvpField({ label, htmlFor, hint, children, className = "" }) {
   return (
-    <div className="min-w-0">
-      <label className="rsvp-label" htmlFor={htmlFor}>
+    <div className={`rsvp-reply-field min-w-0 ${className}`.trim()}>
+      <label className="rsvp-reply-label" htmlFor={htmlFor}>
         {label}
       </label>
+      {children}
+      {hint ? <p className="rsvp-reply-hint">{hint}</p> : null}
+    </div>
+  );
+}
+
+function RsvpSection({ title, children }) {
+  return (
+    <div className="rsvp-reply-section">
+      <h3 className="rsvp-reply-section-title">{title}</h3>
       {children}
     </div>
   );
 }
 
-const Frame = ({ children }) => (
-  <LuxeCard className="rsvp-card overflow-visible px-5 py-6 shadow-[0_24px_60px_rgba(0,0,0,0.2)] sm:px-8 sm:py-7">
-    {children}
-  </LuxeCard>
+function RsvpRadio({ active, onClick, testId, children }) {
+  return (
+    <button
+      type="button"
+      data-testid={testId}
+      onClick={onClick}
+      className={`rsvp-radio${active ? " rsvp-radio--active" : ""}`}
+      aria-pressed={active}
+    >
+      <span className="rsvp-radio-mark" aria-hidden />
+      <span className="rsvp-radio-text">{children}</span>
+    </button>
+  );
+}
+
+const ReplyCard = ({ children }) => (
+  <div className="rsvp-reply-card">
+    <div className="rsvp-reply-card__frame rsvp-reply-card__frame--gold" aria-hidden />
+    <div className="rsvp-reply-card__frame rsvp-reply-card__frame--rose" aria-hidden />
+    <div className="rsvp-reply-card__body">{children}</div>
+  </div>
 );
 
 export default function Rsvp() {
@@ -184,7 +211,7 @@ export default function Rsvp() {
       className="relative bg-[linear-gradient(135deg,#5C0A20_0%,#9B1B4A_50%,#7A1538_100%)] px-5 py-16 sm:px-8 md:py-24 lg:px-16"
       data-testid="rsvp-section"
     >
-      <div className="relative z-10 mx-auto max-w-2xl">
+      <div className="relative z-10 mx-auto max-w-xl lg:max-w-2xl">
         <Chapter index="VI" eyebrow={m.rsvp.chapter} title={m.rsvp.title} script={deadlineLabel} dark />
         <AnimatePresence mode="wait">
           {confirmed ? (
@@ -195,7 +222,7 @@ export default function Rsvp() {
               transition={{ duration: 0.7, ease: EASE }}
               data-testid="rsvp-confirmation"
             >
-              <Frame>
+              <ReplyCard>
                 <div className="text-center">
                   <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#D4AF37]/60 bg-[#4A0E17]">
                     <Check size={22} className="text-[#D4AF37]" />
@@ -267,7 +294,7 @@ export default function Rsvp() {
                     </a>
                   )}
                 </div>
-              </Frame>
+              </ReplyCard>
             </motion.div>
           ) : (
             <motion.div
@@ -277,34 +304,12 @@ export default function Rsvp() {
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.9, ease: EASE }}
             >
-              <Frame>
-                <div className="mb-5 rounded-2xl border border-[#D4AF37]/25 bg-[#FFF8FA]/80 px-4 py-4">
-                  <p className="font-cinzel text-[10px] uppercase tracking-[0.2em] text-[#9B1B4A]">{m.rsvp.lookupTitle}</p>
-                  <p className="mt-1 text-xs leading-relaxed text-[#5C4F51]">{m.rsvp.lookupHint}</p>
-                  <form onSubmit={lookup} className="mt-3 flex flex-col gap-2 sm:flex-row">
-                    <input
-                      type="tel"
-                      inputMode="tel"
-                      value={lookupPhone}
-                      onChange={(e) => setLookupPhone(e.target.value)}
-                      placeholder={m.rsvp.phonePh}
-                      className="rsvp-input flex-1"
-                      data-testid="rsvp-lookup-phone"
-                    />
-                    <button
-                      type="submit"
-                      disabled={lookupBusy || !lookupPhone.trim()}
-                      className="inline-flex items-center justify-center gap-2 rounded-full border border-[#4A0E17]/20 bg-white px-5 py-2.5 font-cinzel text-[10px] uppercase tracking-[0.16em] text-[#4A0E17] disabled:opacity-50"
-                      data-testid="rsvp-lookup-submit"
-                    >
-                      <Search size={14} />
-                      {lookupBusy ? m.rsvp.lookupBusy : m.rsvp.lookupAction}
-                    </button>
-                  </form>
-                </div>
+              <ReplyCard>
+                <p className="rsvp-reply-lead">{m.rsvp.formIntro}</p>
+                <ClassicRule className="rsvp-reply-rule" gem="♥" />
 
-                <form onSubmit={submit} className="space-y-3.5" data-testid="rsvp-form">
-                  <div className="grid items-start gap-3.5 sm:grid-cols-2">
+                <form onSubmit={submit} className="rsvp-reply-form" data-testid="rsvp-form">
+                  <RsvpSection title={m.rsvp.sectionIdentity}>
                     <RsvpField label={m.rsvp.name} htmlFor="rsvp-nom">
                       <input
                         id="rsvp-nom"
@@ -313,11 +318,16 @@ export default function Rsvp() {
                         placeholder={m.rsvp.namePh}
                         value={form.nom}
                         onChange={set("nom")}
-                        className="rsvp-input"
+                        className="rsvp-line"
                         autoComplete="name"
                       />
                     </RsvpField>
-                    <RsvpField label={m.rsvp.phone} htmlFor="rsvp-telephone">
+                    <RsvpField
+                      label={m.rsvp.phone}
+                      htmlFor="rsvp-telephone"
+                      hint={m.rsvp.phoneHint}
+                      className="mt-6"
+                    >
                       <input
                         id="rsvp-telephone"
                         required
@@ -332,122 +342,150 @@ export default function Rsvp() {
                         onBlur={() => {
                           if (form.telephone.trim() && !lookupPhone) setLookupPhone(form.telephone);
                         }}
-                        className="rsvp-input"
+                        className="rsvp-line"
                       />
                     </RsvpField>
-                  </div>
+                  </RsvpSection>
 
-                  <div>
-                    <span className="rsvp-label">{m.rsvp.attendance}</span>
-                    <div className="rsvp-choices" data-testid="rsvp-attendance">
-                      {[
-                        { v: true, label: m.rsvp.present },
-                        { v: false, label: m.rsvp.absent },
-                      ].map((o) => (
-                        <button
-                          type="button"
-                          key={String(o.v)}
-                          data-testid={o.v ? "rsvp-present-oui" : "rsvp-present-non"}
-                          onClick={() => setForm({ ...form, present: o.v })}
-                          className={`rsvp-choice${form.present === o.v ? " rsvp-choice--active" : ""}`}
-                        >
-                          {o.label}
-                        </button>
-                      ))}
+                  <RsvpSection title={m.rsvp.sectionPresence}>
+                    <p className="rsvp-reply-question">{m.rsvp.attendance}</p>
+                    <div className="rsvp-radio-list" data-testid="rsvp-attendance">
+                      <RsvpRadio
+                        active={form.present === true}
+                        testId="rsvp-present-oui"
+                        onClick={() => setForm({ ...form, present: true })}
+                      >
+                        {m.rsvp.present}
+                      </RsvpRadio>
+                      <RsvpRadio
+                        active={form.present === false}
+                        testId="rsvp-present-non"
+                        onClick={() => setForm({ ...form, present: false })}
+                      >
+                        {m.rsvp.absent}
+                      </RsvpRadio>
                     </div>
-                  </div>
 
-                  {form.present ? (
-                    <div>
-                      <span className="rsvp-label">{m.rsvp.mode}</span>
-                      <div className="rsvp-choices" data-testid="rsvp-mode">
-                        {[
-                          { v: "presentiel", label: m.rsvp.inPerson },
-                          { v: "zoom", label: m.rsvp.onZoom },
-                        ].map((o) => (
-                          <button
-                            type="button"
-                            key={o.v}
-                            data-testid={`rsvp-mode-${o.v}`}
-                            onClick={() => setForm({ ...form, mode: o.v })}
-                            className={`rsvp-choice${form.mode === o.v ? " rsvp-choice--active" : ""}`}
+                    {form.present ? (
+                      <>
+                        <p className="rsvp-reply-question mt-7">{m.rsvp.mode}</p>
+                        <div className="rsvp-radio-list" data-testid="rsvp-mode">
+                          <RsvpRadio
+                            active={form.mode === "presentiel"}
+                            testId="rsvp-mode-presentiel"
+                            onClick={() => setForm({ ...form, mode: "presentiel" })}
                           >
-                            {o.label}
-                          </button>
-                        ))}
+                            {m.rsvp.inPerson}
+                          </RsvpRadio>
+                          <RsvpRadio
+                            active={form.mode === "zoom"}
+                            testId="rsvp-mode-zoom"
+                            onClick={() => setForm({ ...form, mode: "zoom" })}
+                          >
+                            {m.rsvp.onZoom}
+                          </RsvpRadio>
+                        </div>
+                      </>
+                    ) : null}
+
+                    {form.present && form.mode === "presentiel" ? (
+                      <div className="mt-7 grid gap-6 sm:grid-cols-2">
+                        <RsvpField label={m.rsvp.guests} htmlFor="rsvp-accompagnants">
+                          <select
+                            id="rsvp-accompagnants"
+                            data-testid="rsvp-select-accompagnants"
+                            value={form.accompagnants}
+                            onChange={set("accompagnants")}
+                            className="rsvp-line rsvp-line--select"
+                          >
+                            {[0, 1, 2, 3, 4].map((n) => (
+                              <option key={n} value={n}>
+                                {n === 0 ? m.rsvp.alone : m.rsvp.plusGuests(n)}
+                              </option>
+                            ))}
+                          </select>
+                        </RsvpField>
+                        <RsvpField label={m.rsvp.diet} htmlFor="rsvp-regime">
+                          <select
+                            id="rsvp-regime"
+                            data-testid="rsvp-select-regime"
+                            value={form.regimeIdx}
+                            onChange={(e) => setForm({ ...form, regimeIdx: Number(e.target.value) })}
+                            className="rsvp-line rsvp-line--select"
+                          >
+                            {m.rsvp.regimes.map((r, i) => (
+                              <option key={r} value={i}>
+                                {r}
+                              </option>
+                            ))}
+                          </select>
+                        </RsvpField>
                       </div>
-                    </div>
-                  ) : null}
+                    ) : null}
+                  </RsvpSection>
 
-                  {form.present && form.mode === "presentiel" ? (
-                    <div className="grid items-start gap-3.5 sm:grid-cols-2">
-                      <RsvpField label={m.rsvp.guests} htmlFor="rsvp-accompagnants">
-                        <select
-                          id="rsvp-accompagnants"
-                          data-testid="rsvp-select-accompagnants"
-                          value={form.accompagnants}
-                          onChange={set("accompagnants")}
-                          className="rsvp-input"
-                        >
-                          {[0, 1, 2, 3, 4].map((n) => (
-                            <option key={n} value={n}>
-                              {n === 0 ? m.rsvp.alone : m.rsvp.plusGuests(n)}
-                            </option>
-                          ))}
-                        </select>
-                      </RsvpField>
-                      <RsvpField label={m.rsvp.diet} htmlFor="rsvp-regime">
-                        <select
-                          id="rsvp-regime"
-                          data-testid="rsvp-select-regime"
-                          value={form.regimeIdx}
-                          onChange={(e) => setForm({ ...form, regimeIdx: Number(e.target.value) })}
-                          className="rsvp-input"
-                        >
-                          {m.rsvp.regimes.map((r, i) => (
-                            <option key={r} value={i}>
-                              {r}
-                            </option>
-                          ))}
-                        </select>
-                      </RsvpField>
-                    </div>
-                  ) : null}
+                  <RsvpSection title={m.rsvp.sectionOptional}>
+                    <RsvpField label={m.rsvp.song} htmlFor="rsvp-chanson">
+                      <input
+                        id="rsvp-chanson"
+                        data-testid="rsvp-input-chanson"
+                        placeholder={m.rsvp.songPh}
+                        value={form.chanson}
+                        onChange={set("chanson")}
+                        className="rsvp-line"
+                      />
+                    </RsvpField>
+                    <RsvpField label={m.rsvp.note} htmlFor="rsvp-message" className="mt-6">
+                      <textarea
+                        id="rsvp-message"
+                        data-testid="rsvp-input-message"
+                        rows={3}
+                        placeholder={m.rsvp.notePh}
+                        value={form.message}
+                        onChange={set("message")}
+                        className="rsvp-line rsvp-line--area"
+                      />
+                    </RsvpField>
+                  </RsvpSection>
 
-                  <RsvpField label={m.rsvp.song} htmlFor="rsvp-chanson">
-                    <input
-                      id="rsvp-chanson"
-                      data-testid="rsvp-input-chanson"
-                      placeholder={m.rsvp.songPh}
-                      value={form.chanson}
-                      onChange={set("chanson")}
-                      className="rsvp-input"
-                    />
-                  </RsvpField>
-
-                  <RsvpField label={m.rsvp.note} htmlFor="rsvp-message">
-                    <textarea
-                      id="rsvp-message"
-                      data-testid="rsvp-input-message"
-                      rows={2}
-                      placeholder={m.rsvp.notePh}
-                      value={form.message}
-                      onChange={set("message")}
-                      className="rsvp-input rsvp-input--area"
-                    />
-                  </RsvpField>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    data-testid="rsvp-submit-button"
-                    className="animate-blink inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#4A0E17] px-7 py-3.5 font-cinzel text-xs uppercase tracking-[0.22em] text-[#FAF7F2] transition-colors duration-300 hover:bg-[#6B1724] disabled:opacity-60"
-                  >
-                    <Send size={15} className="text-[#D4AF37]" />
-                    {loading ? m.rsvp.submitting : isUpdate ? m.rsvp.submitUpdate : m.rsvp.submit}
-                  </button>
+                  <div className="rsvp-reply-actions">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      data-testid="rsvp-submit-button"
+                      className="rsvp-reply-submit animate-blink"
+                    >
+                      <Send size={15} className="text-[#D4AF37]" aria-hidden />
+                      {loading ? m.rsvp.submitting : isUpdate ? m.rsvp.submitUpdate : m.rsvp.submit}
+                    </button>
+                  </div>
                 </form>
-              </Frame>
+
+                <footer className="rsvp-recall">
+                  <p className="rsvp-recall-title">{m.rsvp.lookupTitle}</p>
+                  <p className="rsvp-recall-hint">{m.rsvp.lookupHint}</p>
+                  <form onSubmit={lookup} className="rsvp-recall-form">
+                    <input
+                      type="tel"
+                      inputMode="tel"
+                      value={lookupPhone}
+                      onChange={(e) => setLookupPhone(e.target.value)}
+                      placeholder={m.rsvp.phonePh}
+                      className="rsvp-line rsvp-line--compact"
+                      data-testid="rsvp-lookup-phone"
+                    />
+                    <button
+                      type="submit"
+                      disabled={lookupBusy || !lookupPhone.trim()}
+                      className="rsvp-recall-btn"
+                      data-testid="rsvp-lookup-submit"
+                    >
+                      <Search size={14} aria-hidden />
+                      {lookupBusy ? m.rsvp.lookupBusy : m.rsvp.lookupAction}
+                    </button>
+                  </form>
+                </footer>
+              </ReplyCard>
             </motion.div>
           )}
         </AnimatePresence>

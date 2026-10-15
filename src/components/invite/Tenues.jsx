@@ -1,129 +1,85 @@
 import { motion } from "framer-motion";
-import { Sparkles, Shirt } from "lucide-react";
-import { EASE, WEDDING_PALETTE } from "@/lib/invite-data";
+import { EASE, IMAGES, WEDDING_PALETTE } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import Chapter from "./Chapter";
-import LuxeCard from "./LuxeCard";
-import SparkleField from "./SparkleField";
 
-const GEM = {
-  berry: "h-[5.5rem] w-[5.5rem] sm:h-[6.25rem] sm:w-[6.25rem]",
-  wine: "h-[5rem] w-[5rem] sm:h-[5.75rem] sm:w-[5.75rem]",
-  blush: "h-[5.25rem] w-[5.25rem] sm:h-[6rem] sm:w-[6rem]",
-  silver: "h-[4.75rem] w-[4.75rem] sm:h-[5.5rem] sm:w-[5.5rem]",
-};
-
-const gemStyle = (color) => {
+const swatchStyle = (color) => {
   if (color.metallic) {
     return {
       background:
-        "linear-gradient(145deg, #ffffff 0%, #e8eaef 30%, #ffffff 48%, #b8bcc8 55%, #f3f4f6 78%, #c0c0c0 100%)",
+        "linear-gradient(145deg, #ffffff 0%, #e8eaef 28%, #ffffff 46%, #b8bcc8 54%, #f3f4f6 76%, #c0c0c0 100%)",
     };
   }
   if (color.id === "wine") {
-    return {
-      background: `linear-gradient(145deg, ${color.hex} 0%, #3b0910 100%)`,
-      boxShadow: "inset 0 0 0 2px rgba(255,255,255,0.35)",
-    };
+    return { background: `linear-gradient(180deg, #3b0910 0%, ${color.hex} 100%)` };
   }
-  return {
-    background: color.hex,
-    boxShadow: `inset 0 0 0 2px rgba(255,255,255,0.4), 0 16px 36px ${color.hex}44`,
-  };
+  return { background: color.hex };
 };
 
 export default function Tenues() {
   const { m } = useI18n();
+  const colorNames = WEDDING_PALETTE.map((c) => m.tenues.colorLabels[c.id] || c.label).join(", ");
+
   return (
     <section
       id="tenues"
       className="relative overflow-hidden py-24 md:py-36 px-5 sm:px-8 lg:px-16"
       data-testid="tenues-section"
     >
-      <div className="relative z-10 mx-auto max-w-5xl">
+      <div className="relative z-10 mx-auto max-w-6xl">
         <Chapter index="V" eyebrow={m.tenues.chapter} title={m.tenues.title} script={m.tenues.script} />
 
         <motion.div
-          initial={{ opacity: 0, y: 36 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 1, ease: EASE }}
-          className="relative mt-12 sm:mt-16"
+          transition={{ duration: 0.9, ease: EASE }}
+          className="mt-10 sm:mt-14"
+          data-testid="dresscode-inspiration"
         >
-          <LuxeCard noInset className="relative overflow-hidden !p-0" data-testid="wedding-colors">
-            <SparkleField count={16} />
-            <div className="relative bg-gradient-to-br from-[#FFF0F4] via-[#FFFBFC] to-[#FFE8F0] px-6 py-12 sm:px-10 sm:py-16">
-              <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#ED1E79]/10 blur-3xl" aria-hidden="true" />
-              <div className="pointer-events-none absolute -bottom-20 -left-12 h-56 w-56 rounded-full bg-[#C9A962]/15 blur-3xl" aria-hidden="true" />
-
-              <p className="relative text-center font-cinzel text-[10px] font-bold tracking-[0.45em] uppercase text-[#ED1E79]">
-                {m.tenues.paletteTitle}
-              </p>
-              <p className="relative mx-auto mt-3 max-w-lg text-center font-display text-lg font-medium leading-relaxed text-[#4A1025] sm:text-xl">
-                {m.tenues.paletteText}
-              </p>
-
-              <div className="relative mx-auto mt-12 flex max-w-3xl flex-wrap items-end justify-center gap-x-10 gap-y-10 sm:gap-x-14">
-                {WEDDING_PALETTE.map((color, i) => (
-                  <motion.div
-                    key={color.id}
-                    initial={{ opacity: 0, y: 28, scale: 0.9 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.85, delay: 0.08 * i, ease: EASE }}
-                    whileHover={{ y: -6, scale: 1.04 }}
-                    className="flex flex-col items-center"
-                  >
-                    <div className={`palette-gem-ring ${GEM[color.id] || "h-24 w-24"}`}>
-                      <div
-                        className="palette-gem h-full w-full"
-                        style={gemStyle(color)}
-                        data-testid={`color-${color.id}`}
-                      />
-                    </div>
-                    <span className="mt-4 font-cinzel text-[10px] font-bold tracking-[0.28em] uppercase text-[#5C0A20]">
-                      {m.tenues.colorLabels[color.id] || color.label}
-                    </span>
-                    <span className="mt-1 font-display text-sm font-semibold tracking-wide text-[#7A1538]">{color.hex}</span>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="relative mx-auto mt-12 flex max-w-md items-center gap-3" aria-hidden="true">
-                <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#ED1E79]/65" />
-                <Sparkles size={14} className="text-[#C9A962]" strokeWidth={1.5} />
-                <span className="font-cinzel text-[9px] font-bold tracking-[0.35em] uppercase text-[#9B1B4A]">Berry Love</span>
-                <Sparkles size={14} className="text-[#C9A962]" strokeWidth={1.5} />
-                <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[#ED1E79]/65" />
-              </div>
-            </div>
-          </LuxeCard>
+          <img
+            src={IMAGES.dresscodeInspiration}
+            alt={m.tenues.inspirationAlt}
+            className="mx-auto block h-auto w-full max-w-5xl object-contain"
+            loading="lazy"
+            decoding="async"
+          />
         </motion.div>
 
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.85, delay: 0.06, ease: EASE }}
+          className="mx-auto mt-10 max-w-3xl text-center font-display text-lg font-normal italic leading-relaxed text-[#4A1025] sm:mt-12 sm:text-xl md:text-2xl md:leading-snug"
+          data-testid="wedding-colors"
+        >
+          {m.tenues.paletteText}
+        </motion.p>
+
         <motion.div
-          initial={{ opacity: 0, y: 28 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
-          className="mt-10 grid gap-4 sm:grid-cols-2"
-          data-testid="dresscode-card"
+          transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
+          className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:mt-12 sm:gap-5"
+          role="img"
+          aria-label={colorNames}
         >
-          {m.tenues.dress.map(({ title, text }, idx) => {
-            const Icon = idx === 0 ? Shirt : Sparkles;
-            return (
-            <LuxeCard key={title} lift className="p-6 sm:p-7">
-              <div className="flex items-start gap-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#ED1E79]/25 bg-gradient-to-br from-[#FFF0F4] to-[#FFFBFC] text-[#ED1E79] shadow-[0_8px_20px_rgba(237,30,121,0.12)]">
-                  <Icon size={18} strokeWidth={1.5} />
-                </span>
-                <div>
-                  <p className="font-cinzel text-[11px] font-bold tracking-[0.25em] uppercase text-[#7A1538]">{title}</p>
-                  <p className="mt-2 text-sm font-medium leading-relaxed text-[#4A1025]">{text}</p>
-                </div>
-              </div>
-            </LuxeCard>
-            );
-          })}
+          {WEDDING_PALETTE.map((color) => (
+            <span
+              key={color.id}
+              className="relative flex h-[3.25rem] w-[3.25rem] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#F7ECD0] via-[#C9A962] to-[#8A6424] p-[3px] shadow-[0_6px_18px_rgba(201,169,98,0.28)] sm:h-14 sm:w-14"
+              title={m.tenues.colorLabels[color.id] || color.label}
+              data-testid={`color-${color.id}`}
+            >
+              <span
+                className="h-full w-full rounded-full ring-2 ring-white/85 ring-offset-0 shadow-[inset_0_1px_2px_rgba(255,255,255,0.45)]"
+                style={swatchStyle(color)}
+                aria-hidden="true"
+              />
+            </span>
+          ))}
         </motion.div>
       </div>
     </section>

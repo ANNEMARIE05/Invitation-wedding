@@ -5,7 +5,7 @@ import { EASE, IMAGES } from "@/lib/invite-data";
 import { usePhoto } from "@/lib/photos";
 
 export default function Footer() {
-  const { bride, groom, dateLabel } = useSettings();
+  const { coupleLabel, dateLabel } = useSettings();
   const { m } = useI18n();
   const footerPhoto = usePhoto("footer", IMAGES.footerPhoto);
   return (
@@ -27,13 +27,13 @@ export default function Footer() {
             <img
               src={footerPhoto}
               alt={m.footer.photoAlt}
-              className="aspect-[4/5] w-52 rounded-sm object-cover sm:w-64"
+              className="footer-couple-sketch aspect-[4/5] w-52 bg-[#FFFBFC] sm:w-64"
             />
           </div>
           <p className="mt-3 font-script text-2xl text-[#C48B92]">{m.footer.love}</p>
         </motion.div>
         <p className="font-script text-5xl sm:text-6xl text-[#D4AF37]">
-          {bride} & {groom}
+          {coupleLabel}
         </p>
         <div className="mt-6 flex items-center justify-center gap-3">
           <span className="h-px w-14 bg-gradient-to-r from-transparent to-[#C0C0C0]/60" />

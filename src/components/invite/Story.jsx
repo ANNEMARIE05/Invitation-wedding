@@ -4,7 +4,7 @@ import { usePhoto } from "@/lib/photos";
 import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
 export default function Story() {
-  const { bride, groom, story } = useSettings();
+  const { coupleLabel, story } = useSettings();
   const portrait = usePhoto("portrait", IMAGES.portrait);
   return (
     <section id="histoire" className="py-24 md:py-36 px-5 sm:px-8 lg:px-16" data-testid="story-section">
@@ -21,7 +21,7 @@ export default function Story() {
             <div className="absolute -top-4 -left-4 right-4 bottom-4 border border-[#D4AF37]/50 rounded-sm" />
             <img
               src={portrait}
-              alt={`Portrait de ${bride} et ${groom}`}
+              alt={`Portrait de ${coupleLabel}`}
               className="relative w-full aspect-[3/4] object-cover clipped-frame"
               data-testid="story-portrait"
             />

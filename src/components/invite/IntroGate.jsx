@@ -15,11 +15,11 @@ const INTRO_ORBS = [
 ];
 
 export default function IntroGate({ onOpen }) {
-  const { bride, groom, dateLabel } = useSettings();
+  const { dateLabel, coupleLabel, initials, bride, groom } = useSettings();
   const { m } = useI18n();
+  const [opening, setOpening] = useState(false);
   const letterBride = bride.charAt(0).toUpperCase();
   const letterGroom = groom.charAt(0).toUpperCase();
-  const [opening, setOpening] = useState(false);
 
   const open = () => {
     if (opening) return;
@@ -63,7 +63,7 @@ export default function IntroGate({ onOpen }) {
           {m.intro.invited}
         </p>
         <ClassicRule className="mt-4 max-w-[11rem]" tone="light" />
-        <p className="mt-4 font-script text-xl text-[#D4AF37]/95 sm:text-2xl">{bride} & {groom}</p>
+        <p className="mt-4 font-script text-xl text-[#D4AF37]/95 sm:text-2xl">{coupleLabel}</p>
       </motion.div>
 
       <motion.button
@@ -100,13 +100,9 @@ export default function IntroGate({ onOpen }) {
             <div className="relative flex h-full flex-col items-center justify-center px-6 text-center">
               <p className="font-cinzel text-[8px] tracking-[0.42em] uppercase text-[#9B1B4A]/85">{m.intro.weddingTag}</p>
               <ClassicRule className="my-3 max-w-[10rem]" gem="♥" />
-              <p className="font-display text-xl tracking-[0.2em] text-[#2A050B]">
-                {letterBride}
-                <span className="mx-1.5 font-cinzel text-xs tracking-[0.45em] text-[#ED1E79]">&</span>
-                {letterGroom}
-              </p>
+              <p className="font-display text-xl tracking-[0.2em] text-[#2A050B]">{initials}</p>
               <p className="mt-4 font-display text-3xl font-medium italic leading-tight text-[#2A050B] sm:text-4xl">
-                {bride} & {groom}
+                {coupleLabel}
               </p>
               <ClassicRule className="my-4 max-w-[9rem]" />
               <p className="font-cinzel text-[9px] tracking-[0.32em] uppercase text-[#9B1B4A]">{dateLabel}</p>

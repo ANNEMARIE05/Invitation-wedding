@@ -52,17 +52,17 @@ function SharedSettings({ children }) {
 }
 
 function InvitationSeo() {
-  const { bride, groom, venue } = useSettings();
+  const { groom, bride, venue, coupleLabel } = useSettings();
   const { m } = useI18n();
   return (
     <Seo
-      title={m.seo.title(bride, groom)}
-      siteName={`${bride} & ${groom}`}
-      description={m.seo.description(bride, groom)}
+      title={m.seo.title(groom, bride)}
+      siteName={coupleLabel}
+      description={m.seo.description(groom, bride)}
       jsonLd={{
         "@context": "https://schema.org",
         "@type": "Event",
-        name: m.seo.eventName(bride, groom),
+        name: m.seo.eventName(groom, bride),
         startDate: "2026-12-04T13:30:00+00:00",
         eventStatus: "https://schema.org/EventScheduled",
         location: {
