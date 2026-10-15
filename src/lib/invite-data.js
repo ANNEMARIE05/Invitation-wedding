@@ -101,3 +101,12 @@ export const scrollToId = (href) => {
   if (window.__lenis) window.__lenis.scrollTo(el, { offset: -72, duration: 1.6 });
   else el.scrollIntoView({ behavior: "smooth" });
 };
+
+/** Bande-son YouTube (iframe cachée — contrôles via MusicPlayer) */
+export const WEDDING_SONG = {
+  youtubeId: "5UrUEt-Evno",
+  startSeconds: 0,
+  track: "If It Is Love",
+  artist: "Laura Alden",
+  thumbUrl: "https://i.ytimg.com/vi/5UrUEt-Evno/hqdefault.jpg",
+};
