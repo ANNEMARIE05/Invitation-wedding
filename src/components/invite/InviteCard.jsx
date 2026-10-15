@@ -210,7 +210,7 @@ export function CardActions({ cardTestId, fileName = "carte-invitation.png", cla
 export default function InviteCard() {
   const { m } = useI18n();
   return (
-    <section id="faire-part" className="relative overflow-x-clip overflow-y-visible px-5 py-16 sm:px-8 md:py-24" data-testid="invite-card-section">
+    <section id="faire-part" className="relative overflow-x-visible overflow-y-visible px-7 py-16 sm:px-10 md:py-24" data-testid="invite-card-section">
       <SparkleField count={14} className="opacity-70" />
       <motion.div
         initial={{ opacity: 0, y: 40 }}

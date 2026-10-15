@@ -1922,12 +1922,17 @@ body {
     pointer-events: none;
     border-radius: 2px;
     border: 1px solid rgba(212, 175, 55, 0.92);
+    background: linear-gradient(160deg, #fff8f4 0%, #fff0ea 48%, #ffe8e0 100%);
+    box-shadow:
+        0 16px 42px rgba(42, 5, 11, 0.14),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.65);
     top: clamp(1.75rem, 7.5cqi, 2.65rem);
     right: clamp(1.65rem, 7cqi, 2.45rem);
     left: clamp(1.65rem, 7cqi, 2.45rem);
     aspect-ratio: 682 / 1024;
     transform-origin: center center;
-    transform: rotate(-9.25deg) translate(clamp(-36px, -8cqi, -48px), clamp(22px, 5.5cqi, 34px)) scale(1.055);
+    /* Carte arrière — même sens que le devant, plus inclinée pour l’effet empilé */
+    transform: rotate(-7.5deg) translate(clamp(-28px, -6.5cqi, -40px), clamp(20px, 5cqi, 32px)) scale(1.04);
     animation: gold-ring-glimmer 3.6s ease-in-out infinite;
 }
 
@@ -1997,7 +2002,7 @@ body {
     overflow: hidden;
     border-radius: 2px;
     transform-origin: center center;
-    transform: rotate(3.15deg) translate(4px, -3px);
+    transform: rotate(-3.5deg) translate(2px, -2px);
     box-shadow:
         0 22px 56px rgba(42, 5, 11, 0.18),
         0 6px 20px rgba(237, 30, 121, 0.08);
@@ -2678,6 +2683,12 @@ input:focus, select:focus, textarea:focus {
         transform: scale(1.38);
         opacity: 1;
     }
+}
+
+.footer-couple-sketch {
+    display: block;
+    object-fit: contain;
+    object-position: center bottom;
 }
 
 .couple-names-animate {
