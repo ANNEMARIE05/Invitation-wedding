@@ -5,6 +5,8 @@ import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import WeddingPetals from "./WeddingPetals";
 import { FloralCornerOverlay } from "./Flowers";
+import TypewriterText from "./TypewriterText";
+import CoupleNameMotion from "./CoupleNameMotion";
 
 const MaskedLine = ({ children, delay, start }) => (
   <span className="block overflow-hidden pb-2 -mb-2">
@@ -73,12 +75,18 @@ export default function Hero({ start = true }) {
           className="hero-monogram mx-auto mb-7 sm:mb-9"
           data-testid="hero-monogram"
         >
-          <p className="font-display text-[2.15rem] sm:text-[2.5rem] font-medium tracking-[0.12em] text-[#FFFBFC]">
+          <p className="flex items-center justify-center font-display text-[2.15rem] sm:text-[2.5rem] font-medium tracking-[0.12em] text-[#FFFBFC]">
+            <span className="hero-monogram-flower hero-monogram-flower--lead" aria-hidden="true">
+              <span className="hero-monogram-flower__glyph">✿</span>
+            </span>
             {letterGroom}
             <span className="mx-2 sm:mx-3 inline-block font-cinzel text-sm sm:text-base font-normal tracking-[0.55em] text-[#FFD6E0] align-middle">
               &
             </span>
             {letterBride}
+            <span className="hero-monogram-flower hero-monogram-flower--trail" aria-hidden="true">
+              <span className="hero-monogram-flower__glyph">✿</span>
+            </span>
           </p>
         </motion.div>
 
@@ -88,15 +96,40 @@ export default function Hero({ start = true }) {
           </span>
         </MaskedLine>
 
-        <h1 className="mt-6 font-display text-[#FAF7F2] leading-[0.95]" data-testid="hero-names">
+        <h1
+          className="relative z-[1] mt-6 font-display text-[#FAF7F2] leading-[0.95]"
+          data-testid="hero-names"
+        >
           <MaskedLine delay={0.85} start={start}>
-            <span className="hero-name text-6xl italic font-medium sm:text-7xl lg:text-8xl bg-gradient-to-br from-[#FFFBFC] via-[#FFD6E0] to-[#FFFBFC] bg-clip-text text-transparent">{groom}</span>
+            <CoupleNameMotion preset="hero-groom" className="flex w-full justify-center">
+              <TypewriterText
+                text={groom}
+                start={start}
+                delay={200}
+                speed={72}
+                showCursor={false}
+                className="hero-name couple-name-shimmer couple-name-shimmer--a text-6xl italic font-medium sm:text-7xl lg:text-8xl"
+              />
+            </CoupleNameMotion>
           </MaskedLine>
           <MaskedLine delay={1.05} start={start}>
-            <span className="hero-amp my-1 inline-block font-display text-3xl not-italic font-normal tracking-[0.2em] text-[#ED1E79] sm:text-4xl">&</span>
+            <CoupleNameMotion preset="hero-amp" as="span" className="my-1 block">
+              <span className="hero-amp couple-name-amp couple-name-amp--hero inline-block text-3xl not-italic font-normal tracking-[0.2em] sm:text-4xl">
+                &
+              </span>
+            </CoupleNameMotion>
           </MaskedLine>
           <MaskedLine delay={1.25} start={start}>
-            <span className="hero-name text-6xl italic font-medium sm:text-7xl lg:text-8xl text-[#FFFBFC]">{bride}</span>
+            <CoupleNameMotion preset="hero-bride" className="flex w-full justify-center">
+              <TypewriterText
+                text={bride}
+                start={start}
+                delay={200 + groom.length * 72 + 280}
+                speed={72}
+                showCursor={false}
+                className="hero-name couple-name-shimmer couple-name-shimmer--b text-6xl italic font-medium sm:text-7xl lg:text-8xl"
+              />
+            </CoupleNameMotion>
           </MaskedLine>
         </h1>
 

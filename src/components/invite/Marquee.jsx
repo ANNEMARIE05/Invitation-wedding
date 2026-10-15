@@ -13,9 +13,15 @@ export default function Marquee() {
           <div key={half} className="flex items-center">
             {row.map((t, i) => (
               <span key={`${half}-${i}`} className="flex items-center">
-                <span className={i % 2 === 0
-                  ? "font-cinzel text-xs font-semibold sm:text-sm tracking-[0.4em] uppercase text-[#5C0A20] px-8"
-                  : "font-display text-xl italic sm:text-2xl text-[#9B1B4A] px-8"}>
+                <span
+                  className={
+                    t === coupleLabel
+                      ? "marquee-couple-name font-display text-xl italic sm:text-2xl text-[#9B1B4A] px-8"
+                      : i % 2 === 0
+                        ? "font-cinzel text-xs font-semibold sm:text-sm tracking-[0.4em] uppercase text-[#5C0A20] px-8"
+                        : "font-display text-xl italic sm:text-2xl text-[#9B1B4A] px-8"
+                  }
+                >
                   {t}
                 </span>
                 <span className="text-[#B8BCC8] text-sm">◆</span>

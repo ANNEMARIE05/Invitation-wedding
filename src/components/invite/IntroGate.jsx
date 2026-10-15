@@ -7,7 +7,7 @@ import { useSettings } from "@/lib/settings";
 import WeddingPetals from "@/components/invite/WeddingPetals";
 import SparkleField from "@/components/invite/SparkleField";
 import ClassicRule from "@/components/invite/ClassicRule";
-
+import TypewriterText from "@/components/invite/TypewriterText";
 const INTRO_ORBS = [
   { className: "hero-orb hero-orb--magenta left-[6%] top-[14%] h-[min(48vw,340px)] w-[min(48vw,340px)]", delay: 0 },
   { className: "hero-orb hero-orb--wine right-[4%] bottom-[10%] h-[min(52vw,400px)] w-[min(52vw,400px)]", delay: 2.5 },
@@ -63,7 +63,9 @@ export default function IntroGate({ onOpen }) {
           {m.intro.invited}
         </p>
         <ClassicRule className="mt-4 max-w-[11rem]" tone="light" />
-        <p className="mt-4 font-script text-xl text-[#D4AF37]/95 sm:text-2xl">{coupleLabel}</p>
+        <p className="mt-4 font-script text-xl text-[#D4AF37]/95 sm:text-2xl">
+          <TypewriterText text={coupleLabel} start={!opening} delay={600} speed={55} flowerAtStart flowerAtEnd />
+        </p>
       </motion.div>
 
       <motion.button
@@ -102,7 +104,19 @@ export default function IntroGate({ onOpen }) {
               <ClassicRule className="my-3 max-w-[10rem]" gem="♥" />
               <p className="font-display text-xl tracking-[0.2em] text-[#2A050B]">{initials}</p>
               <p className="mt-4 font-display text-3xl font-medium italic leading-tight text-[#2A050B] sm:text-4xl">
-                {coupleLabel}
+                <span className="block">
+                  <TypewriterText text={groom} start={!opening} delay={500} speed={65} flowerAtStart flowerAtEnd />
+                </span>
+                <span className="my-1 block font-cinzel text-sm not-italic tracking-[0.4em] text-[#ED1E79]">&</span>
+                <span className="block">
+                  <TypewriterText
+                    text={bride}
+                    start={!opening}
+                    delay={500 + groom.length * 65 + 320}
+                    speed={65}
+                    flowerAtEnd
+                  />
+                </span>
               </p>
               <ClassicRule className="my-4 max-w-[9rem]" />
               <p className="font-cinzel text-[9px] tracking-[0.32em] uppercase text-[#9B1B4A]">{dateLabel}</p>

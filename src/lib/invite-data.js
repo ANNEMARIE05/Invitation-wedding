@@ -43,12 +43,13 @@ export const ZOOM = {
   code: "0000",
 };
 
-/** Couleurs officielles du mariage (Berry Love + touche argentée) */
+/** Couleurs officielles du mariage (Berry Love + touche argentée) — calées sur le mood board */
 export const WEDDING_PALETTE = [
-  { id: "berry", label: "Framboise", hex: "#9B1B4A" },
-  { id: "wine", label: "Bordeaux", hex: "#2A050B" },
-  { id: "blush", label: "Rose poudré", hex: "#FFD6E0" },
-  { id: "silver", label: "Argenté", hex: "#C0C0C0", metallic: true },
+  { id: "berry", label: "Framboise profonde", hex: "#980522" },
+  { id: "magenta", label: "Framboise vif", hex: "#ED1E79" },
+  { id: "red", label: "Rouge", hex: "#C4282A" },
+  { id: "blush", label: "Rose poudré", hex: "#EBAF9B" },
+  { id: "silver", label: "Argenté", hex: "#B8BCC8", metallic: true },
 ];
 
 export function getZoomJoinUrl(zoom = ZOOM) {
@@ -105,7 +106,7 @@ export const scrollToId = (href) => {
 /** Bande-son YouTube (iframe cachée — contrôles via MusicPlayer) */
 export const WEDDING_SONG = {
   youtubeId: "hLQl3WQQoQ0",
-  startSeconds: 14,
+  startSeconds: 0,
   track: "Someone Like You",
   artist: "Adele",
   thumbUrl: "https://i.ytimg.com/vi/hLQl3WQQoQ0/hqdefault.jpg",

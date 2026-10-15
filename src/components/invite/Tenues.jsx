@@ -7,11 +7,14 @@ const swatchStyle = (color) => {
   if (color.metallic) {
     return {
       background:
-        "linear-gradient(145deg, #ffffff 0%, #e8eaef 28%, #ffffff 46%, #b8bcc8 54%, #f3f4f6 76%, #c0c0c0 100%)",
+        "linear-gradient(145deg, #f8f9fb 0%, #e8eaef 18%, #ffffff 38%, #b8bcc8 52%, #dfe2e8 72%, #a8adb8 100%)",
+      boxShadow: "inset 0 2px 6px rgba(255,255,255,0.65), inset 0 -2px 5px rgba(80,85,95,0.18)",
     };
   }
-  if (color.id === "wine") {
-    return { background: `linear-gradient(180deg, #3b0910 0%, ${color.hex} 100%)` };
+  if (color.id === "magenta") {
+    return {
+      background: `linear-gradient(160deg, #F7338B 0%, ${color.hex} 55%, #9B1B4A 100%)`,
+    };
   }
   return { background: color.hex };
 };

@@ -174,24 +174,37 @@ export const messages = {
     tenues: {
       chapter: "Couleurs & Tenues",
       title: "Berry Love",
-      script: "framboise, bordeaux & argent",
+      script: "framboise, rouge & argent",
       paletteTitle: "Code couleur",
       paletteText:
-        "Costume, robe, combinaison, polo ou imprimé : portez ce dans quoi vous vous sentez élégants. L’essentiel, c’est de reprendre les couleurs de la session — framboise, bordeaux, rose poudré, crème ou beige — pour que nous formions un même tableau ce jour-là.",
+        "Costume, robe, combinaison, polo ou imprimé : portez ce dans quoi vous vous sentez élégants. L’essentiel, c’est de reprendre les couleurs de la session — framboise, rouge, rose poudré, crème ou beige — avec une touche d’argent si vous le souhaitez, pour que nous formions un même tableau ce jour-là.",
       paletteRibbonCaption: "Les tons qui marquent la session",
       inspirationAlt:
         "Collage d’invités en tenues variées — robes, costumes, polos — dans les couleurs framboise, bordeaux, rose et crème",
-      colorLabels: { berry: "Framboise", wine: "Bordeaux", blush: "Rose poudré", silver: "Argenté" },
+      colorLabels: {
+        berry: "Framboise profonde",
+        magenta: "Framboise vif",
+        red: "Rouge",
+        blush: "Rose poudré",
+        silver: "Argenté",
+      },
       colorHints: {
-        berry: "Robe, costume, cravate ou foulard dans ce rose profond.",
-        wine: "Parfait en costume, robe longue ou manteau bordeaux.",
-        blush: "Douceur : robe claire, chemise ou accessoire rose pâle.",
+        berry: "Roses foncées du bouquet, bordeaux framboise.",
+        magenta: "Robes et papeterie rose vif du mood board.",
+        red: "Rouge des chaussures et fleurs éclatantes.",
+        blush: "Rose doux de la robe et des tons poudrés.",
         silver: "Bijoux, chaussures, pochette ou ceinture — en accent, pas obligatoire.",
       },
-      colorRoles: { berry: "Couleur phare", wine: "Couleur phare", blush: "Alternative douce", silver: "Accent" },
+      colorRoles: {
+        berry: "Couleur phare",
+        magenta: "Couleur phare",
+        red: "Couleur phare",
+        blush: "Alternative douce",
+        silver: "Accent",
+      },
       dress: [
         { title: "Liberté de style", text: "Robe longue, costume, combinaison, polo, imprimé floral ou smart casual : tout est possible, tant que c’est soigné." },
-        { title: "Couleurs de la session", text: "Framboise, bordeaux, rose poudré, crème ou beige en fil rouge. Vert olive, marine ou noir en complément ; une touche d’argent reste la bienvenue." },
+        { title: "Couleurs de la session", text: "Framboise, rouge, rose poudré, crème ou beige en fil rouge. Vert olive, marine ou noir en complément ; une touche d’argent reste la bienvenue." },
       ],
     },
     rsvp: {
@@ -509,24 +522,37 @@ export const messages = {
     tenues: {
       chapter: "Colours & Attire",
       title: "Berry Love",
-      script: "berry, burgundy & silver",
+      script: "berry, red & silver",
       paletteTitle: "Dress code colours",
       paletteText:
-        "Suit, dress, jumpsuit, polo or floral print — wear what makes you feel elegant. What matters is picking the session colours — berry, burgundy, blush, cream or beige — so we look united on the day.",
+        "Suit, dress, jumpsuit, polo or floral print — wear what makes you feel elegant. What matters is picking the session colours — berry, red, blush, cream or beige — with an optional touch of silver so we look united on the day.",
       paletteRibbonCaption: "The shades that mark the session",
       inspirationAlt:
         "Collage of guests in varied outfits — dresses, suits, polos — in berry, burgundy, blush and cream tones",
-      colorLabels: { berry: "Berry", wine: "Burgundy", blush: "Blush pink", silver: "Silver" },
+      colorLabels: {
+        berry: "Deep berry",
+        magenta: "Vivid berry",
+        red: "Red",
+        blush: "Blush pink",
+        silver: "Silver",
+      },
       colorHints: {
-        berry: "Dress, suit, tie or scarf in this rich berry tone.",
-        wine: "Great for suits, long dresses or a burgundy coat.",
-        blush: "Softer option: light dress, shirt or blush accessory.",
+        berry: "Dark bouquet roses, berry burgundy.",
+        magenta: "Bright pink dresses and stationery from the mood board.",
+        red: "Red from shoes and vivid florals.",
+        blush: "Soft dress pink and powdery tones.",
         silver: "Jewellery, shoes, pocket square or belt — accent only, optional.",
       },
-      colorRoles: { berry: "Hero colour", wine: "Hero colour", blush: "Soft option", silver: "Accent" },
+      colorRoles: {
+        berry: "Hero colour",
+        magenta: "Hero colour",
+        red: "Hero colour",
+        blush: "Soft option",
+        silver: "Accent",
+      },
       dress: [
         { title: "Your style", text: "Long dress, suit, jumpsuit, polo, floral print or smart casual — all welcome, as long as it’s polished." },
-        { title: "Session colours", text: "Berry, burgundy, blush, cream or beige as your thread. Olive, navy or black work too; a touch of silver is welcome." },
+        { title: "Session colours", text: "Berry, red, blush, cream or beige as your thread. Olive, navy or black work too; a touch of silver is welcome." },
       ],
     },
     rsvp: {
