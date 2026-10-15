@@ -2170,41 +2170,6 @@ body {
     background: transparent;
 }
 
-@media (max-width: 640px) {
-    #faire-part {
-        overflow-x: visible;
-    }
-
-    .faire-part-stage {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
-    .faire-part-stack {
-        width: 100%;
-        max-width: 100%;
-        padding: clamp(1.25rem, 5.5cqi, 1.85rem) clamp(1.25rem, 5.5cqi, 1.65rem);
-        transform: translateY(clamp(-14px, -3.5cqi, -22px)) translateX(clamp(8px, 2cqi, 14px));
-    }
-
-    .faire-part-gold-ring {
-        top: clamp(1.25rem, 5.5cqi, 1.85rem);
-        right: clamp(1.25rem, 5.5cqi, 1.65rem);
-        left: clamp(1.25rem, 5.5cqi, 1.65rem);
-        transform: rotate(-9.25deg) translate(clamp(-16px, -4cqi, -24px), clamp(18px, 4.5cqi, 28px)) scale(1.055);
-    }
-
-    .faire-part-shell:not(.faire-part-shell--flat) {
-        transform: rotate(3.15deg) translate(2px, -2px);
-    }
-
-    .faire-part-aura {
-        inset: -4%;
-    }
-}
-
 @media (prefers-reduced-motion: reduce) {
     .page-flow,
     .hero-orb,

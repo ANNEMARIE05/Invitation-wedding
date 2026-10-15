@@ -66,6 +66,64 @@ function ChicWeddingHeart() {
   );
 }
 
+function BigDayCountdown({ rows, onDark = false }) {
+  const valueClass = onDark ? "text-[#FFFBFC]" : "text-[#5C0A20]";
+  const sepClass = onDark ? "text-[#FFD6E0]/90" : "text-[#7A1538]";
+  const labelClass = onDark ? "text-[#FFD6E0]/85" : "text-[#6B2440]/90";
+
+  return (
+    <div
+      className="bigday-countdown flex flex-nowrap justify-center items-baseline gap-x-0.5 sm:gap-x-2.5"
+      data-testid="countdown-grid"
+    >
+      {rows.map(({ key, label, value }, i) => (
+        <Fragment key={key}>
+          {i > 0 ? (
+            <span
+              className={`bigday-countdown__sep font-display text-[1.65rem] sm:text-[2.75rem] leading-none select-none shrink-0 ${sepClass}`}
+              aria-hidden="true"
+            >
+              :
+            </span>
+          ) : null}
+          <div className="bigday-countdown__unit text-center shrink-0" data-testid={`countdown-${key}`}>
+            <p className={`bigday-countdown__value font-display text-[1.65rem] sm:text-[2.75rem] font-semibold tabular-nums leading-none ${valueClass}`}>
+              {key === "days" ? String(value) : String(value).padStart(2, "0")}
+            </p>
+            <p className={`bigday-countdown__label mt-2 sm:mt-2.5 font-cinzel text-[8px] sm:text-[10px] font-semibold tracking-[0.14em] sm:tracking-[0.32em] uppercase ${labelClass}`}>
+              {label}
+            </p>
+          </div>
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+function BigDayCalendarActions({ m, downloadIcs, googleUrl }) {
+  return (
+    <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+      <button
+        type="button"
+        data-testid="download-ics-button"
+        onClick={downloadIcs}
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-[#7A1538] text-[#FFFBFC] font-cinzel text-[10px] font-semibold tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-[#5C0A20] transition-colors duration-300"
+      >
+        <CalendarPlus size={15} strokeWidth={1.5} /> {m.bigDay.addCalendar}
+      </button>
+      <a
+        data-testid="google-calendar-link"
+        href={googleUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center justify-center gap-2 rounded-full border border-[#FFD6E0]/45 text-[#FFFBFC] font-cinzel text-[10px] tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-white/10 transition-colors duration-300"
+      >
+        {m.bigDay.googleCalendar}
+      </a>
+    </div>
+  );
+}
+
 export default function BigDay() {
   const { bride, groom, dateIso, dateLabel, venue, locale } = useSettings();
   const { m } = useI18n();
@@ -159,112 +217,74 @@ export default function BigDay() {
       <div className="relative z-10 w-full max-w-2xl mx-auto">
         <Chapter index="II" eyebrow={m.bigDay.chapter} title={m.bigDay.title} script={m.bigDay.script} dark />
 
-        <div className="bigday-panel-frame">
-          <span className="bigday-panel-corner bigday-panel-corner--tl" aria-hidden="true" />
-          <span className="bigday-panel-corner bigday-panel-corner--tr" aria-hidden="true" />
-          <span className="bigday-panel-corner bigday-panel-corner--bl" aria-hidden="true" />
-          <span className="bigday-panel-corner bigday-panel-corner--br" aria-hidden="true" />
+        <div className="bigday-stack">
+          <div className="mb-7 sm:mb-9 px-1">
+            <BigDayCountdown rows={countdownRows} onDark />
+          </div>
 
-        <motion.article
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9, ease: EASE }}
-          className="bigday-card relative overflow-hidden rounded-sm bg-[#FFFBFC] text-[#2A050B] shadow-[0_24px_70px_rgba(0,0,0,0.35)] px-3 py-10 sm:px-11 sm:py-12"
-          data-testid="calendar-card"
-        >
-          <span className="bigday-card-corner bigday-card-corner--tl" aria-hidden="true" />
-          <span className="bigday-card-corner bigday-card-corner--tr" aria-hidden="true" />
-          <span className="bigday-card-corner bigday-card-corner--bl" aria-hidden="true" />
-          <span className="bigday-card-corner bigday-card-corner--br" aria-hidden="true" />
-          <span className="bigday-card-ornament bigday-card-ornament--top" aria-hidden="true" />
-          <span className="bigday-card-ornament bigday-card-ornament--bottom" aria-hidden="true" />
-          <SparkleField count={14} chic onLight className="z-0 opacity-90" />
-          <div className="relative z-[1]">
-          <div
-            className="bigday-countdown flex flex-nowrap justify-center items-baseline gap-x-0.5 sm:gap-x-2.5"
-            data-testid="countdown-grid"
-          >
-            {countdownRows.map(({ key, label, value }, i) => (
-              <Fragment key={key}>
-                {i > 0 ? (
-                  <span
-                    className="bigday-countdown__sep font-display text-[1.65rem] sm:text-[2.75rem] text-[#7A1538] leading-none select-none shrink-0"
-                    aria-hidden="true"
-                  >
-                    :
-                  </span>
-                ) : null}
-                <div className="bigday-countdown__unit text-center shrink-0" data-testid={`countdown-${key}`}>
-                  <p className="bigday-countdown__value font-display text-[1.65rem] sm:text-[2.75rem] font-semibold text-[#5C0A20] tabular-nums leading-none">
-                    {key === "days" ? String(value) : String(value).padStart(2, "0")}
-                  </p>
-                  <p className="bigday-countdown__label mt-2 sm:mt-2.5 font-cinzel text-[8px] sm:text-[10px] font-semibold tracking-[0.14em] sm:tracking-[0.32em] uppercase text-[#6B2440]/90">
-                    {label}
-                  </p>
+          <div className="bigday-panel-frame">
+            <span className="bigday-panel-corner bigday-panel-corner--tl" aria-hidden="true" />
+            <span className="bigday-panel-corner bigday-panel-corner--tr" aria-hidden="true" />
+            <span className="bigday-panel-corner bigday-panel-corner--bl" aria-hidden="true" />
+            <span className="bigday-panel-corner bigday-panel-corner--br" aria-hidden="true" />
+
+            <motion.article
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9, ease: EASE }}
+              className="bigday-card relative overflow-hidden rounded-sm bg-[#FFFBFC] text-[#2A050B] shadow-[0_24px_70px_rgba(0,0,0,0.35)] px-3 py-7 sm:px-11 sm:py-12"
+              data-testid="calendar-card"
+            >
+              <span className="bigday-card-corner bigday-card-corner--tl" aria-hidden="true" />
+              <span className="bigday-card-corner bigday-card-corner--tr" aria-hidden="true" />
+              <span className="bigday-card-corner bigday-card-corner--bl" aria-hidden="true" />
+              <span className="bigday-card-corner bigday-card-corner--br" aria-hidden="true" />
+              <span className="bigday-card-ornament bigday-card-ornament--top" aria-hidden="true" />
+              <span className="bigday-card-ornament bigday-card-ornament--bottom" aria-hidden="true" />
+              <SparkleField count={14} chic onLight className="z-0 opacity-90" />
+              <div className="relative z-[1]">
+                <p className="text-center font-cinzel text-[11px] font-semibold tracking-[0.38em] uppercase text-[#7A1538]">
+                  {cal.label}
+                </p>
+                <div className="mt-4 grid grid-cols-7 gap-1 text-center font-cinzel text-[10px] font-medium tracking-widest text-[#6B2440]/75">
+                  {m.bigDay.weekdays.map((d, i) => (
+                    <span key={i} className="py-1">{d}</span>
+                  ))}
                 </div>
-              </Fragment>
-            ))}
+                <div className="grid grid-cols-7 gap-1 text-center font-display text-lg text-[#2A050B]/80">
+                  {[...Array(cal.first)].map((_, i) => <span key={`empty-${i}`} />)}
+                  {[...Array(cal.days)].map((_, i) => {
+                    const day = i + 1;
+                    const isWeddingDay = day === cal.day;
+                    return (
+                      <span
+                        key={day}
+                        data-testid={isWeddingDay ? "calendar-wedding-day" : undefined}
+                        className={isWeddingDay ? "relative inline-flex items-center justify-center py-1.5" : "py-1.5"}
+                      >
+                        {isWeddingDay ? (
+                          <>
+                            <ChicWeddingHeart />
+                            <span className="relative z-[1] font-display text-lg font-semibold text-[#5C0A20]">{day}</span>
+                          </>
+                        ) : (
+                          day
+                        )}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.article>
           </div>
 
-          <div className="my-9 sm:my-10 h-px bg-gradient-to-r from-transparent via-[#7A1538]/20 to-transparent" />
-
-          <p className="text-center font-cinzel text-[11px] font-semibold tracking-[0.38em] uppercase text-[#7A1538]">
-            {cal.label}
-          </p>
-          <div className="mt-4 grid grid-cols-7 gap-1 text-center font-cinzel text-[10px] font-medium tracking-widest text-[#6B2440]/75">
-            {m.bigDay.weekdays.map((d, i) => (
-              <span key={i} className="py-1">{d}</span>
-            ))}
+          <div className="mt-7 sm:mt-9 px-2 text-center">
+            <p className="font-cinzel text-[10px] sm:text-[11px] font-medium tracking-[0.28em] uppercase text-[#FFD6E0]/90 leading-relaxed">
+              {m.bigDay.calendarFooter(dateLabel)}
+            </p>
+            <BigDayCalendarActions m={m} downloadIcs={downloadIcs} googleUrl={googleUrl} />
           </div>
-          <div className="grid grid-cols-7 gap-1 text-center font-display text-lg text-[#2A050B]/80">
-            {[...Array(cal.first)].map((_, i) => <span key={`empty-${i}`} />)}
-            {[...Array(cal.days)].map((_, i) => {
-              const day = i + 1;
-              const isWeddingDay = day === cal.day;
-              return (
-                <span
-                  key={day}
-                  data-testid={isWeddingDay ? "calendar-wedding-day" : undefined}
-                  className={isWeddingDay ? "relative inline-flex items-center justify-center py-1.5" : "py-1.5"}
-                >
-                  {isWeddingDay ? (
-                    <>
-                      <ChicWeddingHeart />
-                      <span className="relative z-[1] font-display text-lg font-semibold text-[#5C0A20]">{day}</span>
-                    </>
-                  ) : (
-                    day
-                  )}
-                </span>
-              );
-            })}
-          </div>
-          <p className="mt-6 text-center font-cinzel text-[10px] font-medium tracking-[0.28em] uppercase text-[#6B2440]/85 leading-relaxed">
-            {m.bigDay.calendarFooter(dateLabel)}
-          </p>
-
-          <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
-            <button
-              type="button"
-              data-testid="download-ics-button"
-              onClick={downloadIcs}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#7A1538] text-[#FFFBFC] font-cinzel text-[10px] font-semibold tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-[#5C0A20] transition-colors duration-300"
-            >
-              <CalendarPlus size={15} strokeWidth={1.5} /> {m.bigDay.addCalendar}
-            </button>
-            <a
-              data-testid="google-calendar-link"
-              href={googleUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#7A1538]/35 text-[#5C0A20] font-cinzel text-[10px] tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-[#FFF0F4] transition-colors duration-300"
-            >
-              {m.bigDay.googleCalendar}
-            </a>
-          </div>
-          </div>
-        </motion.article>
         </div>
       </div>
     </section>
