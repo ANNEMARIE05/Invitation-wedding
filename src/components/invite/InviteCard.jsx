@@ -160,7 +160,7 @@ export function FairePart({ guest, testId = "invite-card", variant = "showcase" 
   );
 }
 
-const captureCard = async (cardTestId) => {
+export const captureCard = async (cardTestId) => {
   const node = document.querySelector(`[data-testid="${cardTestId}"]`);
   if (!node) return null;
   const target = node.querySelector(".faire-part-shell") || node;

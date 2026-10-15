@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Check, MessageCircle, Sparkles, Search } from "lucide-react";
 import { toast } from "sonner";
@@ -96,6 +96,7 @@ export default function Rsvp() {
   const [editLocked, setEditLocked] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [cardModalOpen, setCardModalOpen] = useState(false);
+  const [autoShareCard, setAutoShareCard] = useState(false);
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target ? e.target.value : e });
   const firstName = (name) => String(name || "").trim().split(/\s+/)[0] || "";
@@ -110,7 +111,7 @@ export default function Rsvp() {
       d.present ? `${m.rsvp.waMode} : ${modeLabel}` : "",
       d.present && d.mode === "presentiel" ? `${m.rsvp.waCount} : ${partySize(d)}` : "",
       d.present && d.mode === "presentiel" ? `${m.rsvp.waDiet} : ${d.regime}` : "",
-      d.chanson ? `${m.rsvp.waSong} : ${d.chanson}` : "",
+      d.present && d.chanson ? `${m.rsvp.waSong} : ${d.chanson}` : "",
       d.message ? `${m.rsvp.waMessage} : ${d.message}` : "",
     ]
       .filter(Boolean)
@@ -161,6 +162,7 @@ export default function Rsvp() {
         ...form,
         regime: m.rsvp.regimes[Number(form.regimeIdx) || 0],
         accompagnants: Number(form.accompagnants),
+        chanson: form.present ? form.chanson : "",
       };
       delete payload.regimeIdx;
       const data = await createRsvp(payload, { update: isUpdate });
@@ -169,6 +171,7 @@ export default function Rsvp() {
       setEditLocked(false);
       if (data.present && data.mode === "presentiel") {
         setCardModalOpen(true);
+        setAutoShareCard(true);
       }
       toast.success(data.present ? m.rsvp.toastPresent : m.rsvp.toastAbsent);
     } catch (err) {
@@ -190,6 +193,8 @@ export default function Rsvp() {
       setLoading(false);
     }
   };
+
+  const handleAutoShareDone = useCallback(() => setAutoShareCard(false), []);
 
   const startEdit = () => {
     if (editLocked) {
@@ -263,6 +268,8 @@ export default function Rsvp() {
                         open={cardModalOpen}
                         onOpenChange={setCardModalOpen}
                         guest={confirmed}
+                        autoShareWhenOpen={autoShareCard}
+                        onAutoShareDone={handleAutoShareDone}
                       />
                     </>
                   ) : confirmed.present ? (
@@ -360,7 +367,7 @@ export default function Rsvp() {
                       <RsvpRadio
                         active={form.present === false}
                         testId="rsvp-present-non"
-                        onClick={() => setForm({ ...form, present: false })}
+                        onClick={() => setForm({ ...form, present: false, chanson: "" })}
                       >
                         {m.rsvp.absent}
                       </RsvpRadio>
@@ -425,17 +432,19 @@ export default function Rsvp() {
                   </RsvpSection>
 
                   <RsvpSection title={m.rsvp.sectionOptional}>
-                    <RsvpField label={m.rsvp.song} htmlFor="rsvp-chanson">
-                      <input
-                        id="rsvp-chanson"
-                        data-testid="rsvp-input-chanson"
-                        placeholder={m.rsvp.songPh}
-                        value={form.chanson}
-                        onChange={set("chanson")}
-                        className="rsvp-line"
-                      />
-                    </RsvpField>
-                    <RsvpField label={m.rsvp.note} htmlFor="rsvp-message" className="mt-6">
+                    {form.present ? (
+                      <RsvpField label={m.rsvp.song} htmlFor="rsvp-chanson">
+                        <input
+                          id="rsvp-chanson"
+                          data-testid="rsvp-input-chanson"
+                          placeholder={m.rsvp.songPh}
+                          value={form.chanson}
+                          onChange={set("chanson")}
+                          className="rsvp-line"
+                        />
+                      </RsvpField>
+                    ) : null}
+                    <RsvpField label={m.rsvp.note} htmlFor="rsvp-message" className={form.present ? "mt-6" : ""}>
                       <textarea
                         id="rsvp-message"
                         data-testid="rsvp-input-message"

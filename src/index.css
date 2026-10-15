@@ -2086,7 +2086,7 @@ body {
     flex-shrink: 0;
 }
 
-.invite-card-modal-actions button {
+.invite-card-modal-actions button[data-testid$="-download"] {
     border-color: rgba(237, 30, 121, 0.55);
     background: linear-gradient(135deg, #fffefb 0%, #fff5f8 100%);
     box-shadow: 0 8px 28px rgba(42, 5, 11, 0.35);

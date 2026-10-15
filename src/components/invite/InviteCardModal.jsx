@@ -1,7 +1,12 @@
+import { useEffect, useRef } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import { toast } from "sonner";
+import { deliverInviteCardOnWhatsApp } from "@/lib/invite-card-share";
 import { useI18n } from "@/lib/locale";
-import { CardActions, FairePart } from "./InviteCard";
+import { CardActions, captureCard, FairePart } from "./InviteCard";
+
+const firstName = (name) => String(name || "").trim().split(/\s+/)[0] || "";
 
 export default function InviteCardModal({
   open,
@@ -9,8 +14,65 @@ export default function InviteCardModal({
   guest,
   cardTestId = "personal-invite-card",
   fileName = "ma-carte-invitation.png",
+  autoShareWhenOpen = false,
+  onAutoShareDone,
 }) {
   const { m } = useI18n();
+  const autoShareStarted = useRef(false);
+
+  const shareText = guest ? m.rsvp.waCardShareText(firstName(guest.nom)) : "";
+  const selfChatText = m.rsvp.waCardSelfChat;
+
+  useEffect(() => {
+    if (!open) {
+      autoShareStarted.current = false;
+      return;
+    }
+    if (!autoShareWhenOpen || autoShareStarted.current || !guest?.telephone) return;
+    autoShareStarted.current = true;
+
+    let cancelled = false;
+    (async () => {
+      await new Promise((r) => setTimeout(r, 550));
+      if (cancelled) return;
+
+      try {
+        const result = await deliverInviteCardOnWhatsApp({
+          captureCard,
+          cardTestId,
+          fileName,
+          shareText,
+          selfChatText,
+          telephone: guest.telephone,
+        });
+        if (cancelled) return;
+        if (result.ok) {
+          toast.success(m.inviteSection.shareWhatsAppOk);
+        } else {
+          toast.message(m.inviteSection.shareWhatsAppErr);
+        }
+      } catch {
+        if (!cancelled) toast.error(m.inviteSection.shareWhatsAppErr);
+      } finally {
+        if (!cancelled) onAutoShareDone?.();
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    open,
+    autoShareWhenOpen,
+    guest,
+    cardTestId,
+    fileName,
+    shareText,
+    selfChatText,
+    m.inviteSection.shareWhatsAppOk,
+    m.inviteSection.shareWhatsAppErr,
+    onAutoShareDone,
+  ]);
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>

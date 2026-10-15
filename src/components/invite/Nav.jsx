@@ -1,12 +1,22 @@
-import { motion } from "framer-motion";
+import { useMemo } from "react";
+import { LayoutGroup, motion } from "framer-motion";
 import { scrollToId } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
+import { useNavActive } from "@/lib/use-nav-active";
 import LangToggle from "./LangToggle";
 
 export default function Nav() {
   const { initials } = useSettings();
   const { m } = useI18n();
+  const sectionIds = useMemo(() => m.nav.links.map((l) => l.href.slice(1)), [m.nav.links]);
+  const [activeHref, activateOnNavigate] = useNavActive(sectionIds);
+
+  const goTo = (href) => {
+    activateOnNavigate(href === "#hero" ? null : href);
+    scrollToId(href);
+  };
+
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}
@@ -18,29 +28,47 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
         <button
           data-testid="nav-logo-button"
-          onClick={() => scrollToId("#hero")}
+          onClick={() => goTo("#hero")}
           className="font-display text-xl font-medium tracking-[0.08em] text-[#2A050B] leading-none pt-0.5"
         >
           {initials}
         </button>
         <nav className="hidden md:flex items-center gap-8">
-          {m.nav.links.map((l) => (
-            <button
-              key={l.href}
-              data-testid={`nav-link-${l.href.slice(1)}`}
-              onClick={() => scrollToId(l.href)}
-              className="gold-underline font-cinzel text-[11px] font-semibold tracking-[0.25em] uppercase text-[#6B2440] hover:text-[#ED1E79] transition-colors"
-            >
-              {l.label}
-            </button>
-          ))}
+          <LayoutGroup id="main-nav-links">
+          {m.nav.links.map((l) => {
+            const isActive = activeHref === l.href;
+            return (
+              <button
+                key={l.href}
+                type="button"
+                data-testid={`nav-link-${l.href.slice(1)}`}
+                onClick={() => goTo(l.href)}
+                aria-current={isActive ? "true" : undefined}
+                className={`relative pb-1 font-cinzel text-[11px] font-semibold tracking-[0.25em] uppercase transition-colors duration-500 ${
+                  isActive
+                    ? "text-[#ED1E79]"
+                    : "text-[#6B2440] hover:text-[#ED1E79] gold-underline"
+                }`}
+              >
+                {l.label}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-indicator"
+                    className="absolute inset-x-0 bottom-0 h-px bg-[var(--gold)]"
+                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                )}
+              </button>
+            );
+          })}
+          </LayoutGroup>
         </nav>
         <div className="flex items-center gap-2 sm:gap-2.5">
           <LangToggle />
           <button
             type="button"
             data-testid="nav-rsvp-button"
-            onClick={() => scrollToId("#rsvp")}
+            onClick={() => goTo("#rsvp")}
             className="btn-rejoindre !min-w-0 !px-5 !py-2.5 !text-[10px] !shadow-[0_10px_28px_rgba(237,30,121,0.3)]"
           >
             <span className="relative z-[1]">{m.nav.confirm}</span>

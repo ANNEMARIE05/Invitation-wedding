@@ -71,6 +71,10 @@ export const messages = {
       cardModalTitle: "Votre carte d'invitation",
       cardModalHint: "Aperçu fidèle au fichier téléchargé — enregistrez l'image pour la partager.",
       closeModal: "Fermer",
+      shareWhatsApp: "Envoyer sur WhatsApp",
+      shareWhatsAppBusy: "Préparation…",
+      shareWhatsAppOk: "WhatsApp s’ouvre sur votre numéro — joignez l’image téléchargée au message.",
+      shareWhatsAppErr: "Impossible d’ouvrir WhatsApp — téléchargez la carte depuis la fenêtre affichée.",
     },
     verses: {
       chapter: "Paroles du cœur",
@@ -254,6 +258,10 @@ export const messages = {
       waDiet: "Régime",
       waSong: "Chanson",
       waMessage: "Message",
+      waCardShareText: (name) => `Ma carte d'invitation — mariage Stéphane & Marie (${name || "invité·e"})`,
+      waCardSelfChat:
+        "Voici ma carte d'invitation personnalisée ✦ Joignez l'image « ma-carte-invitation.png » que le site vient de télécharger.",
+      whatsappCard: "Recevoir ma carte sur WhatsApp",
     },
     guestbook: {
       chapter: "Livre d'Or",
@@ -398,6 +406,10 @@ export const messages = {
       cardModalTitle: "Your invitation card",
       cardModalHint: "This preview matches the downloaded file — save the image to share it.",
       closeModal: "Close",
+      shareWhatsApp: "Send on WhatsApp",
+      shareWhatsAppBusy: "Preparing…",
+      shareWhatsAppOk: "WhatsApp is opening on your number — attach the downloaded image to the message.",
+      shareWhatsAppErr: "Could not open WhatsApp — download the card from the dialog shown.",
     },
     verses: {
       chapter: "Words from the heart",
@@ -581,6 +593,10 @@ export const messages = {
       waDiet: "Diet",
       waSong: "Song",
       waMessage: "Message",
+      waCardShareText: (name) => `My invitation card — Stéphane & Marie wedding (${name || "guest"})`,
+      waCardSelfChat:
+        "Here is my personalised invitation card ✦ Attach the « ma-carte-invitation.png » image the site just downloaded.",
+      whatsappCard: "Get my card on WhatsApp",
     },
     guestbook: {
       chapter: "Guestbook",
