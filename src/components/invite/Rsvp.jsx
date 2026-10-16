@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Check, MessageCircle, Sparkles, Search } from "lucide-react";
 import { toast } from "sonner";
