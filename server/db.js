@@ -101,8 +101,17 @@ function listRsvps(db) {
 function findRsvpByPhone(db, telephone) {
   const key = normalizePhone(telephone);
   if (!key) return null;
-  const row = db.prepare("SELECT * FROM rsvps WHERE telephone_norm = ?").get(key);
-  return rowToRsvp(row);
+  let row = db.prepare("SELECT * FROM rsvps WHERE telephone_norm = ?").get(key);
+  if (row) return rowToRsvp(row);
+
+  if (key.length >= 8) {
+    const suffix = key.slice(-8);
+    row = db.prepare(
+      "SELECT * FROM rsvps WHERE telephone_norm LIKE ? OR ? LIKE '%' || telephone_norm ORDER BY datetime(created_at) DESC LIMIT 1",
+    ).get(`%${suffix}`, key);
+    if (row) return rowToRsvp(row);
+  }
+  return null;
 }
 
 function upsertRsvp(db, payload, { allowUpdate }) {

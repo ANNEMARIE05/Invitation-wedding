@@ -97,7 +97,12 @@ export default function InviteCardModal({
             <FairePart guest={guest} testId={cardTestId} variant="flat" />
           </div>
 
-          <CardActions cardTestId={cardTestId} fileName={fileName} className="invite-card-modal-actions" />
+          <CardActions
+            cardTestId={cardTestId}
+            fileName={fileName}
+            guest={guest}
+            className="invite-card-modal-actions"
+          />
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

@@ -26,23 +26,57 @@ export function openWhatsAppUrl(url) {
   return true;
 }
 
-/** Génère la carte PNG, la télécharge puis ouvre WhatsApp sur le numéro invité (sans dialogue de partage). */
+export async function dataUrlToFile(dataUrl, fileName = "carte-invitation.png") {
+  const res = await fetch(dataUrl);
+  const blob = await res.blob();
+  return new File([blob], fileName, { type: "image/png" });
+}
+
+/**
+ * Partage la carte d'invitation sur WhatsApp :
+ * - Sur smartphone (iOS / Android) : utilise le partage natif (Web Share API)
+ *   avec le fichier image PNG attaché directement dans WhatsApp.
+ * - Sur desktop / fallback : télécharge l'image et ouvre WhatsApp.
+ */
 export async function deliverInviteCardOnWhatsApp({
   captureCard,
-  cardTestId,
-  fileName,
-  shareText,
-  selfChatText,
-  telephone,
+  cardTestId = "personal-invite-card",
+  fileName = "ma-carte-invitation.png",
+  shareText = "",
+  selfChatText = "",
+  telephone = "",
 }) {
   const dataUrl = await captureCard(cardTestId);
   if (!dataUrl) return { ok: false, reason: "capture_failed" };
 
-  triggerDownload(dataUrl, fileName);
   const text = [shareText, selfChatText].filter(Boolean).join("\n\n");
-  const url = whatsAppSendUrl(telephone, text);
+
+  // 1. Partage direct avec image attachée (mobile)
+  if (typeof navigator !== "undefined" && navigator.canShare) {
+    try {
+      const file = await dataUrlToFile(dataUrl, fileName);
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: "Mon invitation au mariage",
+          text,
+          files: [file],
+        });
+        return { ok: true, method: "native_share", dataUrl };
+      }
+    } catch (err) {
+      if (err && err.name === "AbortError") {
+        return { ok: true, method: "cancelled", dataUrl };
+      }
+    }
+  }
+
+  // 2. Fallback ordinateur : téléchargement de l'image + ouverture WhatsApp
+  triggerDownload(dataUrl, fileName);
+  const url = telephone
+    ? whatsAppSendUrl(telephone, text)
+    : `https://wa.me/?text=${encodeURIComponent(text)}`;
   if (url && openWhatsAppUrl(url)) {
     return { ok: true, method: "download_and_wa", dataUrl };
   }
-  return { ok: false, reason: url ? "popup_blocked" : "no_phone", dataUrl };
+  return { ok: true, method: "download_only", dataUrl };
 }

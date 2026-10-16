@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { toPng } from "html-to-image";
-import { Download } from "lucide-react";
+import { Download, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
+import { deliverInviteCardOnWhatsApp } from "@/lib/invite-card-share";
 import { EASE } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { messages } from "@/lib/translations";
@@ -167,9 +168,16 @@ export const captureCard = async (cardTestId) => {
   return toPng(target, { pixelRatio: 2, backgroundColor: "#FFF9F5", cacheBust: true });
 };
 
-export function CardActions({ cardTestId, fileName = "carte-invitation.png", className = "" }) {
+export function CardActions({
+  cardTestId,
+  fileName = "carte-invitation.png",
+  className = "",
+  guest = null,
+  showWhatsApp = true,
+}) {
   const { m } = useI18n();
   const [busy, setBusy] = useState(false);
+  const [busyWa, setBusyWa] = useState(false);
 
   const downloadCard = async () => {
     setBusy(true);
@@ -179,7 +187,9 @@ export function CardActions({ cardTestId, fileName = "carte-invitation.png", cla
       const link = document.createElement("a");
       link.href = dataUrl;
       link.download = fileName;
+      document.body.appendChild(link);
       link.click();
+      link.remove();
       toast.success(m.inviteSection.downloadOk);
     } catch {
       toast.error(m.inviteSection.downloadErr);
@@ -188,16 +198,55 @@ export function CardActions({ cardTestId, fileName = "carte-invitation.png", cla
     }
   };
 
+  const shareWhatsApp = async () => {
+    setBusyWa(true);
+    try {
+      const firstName = guest?.nom ? String(guest.nom).trim().split(/\s+/)[0] : "";
+      const shareText = guest ? m.rsvp.waCardShareText(firstName) : "";
+      const result = await deliverInviteCardOnWhatsApp({
+        captureCard,
+        cardTestId,
+        fileName,
+        shareText,
+        selfChatText: m.rsvp.waCardSelfChat,
+        telephone: guest?.telephone || "",
+      });
+      if (result.ok && result.method === "native_share") {
+        toast.success(m.inviteSection.shareWhatsAppOk);
+      } else if (result.ok) {
+        toast.success(m.inviteSection.downloadOk);
+      } else {
+        toast.error(m.inviteSection.shareWhatsAppErr);
+      }
+    } catch {
+      toast.error(m.inviteSection.shareWhatsAppErr);
+    } finally {
+      setBusyWa(false);
+    }
+  };
+
   return (
     <div
       className={`mt-6 flex flex-wrap items-center justify-center gap-3 ${className}`.trim()}
       data-testid={`${cardTestId}-actions`}
     >
+      {showWhatsApp ? (
+        <button
+          type="button"
+          data-testid={`${cardTestId}-share-whatsapp`}
+          onClick={shareWhatsApp}
+          disabled={busy || busyWa}
+          className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#25D366]/40 bg-[#25D366]/15 px-6 py-3.5 font-cinzel text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0d5925] backdrop-blur-sm transition-all duration-300 hover:border-[#25D366]/70 hover:bg-[#25D366]/25 disabled:opacity-60"
+        >
+          <MessageCircle size={16} className="text-[#25D366]" />
+          {busyWa ? m.inviteSection.shareWhatsAppBusy : m.inviteSection.shareWhatsApp}
+        </button>
+      ) : null}
       <button
         type="button"
         data-testid={`${cardTestId}-download`}
         onClick={downloadCard}
-        disabled={busy}
+        disabled={busy || busyWa}
         className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#ED1E79]/30 bg-white/90 px-6 py-3.5 font-cinzel text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5C0A20] backdrop-blur-sm transition-all duration-300 hover:border-[#ED1E79]/55 hover:bg-[#FFF5F8] disabled:opacity-60"
       >
         <Download size={15} className="text-[#ED1E79]" />

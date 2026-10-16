@@ -118,31 +118,65 @@ export default function Rsvp() {
       .join("\n");
   };
 
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("wedding_guest_rsvp") || "null");
+      if (saved?.nom && saved?.telephone) {
+        setSent(saved);
+        setForm(rsvpToForm(saved, m.rsvp.regimes));
+        setIsUpdate(true);
+      }
+    } catch {}
+  }, [m.rsvp.regimes]);
+
   const lookup = async (e) => {
     e?.preventDefault?.();
     const phone = lookupPhone.trim() || form.telephone.trim();
     if (!phone) return;
     setLookupBusy(true);
     try {
-      const result = await findRsvpByPhone(phone);
-      if (!result?.rsvp) {
+      let rsvpData = null;
+      let isLocked = false;
+      try {
+        const result = await findRsvpByPhone(phone);
+        if (result?.rsvp) {
+          rsvpData = result.rsvp;
+          isLocked = Boolean(result.edit_locked);
+        }
+      } catch {
+        // Fallback si l'API est temporairement inaccessible
+      }
+
+      // Si pas encore trouvé via API, vérifier le localStorage local
+      if (!rsvpData) {
+        try {
+          const cached = JSON.parse(localStorage.getItem("wedding_guest_rsvp") || "null");
+          if (cached && (cached.telephone === phone || String(cached.telephone || "").replace(/\D/g, "").includes(String(phone).replace(/\D/g, "")))) {
+            rsvpData = cached;
+          }
+        } catch {}
+      }
+
+      if (!rsvpData) {
         setForm({ ...initial, telephone: phone });
         setIsUpdate(false);
         setEditLocked(false);
         toast.message(m.rsvp.lookupNotFound);
         return;
       }
-      setEditLocked(Boolean(result.edit_locked));
-      if (result.edit_locked) {
-        setSent(result.rsvp);
-        setIsUpdate(false);
-        toast.error(m.rsvp.lookupLocked);
-        return;
-      }
-      setForm(rsvpToForm(result.rsvp, m.rsvp.regimes));
+
+      setEditLocked(isLocked);
+      setForm(rsvpToForm(rsvpData, m.rsvp.regimes));
+      setSent(rsvpData);
       setIsUpdate(true);
-      setSent(null);
-      toast.success(m.rsvp.lookupFound(firstName(result.rsvp.nom)));
+      try {
+        localStorage.setItem("wedding_guest_rsvp", JSON.stringify(rsvpData));
+      } catch {}
+
+      if (rsvpData.present && rsvpData.mode === "presentiel") {
+        setCardModalOpen(true);
+      }
+      toast.success(m.rsvp.lookupFound(firstName(rsvpData.nom)));
     } catch {
       toast.error(m.rsvp.toastErr);
     } finally {
@@ -169,11 +203,14 @@ export default function Rsvp() {
       setSent(data);
       setIsUpdate(true);
       setEditLocked(false);
-      if (data.present && data.mode === "presentiel") {
+      try {
+        localStorage.setItem("wedding_guest_rsvp", JSON.stringify(data));
+      } catch {}
+      if (data?.present && data?.mode === "presentiel") {
         setCardModalOpen(true);
         setAutoShareCard(true);
       }
-      toast.success(data.present ? m.rsvp.toastPresent : m.rsvp.toastAbsent);
+      toast.success(data?.present ? m.rsvp.toastPresent : m.rsvp.toastAbsent);
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.code === "rsvp_locked") {
@@ -255,15 +292,26 @@ export default function Rsvp() {
 
                   {confirmed.present && confirmed.mode === "presentiel" ? (
                     <>
-                      <button
-                        type="button"
-                        data-testid="rsvp-view-card-button"
-                        onClick={() => setCardModalOpen(true)}
-                        className="mt-6 inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#ED1E79]/35 bg-white px-7 py-3.5 font-cinzel text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5C0A20] transition-all hover:border-[#ED1E79]/55 hover:bg-[#FFF5F8]"
-                      >
-                        <Sparkles size={15} className="text-[#ED1E79]" />
-                        {m.inviteSection.viewCard}
-                      </button>
+                      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                        <button
+                          type="button"
+                          data-testid="rsvp-view-card-button"
+                          onClick={() => setCardModalOpen(true)}
+                          className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#ED1E79]/35 bg-white px-7 py-3.5 font-cinzel text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5C0A20] transition-all hover:border-[#ED1E79]/55 hover:bg-[#FFF5F8]"
+                        >
+                          <Sparkles size={15} className="text-[#ED1E79]" />
+                          {m.inviteSection.viewCard}
+                        </button>
+                        <button
+                          type="button"
+                          data-testid="rsvp-whatsapp-card-button"
+                          onClick={() => setCardModalOpen(true)}
+                          className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#25D366]/40 bg-[#25D366]/15 px-6 py-3.5 font-cinzel text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0d5925] backdrop-blur-sm transition-all duration-300 hover:border-[#25D366]/70 hover:bg-[#25D366]/25"
+                        >
+                          <MessageCircle size={15} className="text-[#25D366]" />
+                          {m.inviteSection.shareWhatsApp}
+                        </button>
+                      </div>
                       <InviteCardModal
                         open={cardModalOpen}
                         onOpenChange={setCardModalOpen}

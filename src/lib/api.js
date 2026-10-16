@@ -33,6 +33,10 @@ async function request(path, options = {}) {
     } catch {
       data = null;
     }
+  } else if (!res.ok) {
+    throw new ApiError(res.status, `http_${res.status}`, null);
+  } else if (path.startsWith("/api/")) {
+    throw new ApiError(res.status, "invalid_api_response", null);
   }
   if (!res.ok) {
     throw new ApiError(res.status, data?.error, data);
