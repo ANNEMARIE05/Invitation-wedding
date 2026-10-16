@@ -8,7 +8,7 @@ export default function Chapter({ index, eyebrow, title, script, dark = false })
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: true, margin: "0px 0px -40px 0px" }}
       transition={{ duration: 0.9, ease: EASE }}
       className="text-center mb-14 md:mb-20"
     >

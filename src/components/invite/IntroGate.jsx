@@ -84,7 +84,7 @@ export default function IntroGate({ onOpen }) {
       >
         <div className="intro-envelope-glow pointer-events-none" aria-hidden="true" />
         <motion.div
-          className="relative w-[88vw] max-w-[480px] aspect-[7/5]"
+          className="intro-envelope-body relative w-[88vw] max-w-[480px] aspect-[7/5]"
           animate={opening ? { y: 30, scale: 0.97 } : { y: [0, -8, 0], scale: 1 }}
           transition={opening ? { duration: 0.9, delay: 1.2, ease: EASE } : { duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
           data-testid="intro-envelope"
@@ -133,7 +133,7 @@ export default function IntroGate({ onOpen }) {
           />
 
           <motion.div
-            className="absolute top-0 left-0 right-0"
+            className="intro-envelope-flap absolute top-0 left-0 right-0"
             style={{
               height: "56%",
               transformOrigin: "top center",

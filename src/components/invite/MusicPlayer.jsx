@@ -69,12 +69,12 @@ const playBtn =
 export default function MusicPlayer({ opened }) {
   const { m } = useI18n();
   const playerRef = useRef(null);
-  const volumeRef = useRef(30);
+  const volumeRef = useRef(20);
   const wantPlay = useRef(false);
   const userPaused = useRef(false);
   const [ready, setReady] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [volume, setVolume] = useState(30);
+  const [volume, setVolume] = useState(20);
   const [ui, setUi] = useState(readUiMode);
 
   useEffect(() => {

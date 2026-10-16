@@ -125,7 +125,7 @@ export function FairePart({ guest, testId = "invite-card", variant = "showcase" 
         initial={{ rotateX: 10, y: 32, opacity: 0 }}
         whileInView={{ rotateX: 0, y: 0, opacity: 1 }}
         whileHover={{ y: -6, rotateX: 2, rotateY: -2 }}
-        viewport={{ once: true, margin: "-60px" }}
+        viewport={{ once: true, margin: "0px 0px -40px 0px" }}
         transition={{ duration: 1.1, ease: EASE }}
         className="faire-part-stage"
       >
@@ -210,12 +210,12 @@ export function CardActions({ cardTestId, fileName = "carte-invitation.png", cla
 export default function InviteCard() {
   const { m } = useI18n();
   return (
-    <section id="faire-part" className="relative overflow-x-visible overflow-y-visible px-7 py-16 sm:px-10 md:py-24" data-testid="invite-card-section">
+    <section id="faire-part" className="relative overflow-x-visible overflow-y-visible px-[clamp(1.15rem,5.2vw,1.75rem)] py-16 sm:px-10 md:py-24" data-testid="invite-card-section">
       <SparkleField count={14} className="opacity-70" />
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
+        viewport={{ once: true, margin: "0px 0px -40px 0px" }}
         transition={{ duration: 0.9, ease: EASE }}
         className="relative z-[1] mb-10 text-center"
       >
@@ -226,7 +226,7 @@ export default function InviteCard() {
         ) : null}
       </motion.div>
 
-      <div className="relative z-[1] mx-auto w-full max-w-[min(100%,480px)] overflow-visible sm:max-w-[520px]">
+      <div className="invite-card-showcase relative z-[1] mx-auto w-full max-w-[min(100%,480px)] overflow-visible sm:max-w-[520px]">
         <FairePart />
       </div>
     </section>

@@ -31,7 +31,7 @@ export default function Venues() {
               key={venue.id}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
+              viewport={{ once: true, margin: "0px 0px -40px 0px" }}
               transition={{ duration: 0.9, delay: i * 0.1, ease: EASE }}
             >
               <LuxeCard as="article" lift animate={false} className="overflow-hidden !rounded-[1.25rem] !rounded-b-lg" data-testid={`venue-card-${venue.id}`}>

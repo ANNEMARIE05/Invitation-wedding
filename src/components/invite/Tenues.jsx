@@ -35,7 +35,7 @@ export default function Tenues() {
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
+          viewport={{ once: true, margin: "0px 0px -40px 0px" }}
           transition={{ duration: 0.9, ease: EASE }}
           className="mt-10 sm:mt-14"
           data-testid="dresscode-inspiration"
@@ -52,7 +52,7 @@ export default function Tenues() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
+          viewport={{ once: true, margin: "0px 0px -40px 0px" }}
           transition={{ duration: 0.85, delay: 0.06, ease: EASE }}
           className="mx-auto mt-10 max-w-3xl text-center font-display text-lg font-normal italic leading-relaxed text-[#4A1025] sm:mt-12 sm:text-xl md:text-2xl md:leading-snug"
           data-testid="wedding-colors"

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "@/App.css";
 import Lenis from "lenis";
-import { AnimatePresence } from "framer-motion";
+import "lenis/dist/lenis.css";
+import { AnimatePresence, MotionConfig } from "framer-motion";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 import { PhotosContext } from "@/lib/photos";
@@ -103,7 +104,12 @@ function Invitation() {
   });
 
   useEffect(() => {
-    const lenis = new Lenis({ duration: 1.15, smoothWheel: true });
+    const lenis = new Lenis({
+      duration: 1.15,
+      smoothWheel: true,
+      syncTouch: false,
+      touchMultiplier: 1.15,
+    });
     window.__lenis = lenis;
     let rafId;
     const raf = (time) => {
@@ -120,8 +126,17 @@ function Invitation() {
 
   useEffect(() => {
     document.body.style.overflow = opened ? "" : "hidden";
-    if (opened) window.__lenis?.start();
-    else window.__lenis?.stop();
+    if (opened) {
+      window.__lenis?.start();
+      // Permet à Lenis et aux IntersectionObserver de Framer Motion de recalculer la hauteur
+      requestAnimationFrame(() => {
+        window.__lenis?.resize();
+        window.dispatchEvent(new Event("resize"));
+        window.dispatchEvent(new Event("scroll"));
+      });
+    } else {
+      window.__lenis?.stop();
+    }
   }, [opened]);
 
   return (
@@ -136,25 +151,27 @@ function Invitation() {
             {!opened && <IntroGate onOpen={() => setOpened(true)} />}
           </AnimatePresence>
           {opened && <Nav />}
-          <main>
-            <Hero start={opened} />
-            <Marquee />
-            <InviteCard />
-            <Verses />
-            <TornDivider top="#FFF0F4" bottom="#5C0A20" />
-            <BigDay />
-            <TornDivider top="#5C0A20" bottom="#FFE0EA" />
-            <Program />
-            <TornDivider top="#FFE0EA" bottom="#FFF0F4" />
-            <Venues />
-            <Tenues />
-            <TornDivider top="#FFE0EA" bottom="#5C0A20" />
-            <Rsvp />
-            <TornDivider top="#5C0A20" bottom="#FFE0EA" />
-            <Guestbook />
-            <TornDivider top="#FFE0EA" bottom="#5C0A20" />
-          </main>
-          <Footer />
+          <div className={opened ? undefined : "invite-content-pending"} aria-hidden={!opened}>
+            <main>
+              <Hero start={opened} />
+              <Marquee />
+              <InviteCard />
+              <Verses />
+              <TornDivider top="#FFF0F4" bottom="#5C0A20" />
+              <BigDay />
+              <TornDivider top="#5C0A20" bottom="#FFE0EA" />
+              <Program />
+              <TornDivider top="#FFE0EA" bottom="#FFF0F4" />
+              <Venues />
+              <Tenues />
+              <TornDivider top="#FFE0EA" bottom="#5C0A20" />
+              <Rsvp />
+              <TornDivider top="#5C0A20" bottom="#FFE0EA" />
+              <Guestbook />
+              <TornDivider top="#FFE0EA" bottom="#5C0A20" />
+            </main>
+            <Footer />
+          </div>
           <MusicPlayer opened={opened} />
           <BackToTop />
         </div>
@@ -165,40 +182,42 @@ function Invitation() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <LocaleProvider>
-        <SharedSettings>
-          <Routes>
-            <Route path="/" element={<Invitation />} />
-            <Route path="/espace-maries" element={<CoupleSpace />} />
-            <Route
-              path="/reponses"
-              element={
-                <RequireCoupleAuth>
-                  <RsvpDashboard />
-                </RequireCoupleAuth>
-              }
-            />
-            <Route
-              path="/photos"
-              element={
-                <RequireCoupleAuth>
-                  <PhotosAdmin />
-                </RequireCoupleAuth>
-              }
-            />
-            <Route
-              path="/infos"
-              element={
-                <RequireCoupleAuth>
-                  <InfosAdmin />
-                </RequireCoupleAuth>
-              }
-            />
-          </Routes>
-        </SharedSettings>
-        <Toaster position="bottom-center" richColors />
-      </LocaleProvider>
-    </BrowserRouter>
+    <MotionConfig reducedMotion="never">
+      <BrowserRouter>
+        <LocaleProvider>
+          <SharedSettings>
+            <Routes>
+              <Route path="/" element={<Invitation />} />
+              <Route path="/espace-maries" element={<CoupleSpace />} />
+              <Route
+                path="/reponses"
+                element={
+                  <RequireCoupleAuth>
+                    <RsvpDashboard />
+                  </RequireCoupleAuth>
+                }
+              />
+              <Route
+                path="/photos"
+                element={
+                  <RequireCoupleAuth>
+                    <PhotosAdmin />
+                  </RequireCoupleAuth>
+                }
+              />
+              <Route
+                path="/infos"
+                element={
+                  <RequireCoupleAuth>
+                    <InfosAdmin />
+                  </RequireCoupleAuth>
+                }
+              />
+            </Routes>
+          </SharedSettings>
+          <Toaster position="bottom-center" richColors />
+        </LocaleProvider>
+      </BrowserRouter>
+    </MotionConfig>
   );
 }

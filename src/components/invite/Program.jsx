@@ -24,7 +24,7 @@ export default function Program() {
                 key={p.time}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, margin: "0px 0px -40px 0px" }}
                 transition={{ duration: 0.9, ease: EASE }}
                 className={`relative w-full md:w-[52%] md:pl-0 ${i % 2 === 0 ? "md:pr-12 md:text-right" : "md:ml-auto md:pl-12"}`}
                 data-testid={`program-item-${i}`}

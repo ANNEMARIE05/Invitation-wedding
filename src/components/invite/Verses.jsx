@@ -31,7 +31,7 @@ export default function Verses() {
                 className="flex h-full pt-2 sm:pt-3"
                 initial={{ opacity: 0, y: 36 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, margin: "0px 0px -40px 0px" }}
                 transition={{ duration: 0.9, delay: i * 0.12, ease: EASE }}
               >
                 <LuxeCard

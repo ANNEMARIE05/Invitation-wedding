@@ -22,7 +22,7 @@ export default function LuxeCard({
         className={shell}
         initial={{ opacity: 0, y: 28 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-40px" }}
+        viewport={{ once: true, margin: "0px 0px -30px 0px" }}
         transition={{ duration: 0.85, ease: EASE_VIEW }}
         {...rest}
       >
