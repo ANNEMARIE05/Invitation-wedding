@@ -2303,6 +2303,7 @@ body {
     overflow: hidden;
     border-radius: 2px;
     box-shadow: 0 16px 48px rgba(42, 5, 11, 0.14);
+    container-type: inline-size;
 }
 
 .personal-invite-shell.faire-part-shell--capture {
@@ -2331,33 +2332,54 @@ body {
 
 .personal-invite-name {
     position: absolute;
-    left: 50%;
-    top: 49.2%;
-    width: 74%;
+    left: var(--pi-name-x, 50%);
+    top: var(--pi-name-y, 49.6%);
+    width: var(--pi-name-max-w, 68%);
     margin: 0;
     transform: translate(-50%, -50%);
-    font-family: "Great Vibes", "Pinyon Script", var(--font-display), cursive;
-    font-size: clamp(1.05rem, 5.2cqi, 1.55rem);
-    font-weight: 500;
+    font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    font-size: var(--pi-name-fs, 3.67cqi);
+    font-weight: 600;
+    font-synthesis: none;
     line-height: 1.15;
+    letter-spacing: 0.025em;
     text-align: center;
-    color: #4a0e17;
-    text-wrap: balance;
+    text-transform: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #521018;
+}
+
+.personal-invite-name--md {
+    font-size: var(--pi-name-fs-md, 3.23cqi);
+}
+
+.personal-invite-name--sm {
+    font-size: var(--pi-name-fs-sm, 2.79cqi);
+    letter-spacing: 0.018em;
+}
+
+.personal-invite-name--xs {
+    font-size: var(--pi-name-fs-xs, 2.35cqi);
+    letter-spacing: 0.012em;
 }
 
 .personal-invite-count {
     position: absolute;
-    left: 46.5%;
-    top: 54.75%;
-    width: 2.75rem;
+    left: var(--pi-count-x, 59.4%);
+    top: var(--pi-count-y, 55.5%);
     margin: 0;
     transform: translate(-50%, -50%);
-    font-family: Cinzel, serif;
-    font-size: clamp(0.62rem, 2.35cqi, 0.78rem);
+    font-family: Cinzel, "Cormorant Garamond", Georgia, serif;
+    font-size: var(--pi-count-fs, 2.13cqi);
     font-weight: 700;
-    letter-spacing: 0.04em;
+    font-synthesis: none;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    letter-spacing: 0.05em;
     text-align: center;
-    color: #4a0e17;
+    color: #521018;
 }
 
 .palette-gem {

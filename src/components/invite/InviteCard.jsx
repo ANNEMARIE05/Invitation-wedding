@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { toPng } from "html-to-image";
 import { Download, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
+import { ensureInviteCardFontsReady } from "@/lib/invite-card-capture";
 import { buildInviteCardShareText, deliverInviteCardOnWhatsApp } from "@/lib/invite-card-share";
 import { EASE } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
@@ -68,8 +69,12 @@ export const captureCard = async (cardTestId) => {
     node.querySelector(".personal-invite-shell") || node.querySelector(".faire-part-shell") || node;
   target.classList.add("faire-part-shell--capture");
   try {
+    if (target.classList.contains("personal-invite-shell")) {
+      await ensureInviteCardFontsReady();
+    }
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-    const bg = target.classList.contains("personal-invite-shell") ? "#FDF8F0" : "#FDF8F0";
+    await new Promise((r) => setTimeout(r, 80));
+    const bg = "#FDF8F0";
     return await toPng(target, { pixelRatio: 2, backgroundColor: bg, cacheBust: true });
   } finally {
     target.classList.remove("faire-part-shell--capture");
