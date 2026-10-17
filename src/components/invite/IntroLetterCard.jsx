@@ -19,23 +19,23 @@ export default function IntroLetterCard({
 
   const inner = (
     <>
-      <div className="absolute inset-1.5 rounded-sm border border-[#D4AF37]/35 pointer-events-none" />
-      <div className="absolute inset-2.5 rounded-sm border border-[#ED1E79]/18 pointer-events-none" />
+      <div className="absolute inset-1.5 rounded-sm border border-wedding-gold-accent/35 pointer-events-none" />
+      <div className="absolute inset-2.5 rounded-sm border border-wedding-rose/18 pointer-events-none" />
       <div className="relative flex h-full flex-col items-center justify-center px-6 text-center sm:px-8">
-        <p className="font-cinzel text-[8px] tracking-[0.42em] uppercase text-[#9B1B4A]/85 sm:text-[9px]">
+        <p className="font-cinzel text-[8px] tracking-[0.42em] uppercase text-wedding-wine-accent/85 sm:text-[9px]">
           {m.intro.weddingTag}
         </p>
         <ClassicRule className="my-3 max-w-[10rem] sm:my-4" gem="♥" />
-        <p className="font-display text-xl tracking-[0.2em] text-[#2A050B] sm:text-2xl">{initials}</p>
+        <p className="font-display text-xl tracking-[0.2em] text-wedding-ink sm:text-2xl">{initials}</p>
         <p
-          className={`mt-4 font-display font-medium italic leading-tight text-[#2A050B] ${
+          className={`mt-4 font-display font-medium italic leading-tight text-wedding-ink ${
             compact ? "text-2xl sm:text-3xl" : "text-3xl sm:text-4xl lg:text-[2.65rem]"
           }`}
         >
           {coupleLabel}
         </p>
         <ClassicRule className="my-4 max-w-[9rem] sm:my-5" />
-        <p className="font-cinzel text-[9px] tracking-[0.32em] uppercase text-[#9B1B4A] sm:text-[10px]">
+        <p className="font-cinzel text-[9px] tracking-[0.32em] uppercase text-wedding-wine-accent sm:text-[10px]">
           {dateLabel}
         </p>
       </div>
@@ -43,7 +43,7 @@ export default function IntroLetterCard({
   );
 
   const shellCls = [
-    "intro-letter-card relative overflow-hidden rounded-sm bg-[#FFFBFC]",
+    "intro-letter-card relative overflow-hidden rounded-sm bg-wedding-on-dark",
     floating
       ? "shadow-[0_32px_90px_rgba(0,0,0,0.5),0_0_0_1px_rgba(212,175,55,0.12)]"
       : "shadow-[0_24px_70px_rgba(0,0,0,0.45)]",

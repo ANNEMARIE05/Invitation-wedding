@@ -39,19 +39,19 @@ export default function PhotosAdmin() {
 
   return (
     <div
-      className="min-h-screen bg-[linear-gradient(160deg,#2A050B_0%,#3B0910_60%,#58111A_100%)] text-[#FAF7F2] px-5 sm:px-10 py-10"
+      className="min-h-screen bg-[linear-gradient(160deg,#2A050B_0%,#3B0910_60%,#58111A_100%)] text-wedding-on-dark px-5 sm:px-10 py-10"
       data-testid="photos-admin"
     >
       <div className="max-w-4xl mx-auto">
         <Link
           to="/espace-maries"
           data-testid="photos-back-link"
-          className="inline-flex items-center gap-2 font-cinzel text-[11px] tracking-[0.25em] uppercase text-[#C48B92] hover:text-[#D4AF37] transition-colors"
+          className="inline-flex items-center gap-2 font-cinzel text-[11px] tracking-[0.25em] uppercase text-[#C48B92] hover:text-wedding-gold-accent transition-colors"
         >
           <ArrowLeft size={14} /> Espace mariés
         </Link>
         <h1 className="mt-4 font-display text-4xl sm:text-5xl">Photos de l’invitation</h1>
-        <p className="mt-1 font-script text-2xl text-[#D4AF37]">les visuels visibles sur la page d’accueil</p>
+        <p className="mt-1 font-script text-2xl text-wedding-gold-accent">les visuels visibles sur la page d’accueil</p>
         <p className="mt-3 text-sm text-[#C48B92] max-w-2xl">
           Chaque carte correspond à un emplacement réel sur le site. L’aperçu montre l’image actuelle (démo ou la vôtre).
         </p>
@@ -66,7 +66,7 @@ export default function PhotosAdmin() {
                 className="overflow-hidden rounded-2xl border hairline-gold bg-white/[0.04]"
                 data-testid={`photo-slot-${s.key}`}
               >
-                <div className="relative h-44 bg-[#2A050B]">
+                <div className="relative h-44 bg-wedding-ink">
                   {preview ? (
                     <img
                       src={preview}
@@ -82,8 +82,8 @@ export default function PhotosAdmin() {
                   <span
                     className={`absolute top-3 right-3 inline-flex items-center gap-1 rounded-full font-cinzel text-[9px] tracking-[0.15em] uppercase px-3 py-1 ${
                       customized
-                        ? "bg-[#D4AF37] text-[#2A050B]"
-                        : "bg-[#FAF7F2]/15 text-[#FAF7F2] ring-1 ring-[#FAF7F2]/25"
+                        ? "bg-wedding-gold-accent text-wedding-ink"
+                        : "bg-wedding-on-dark/15 text-wedding-on-dark ring-1 ring-wedding-on-dark/25"
                     }`}
                   >
                     {customized ? (
@@ -111,7 +111,7 @@ export default function PhotosAdmin() {
                     data-testid={`photo-upload-button-${s.key}`}
                     onClick={() => inputs.current[s.key]?.click()}
                     disabled={busy === s.key}
-                    className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#D4AF37] text-[#2A050B] font-cinzel text-[10px] tracking-[0.2em] uppercase px-5 py-3 hover:bg-[#B89428] transition-all disabled:opacity-50"
+                    className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-full bg-wedding-gold-accent text-wedding-ink font-cinzel text-[10px] tracking-[0.2em] uppercase px-5 py-3 hover:bg-[#B89428] transition-all disabled:opacity-50"
                   >
                     <Upload size={14} /> {busy === s.key ? "Envoi…" : customized ? "Remplacer" : "Choisir une photo"}
                   </button>

@@ -20,17 +20,17 @@ export default function AnimatedCoupleNames({
 
   const nameCls =
     variant === "script"
-      ? "font-script text-3xl sm:text-4xl text-[#D4AF37]"
+      ? "font-script text-3xl sm:text-4xl text-wedding-gold-accent"
       : variant === "footer"
         ? "couple-name-shimmer font-script text-5xl sm:text-6xl"
-        : "font-display text-2xl font-medium italic text-[#FFD6E0] sm:text-3xl";
+        : "font-display text-2xl font-medium italic text-wedding-rose-light sm:text-3xl";
 
   const showFlowers = variant !== "footer";
 
   const ampCls =
     variant === "footer"
       ? "my-2 font-cinzel text-sm tracking-[0.45em] text-[#C48B92]"
-      : "my-1 font-cinzel text-xs sm:text-sm tracking-[0.4em] text-[#ED1E79]";
+      : "my-1 font-cinzel text-xs sm:text-sm tracking-[0.4em] text-wedding-rose";
 
   return (
     <motion.div
@@ -75,7 +75,7 @@ export default function AnimatedCoupleNames({
             flowerAtStart={showFlowers}
             flowerAtEnd={showFlowers}
           />
-          <span className="mx-2 font-cinzel not-italic tracking-[0.35em] text-[#ED1E79]">&</span>
+          <span className="mx-2 font-cinzel not-italic tracking-[0.35em] text-wedding-rose">&</span>
           <TypewriterText
             text={bride}
             start={start}

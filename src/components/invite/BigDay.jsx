@@ -29,13 +29,13 @@ function ChicWeddingHeart() {
         <defs>
           <linearGradient id={`${uid}-gold`} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FFF8E7" />
-            <stop offset="45%" stopColor="#C9A962" />
-            <stop offset="100%" stopColor="#7A1538" />
+            <stop offset="45%" stopColor="var(--gold)" />
+            <stop offset="100%" stopColor="var(--wine)" />
           </linearGradient>
           <linearGradient id={`${uid}-rose`} x1="12" y1="5" x2="12" y2="21" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#FFD6E0" />
-            <stop offset="55%" stopColor="#ED1E79" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#9B1B4A" stopOpacity="0.12" />
+            <stop offset="0%" stopColor="var(--rose-light)" />
+            <stop offset="55%" stopColor="var(--rose)" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="var(--wine-accent)" stopOpacity="0.12" />
           </linearGradient>
           <radialGradient id={`${uid}-glint`} cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(12 7.2) rotate(90) scale(4.5)">
             <stop stopColor="#FFFFFF" stopOpacity="0.95" />
@@ -67,9 +67,9 @@ function ChicWeddingHeart() {
 }
 
 function BigDayCountdown({ rows, onDark = false }) {
-  const valueClass = onDark ? "text-[#FFFBFC]" : "text-[#5C0A20]";
-  const sepClass = onDark ? "text-[#FFD6E0]/90" : "text-[#7A1538]";
-  const labelClass = onDark ? "text-[#FFD6E0]/85" : "text-[#6B2440]/90";
+  const valueClass = onDark ? "text-wedding-on-dark" : "text-wedding-wine-deep";
+  const sepClass = onDark ? "text-wedding-rose-light/90" : "text-wedding-wine";
+  const labelClass = onDark ? "text-wedding-rose-light/85" : "text-wedding-muted/90";
 
   return (
     <div
@@ -107,7 +107,7 @@ function BigDayCalendarActions({ m, downloadIcs, googleUrl }) {
         type="button"
         data-testid="download-ics-button"
         onClick={downloadIcs}
-        className="inline-flex items-center justify-center gap-2 rounded-full bg-[#7A1538] text-[#FFFBFC] font-cinzel text-[10px] font-semibold tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-[#5C0A20] transition-colors duration-300"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-wedding-wine text-wedding-on-dark font-cinzel text-[10px] font-semibold tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-wedding-wine-deep transition-colors duration-300"
       >
         <CalendarPlus size={15} strokeWidth={1.5} /> {m.bigDay.addCalendar}
       </button>
@@ -116,7 +116,7 @@ function BigDayCalendarActions({ m, downloadIcs, googleUrl }) {
         href={googleUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center justify-center gap-2 rounded-full border border-[#FFD6E0]/45 text-[#FFFBFC] font-cinzel text-[10px] tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-white/10 transition-colors duration-300"
+        className="inline-flex items-center justify-center gap-2 rounded-full border border-wedding-rose-light/45 text-wedding-on-dark font-cinzel text-[10px] tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-white/10 transition-colors duration-300"
       >
         {m.bigDay.googleCalendar}
       </a>
@@ -189,7 +189,7 @@ export default function BigDay() {
   return (
     <section
       id="grand-jour"
-      className="relative py-24 md:py-36 px-2.5 sm:px-8 lg:px-16 overflow-hidden bg-[linear-gradient(135deg,#5C0A20_0%,#9B1B4A_45%,#7A1538_100%)]"
+      className="relative py-24 md:py-36 px-2.5 sm:px-8 lg:px-16 overflow-hidden bg-gradient-to-br from-wedding-wine-deep via-wedding-wine-accent to-wedding-wine"
       data-testid="bigday-section"
     >
       <SparkleField count={18} chic className="z-[1] opacity-75" />
@@ -233,7 +233,7 @@ export default function BigDay() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9, ease: EASE }}
-              className="bigday-card relative overflow-hidden rounded-sm bg-[#FFFBFC] text-[#2A050B] shadow-[0_24px_70px_rgba(0,0,0,0.35)] px-3 py-7 sm:px-11 sm:py-12"
+              className="bigday-card relative overflow-hidden rounded-sm bg-wedding-on-dark text-wedding-ink shadow-[0_24px_70px_rgba(0,0,0,0.35)] px-3 py-7 sm:px-11 sm:py-12"
               data-testid="calendar-card"
             >
               <span className="bigday-card-corner bigday-card-corner--tl" aria-hidden="true" />
@@ -244,15 +244,15 @@ export default function BigDay() {
               <span className="bigday-card-ornament bigday-card-ornament--bottom" aria-hidden="true" />
               <SparkleField count={14} chic onLight className="z-0 opacity-90" />
               <div className="relative z-[1]">
-                <p className="text-center font-cinzel text-[11px] font-semibold tracking-[0.38em] uppercase text-[#7A1538]">
+                <p className="text-center font-cinzel text-[11px] font-semibold tracking-[0.38em] uppercase text-wedding-wine">
                   {cal.label}
                 </p>
-                <div className="mt-4 grid grid-cols-7 gap-1 text-center font-cinzel text-[10px] font-medium tracking-widest text-[#6B2440]/75">
+                <div className="mt-4 grid grid-cols-7 gap-1 text-center font-cinzel text-[10px] font-medium tracking-widest text-wedding-muted/75">
                   {m.bigDay.weekdays.map((d, i) => (
                     <span key={i} className="py-1">{d}</span>
                   ))}
                 </div>
-                <div className="grid grid-cols-7 gap-1 text-center font-display text-lg text-[#2A050B]/80">
+                <div className="grid grid-cols-7 gap-1 text-center font-display text-lg text-wedding-ink/80">
                   {[...Array(cal.first)].map((_, i) => <span key={`empty-${i}`} />)}
                   {[...Array(cal.days)].map((_, i) => {
                     const day = i + 1;
@@ -266,7 +266,7 @@ export default function BigDay() {
                         {isWeddingDay ? (
                           <>
                             <ChicWeddingHeart />
-                            <span className="relative z-[1] font-display text-lg font-semibold text-[#5C0A20]">{day}</span>
+                            <span className="relative z-[1] font-display text-lg font-semibold text-wedding-wine-deep">{day}</span>
                           </>
                         ) : (
                           day
@@ -280,7 +280,7 @@ export default function BigDay() {
           </div>
 
           <div className="mt-7 sm:mt-9 px-2 text-center">
-            <p className="font-cinzel text-[10px] sm:text-[11px] font-medium tracking-[0.28em] uppercase text-[#FFD6E0]/90 leading-relaxed">
+            <p className="font-cinzel text-[10px] sm:text-[11px] font-medium tracking-[0.28em] uppercase text-wedding-rose-light/90 leading-relaxed">
               {m.bigDay.calendarFooter(dateLabel)}
             </p>
             <BigDayCalendarActions m={m} downloadIcs={downloadIcs} googleUrl={googleUrl} />

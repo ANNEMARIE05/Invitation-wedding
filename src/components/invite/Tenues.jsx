@@ -1,19 +1,21 @@
 import { motion } from "framer-motion";
-import { EASE, IMAGES, WEDDING_PALETTE } from "@/lib/invite-data";
+import { EASE, IMAGES } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
+import { useSettings } from "@/lib/settings";
+import { mergeTheme } from "@/lib/theme";
 import Chapter from "./Chapter";
 
 const swatchStyle = (color) => {
   if (color.metallic) {
     return {
       background:
-        "linear-gradient(145deg, #f8f9fb 0%, #e8eaef 18%, #ffffff 38%, #b8bcc8 52%, #dfe2e8 72%, #a8adb8 100%)",
+        "linear-gradient(145deg, #f8f9fb 0%, #e8eaef 18%, #ffffff 38%, var(--silver) 52%, #dfe2e8 72%, #a8adb8 100%)",
       boxShadow: "inset 0 2px 6px rgba(255,255,255,0.65), inset 0 -2px 5px rgba(80,85,95,0.18)",
     };
   }
   if (color.id === "magenta") {
     return {
-      background: `linear-gradient(160deg, #F7338B 0%, ${color.hex} 55%, #9B1B4A 100%)`,
+      background: `linear-gradient(160deg, var(--rose-bright) 0%, ${color.hex} 55%, var(--wine-accent) 100%)`,
     };
   }
   return { background: color.hex };
@@ -21,7 +23,9 @@ const swatchStyle = (color) => {
 
 export default function Tenues() {
   const { m } = useI18n();
-  const colorNames = WEDDING_PALETTE.map((c) => m.tenues.colorLabels[c.id] || c.label).join(", ");
+  const { dressPalette } = useSettings();
+  const palette = dressPalette?.length ? dressPalette : mergeTheme({}).dressPalette;
+  const colorNames = palette.map((c) => m.tenues.colorLabels[c.id] || c.label).join(", ");
 
   return (
     <section
@@ -54,7 +58,7 @@ export default function Tenues() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "0px 0px -40px 0px" }}
           transition={{ duration: 0.85, delay: 0.06, ease: EASE }}
-          className="mx-auto mt-10 max-w-3xl text-center font-display text-lg font-normal italic leading-relaxed text-[#4A1025] sm:mt-12 sm:text-xl md:text-2xl md:leading-snug"
+          className="mx-auto mt-10 max-w-3xl text-center font-display text-lg font-normal italic leading-relaxed text-wedding-ink-soft sm:mt-12 sm:text-xl md:text-2xl md:leading-snug"
           data-testid="wedding-colors"
         >
           {m.tenues.paletteText}
@@ -69,10 +73,10 @@ export default function Tenues() {
           role="img"
           aria-label={colorNames}
         >
-          {WEDDING_PALETTE.map((color) => (
+          {palette.map((color) => (
             <span
               key={color.id}
-              className="relative flex h-[3.25rem] w-[3.25rem] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#F7ECD0] via-[#C9A962] to-[#8A6424] p-[3px] shadow-[0_6px_18px_rgba(201,169,98,0.28)] sm:h-14 sm:w-14"
+              className="relative flex h-[3.25rem] w-[3.25rem] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#F7ECD0] via-wedding-gold to-[#8A6424] p-[3px] shadow-[0_6px_18px_rgba(201,169,98,0.28)] sm:h-14 sm:w-14"
               title={m.tenues.colorLabels[color.id] || color.label}
               data-testid={`color-${color.id}`}
             >

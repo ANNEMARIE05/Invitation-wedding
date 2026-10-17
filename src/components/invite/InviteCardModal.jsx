@@ -2,9 +2,11 @@ import { useEffect, useRef } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { toast } from "sonner";
-import { deliverInviteCardOnWhatsApp } from "@/lib/invite-card-share";
+import { buildInviteCardShareText, deliverInviteCardOnWhatsApp } from "@/lib/invite-card-share";
 import { useI18n } from "@/lib/locale";
-import { CardActions, captureCard, FairePart } from "./InviteCard";
+import { useSettings } from "@/lib/settings";
+import { CardActions, captureCard } from "./InviteCard";
+import PersonalInviteCard from "./PersonalInviteCard";
 
 const firstName = (name) => String(name || "").trim().split(/\s+/)[0] || "";
 
@@ -18,10 +20,10 @@ export default function InviteCardModal({
   onAutoShareDone,
 }) {
   const { m } = useI18n();
+  const settings = useSettings();
   const autoShareStarted = useRef(false);
 
-  const shareText = guest ? m.rsvp.waCardShareText(firstName(guest.nom)) : "";
-  const selfChatText = m.rsvp.waCardSelfChat;
+  const shareText = buildInviteCardShareText(m, guest ? firstName(guest.nom) : "", settings.dateLabel);
 
   useEffect(() => {
     if (!open) {
@@ -42,7 +44,6 @@ export default function InviteCardModal({
           cardTestId,
           fileName,
           shareText,
-          selfChatText,
           telephone: guest.telephone,
         });
         if (cancelled) return;
@@ -68,7 +69,7 @@ export default function InviteCardModal({
     cardTestId,
     fileName,
     shareText,
-    selfChatText,
+    settings.dateLabel,
     m.inviteSection.shareWhatsAppOk,
     m.inviteSection.shareWhatsAppErr,
     onAutoShareDone,
@@ -94,7 +95,7 @@ export default function InviteCardModal({
           </Dialog.Close>
 
           <div className="invite-card-modal-card">
-            <FairePart guest={guest} testId={cardTestId} variant="flat" />
+            <PersonalInviteCard guest={guest} testId={cardTestId} />
           </div>
 
           <CardActions

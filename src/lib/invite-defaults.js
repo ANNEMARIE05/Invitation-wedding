@@ -1,5 +1,6 @@
 import { COUPLE, WEDDING_DATE_ISO, VENUE, IMAGES, VENUE_MEDIA, ZOOM, getZoomJoinUrl } from "./invite-data";
 import { messages } from "./translations";
+import { mergeTheme, themeFromForm } from "./theme";
 
 const mapsSearch = (q) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
@@ -47,6 +48,8 @@ export function mergeSettings(stored) {
     zoom_url,
     zoom_code,
     zoom_join_url: getZoomJoinUrl({ url: zoom_url, code: zoom_code }),
+    theme: mergeTheme(s),
+    dressPalette: mergeTheme(s).dressPalette,
   };
 }
 
@@ -130,6 +133,7 @@ export function settingsFromForm(form) {
     },
     zoom_url: form.zoom_url.trim(),
     zoom_code: form.zoom_code.trim(),
+    theme: themeFromForm(form.theme),
   };
 }
 
@@ -145,6 +149,15 @@ export function formFromSettings(stored) {
     ceremony: { ...merged.locations.ceremony },
     zoom_url: merged.zoom_url,
     zoom_code: merged.zoom_code,
+    theme: formThemeFromSettings(stored),
+  };
+}
+
+function formThemeFromSettings(stored) {
+  const merged = mergeTheme(stored);
+  return {
+    site: { ...merged.site },
+    dress: { ...merged.dress },
   };
 }
 

@@ -18,14 +18,14 @@ export default function Story() {
             transition={{ duration: 1, ease: EASE }}
             className="relative md:sticky md:top-28"
           >
-            <div className="absolute -top-4 -left-4 right-4 bottom-4 border border-[#D4AF37]/50 rounded-sm" />
+            <div className="absolute -top-4 -left-4 right-4 bottom-4 border border-wedding-gold-accent/50 rounded-sm" />
             <img
               src={portrait}
               alt={`Portrait de ${coupleLabel}`}
               className="relative w-full aspect-[3/4] object-cover clipped-frame"
               data-testid="story-portrait"
             />
-            <p className="absolute -bottom-6 right-6 bg-[#4A0E17] text-[#FAF7F2] font-script text-2xl px-6 py-2 shadow-xl">
+            <p className="absolute -bottom-6 right-6 bg-wedding-wine-deep text-wedding-on-dark font-script text-2xl px-6 py-2 shadow-xl">
               pour toujours
             </p>
           </motion.div>
@@ -50,9 +50,9 @@ export default function Story() {
                 className="relative pl-10 border-l hairline-gold"
                 data-testid={`story-item-${s.year}`}
               >
-                <span className="absolute -left-[7px] top-2 w-3 h-3 rounded-full bg-[#D4AF37] shadow-[0_0_0_4px_rgba(212,175,55,0.2)]" />
+                <span className="absolute -left-[7px] top-2 w-3 h-3 rounded-full bg-wedding-gold-accent shadow-[0_0_0_4px_rgba(212,175,55,0.2)]" />
                 <p className="font-cinzel text-sm tracking-[0.3em] text-[#C48B92]">{s.year}</p>
-                <h3 className="mt-2 font-display text-2xl sm:text-3xl text-[#4A0E17]">{s.title}</h3>
+                <h3 className="mt-2 font-display text-2xl sm:text-3xl text-wedding-wine-deep">{s.title}</h3>
                 <p className="mt-3 text-[#5C4F51] leading-relaxed text-sm sm:text-base">{s.text}</p>
               </motion.div>
             ))}

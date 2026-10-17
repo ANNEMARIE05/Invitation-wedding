@@ -38,7 +38,7 @@ export default function CoupleAuthShell({
 
   return (
     <div
-      className={`couple-auth-page ${pageClass} text-[#FAF7F2] antialiased`}
+      className={`couple-auth-page ${pageClass} text-wedding-on-dark antialiased`}
       data-testid="couple-auth-shell"
     >
       <div className="pointer-events-none absolute inset-0 hero-atmosphere" aria-hidden />
@@ -71,15 +71,15 @@ export default function CoupleAuthShell({
           <Link
             to={backTo}
             data-testid="couple-auth-back"
-            className="inline-flex items-center gap-2 font-cinzel text-[10px] tracking-[0.28em] uppercase text-[#C48B92] transition-colors hover:text-[#D4AF37]"
+            className="inline-flex items-center gap-2 font-cinzel text-[10px] tracking-[0.28em] uppercase text-[#C48B92] transition-colors hover:text-wedding-gold-accent"
           >
             <ArrowLeft size={14} strokeWidth={1.5} />
             {backLabel}
           </Link>
           <div className="flex items-center gap-3">
-            <span className="hidden h-px w-10 bg-gradient-to-r from-transparent to-[#D4AF37]/50 sm:block" />
+            <span className="hidden h-px w-10 bg-gradient-to-r from-transparent to-wedding-gold-accent/50 sm:block" />
             <span
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#D4AF37]/40 bg-[#FAF7F2]/5 font-cinzel text-[9px] tracking-[0.12em] text-[#D4AF37] shadow-[0_0_24px_rgba(212,175,55,0.12)]"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-wedding-gold-accent/40 bg-wedding-on-dark/5 font-cinzel text-[9px] tracking-[0.12em] text-wedding-gold-accent shadow-[0_0_24px_rgba(212,175,55,0.12)]"
               aria-hidden
             >
               {initials.replace(/\s/g, "")}

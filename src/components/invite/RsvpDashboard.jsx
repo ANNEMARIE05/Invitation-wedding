@@ -45,7 +45,7 @@ const labelCaps =
   "font-cinzel text-[10px] font-semibold tracking-[0.14em] uppercase text-[#4A3840]";
 
 const selectCls =
-  "mt-1.5 w-full min-w-[9.5rem] cursor-pointer rounded-md border-0 bg-[#FFFBFC] py-2.5 pl-3 pr-9 text-sm font-medium text-[#1F181A] ring-1 ring-[#DDD2D8] transition-all focus:ring-2 focus:ring-[#935065]/30 disabled:cursor-not-allowed disabled:bg-[#F5F0F2] disabled:text-[#8C7B7E]";
+  "mt-1.5 w-full min-w-[9.5rem] cursor-pointer rounded-md border-0 bg-wedding-on-dark py-2.5 pl-3 pr-9 text-sm font-medium text-[#1F181A] ring-1 ring-[#DDD2D8] transition-all focus:ring-2 focus:ring-[#935065]/30 disabled:cursor-not-allowed disabled:bg-[#F5F0F2] disabled:text-[#8C7B7E]";
 
 const thCell =
   "border-r border-[#E0D0D6] px-4 py-3 font-cinzel text-[10px] font-semibold tracking-[0.12em] uppercase text-[#4A3840] last:border-r-0";
@@ -252,7 +252,7 @@ export default function RsvpDashboard() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Nom, téléphone, message…"
-                  className="w-full rounded-md border-0 bg-[#FFFBFC] py-2.5 pl-10 pr-3 text-sm font-medium text-[#1F181A] placeholder:font-normal placeholder:text-[#6B5A60] ring-1 ring-[#DDD2D8] transition-all focus:ring-2 focus:ring-[#935065]/30"
+                  className="w-full rounded-md border-0 bg-wedding-on-dark py-2.5 pl-10 pr-3 text-sm font-medium text-[#1F181A] placeholder:font-normal placeholder:text-[#6B5A60] ring-1 ring-[#DDD2D8] transition-all focus:ring-2 focus:ring-[#935065]/30"
                 />
               </div>
             </label>

@@ -1,6 +1,6 @@
 /** Séparateur typographique — faire-part classique */
 export default function ClassicRule({ className = "", gem = "✦", tone = "paper" }) {
-  const gemClass = tone === "light" ? "text-[#FFD6E0]/90" : "text-[#D4AF37]";
+  const gemClass = tone === "light" ? "text-wedding-rose-light/90" : "text-wedding-gold-accent";
   const lineClass =
     tone === "light"
       ? "classic-rule__line classic-rule__line--light"

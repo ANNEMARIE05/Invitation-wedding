@@ -47,7 +47,7 @@ export default function CoupleHub() {
       icon: BarChart3,
       title: t.cards.rsvp.title,
       desc: t.cards.rsvp.desc,
-      accent: "from-[#D4AF37]/25 to-transparent",
+      accent: "from-wedding-gold-accent/25 to-transparent",
       badge:
         stats.total !== null
           ? t.cards.rsvp.badge(stats.presents, stats.total)
@@ -59,7 +59,7 @@ export default function CoupleHub() {
       icon: Camera,
       title: t.cards.photos.title,
       desc: t.cards.photos.desc,
-      accent: "from-[#ED1E79]/20 to-transparent",
+      accent: "from-wedding-rose/20 to-transparent",
       badge: t.cards.photos.badge,
     },
     {
@@ -86,10 +86,10 @@ export default function CoupleHub() {
         <p className="font-cinzel text-[9px] tracking-[0.35em] uppercase text-[#C48B92] sm:text-[10px] sm:tracking-[0.4em]">
           {t.eyebrow}
         </p>
-        <h1 className="mt-2 font-display text-[1.75rem] font-medium italic leading-tight text-[#FAF7F2] sm:mt-3 sm:text-4xl sm:leading-normal md:text-5xl">
+        <h1 className="mt-2 font-display text-[1.75rem] font-medium italic leading-tight text-wedding-on-dark sm:mt-3 sm:text-4xl sm:leading-normal md:text-5xl">
           {t.title}
         </h1>
-        <p className="mt-1.5 font-script text-2xl text-[#D4AF37] sm:mt-2 sm:text-3xl">{t.subtitle}</p>
+        <p className="mt-1.5 font-script text-2xl text-wedding-gold-accent sm:mt-2 sm:text-3xl">{t.subtitle}</p>
         <p className="mx-auto mt-4 max-w-lg text-xs leading-relaxed text-[#C48B92]/90 sm:mt-5 sm:text-sm">{t.intro}</p>
       </motion.div>
 
@@ -104,22 +104,22 @@ export default function CoupleHub() {
             <Link
               to={to}
               data-testid={testId}
-              className="couple-hub-card group relative flex h-full flex-col overflow-hidden rounded-xl border border-[#FAF7F2]/10 bg-[#FAF7F2]/[0.05] p-4 shadow-[0_14px_36px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-[#D4AF37]/35 hover:bg-[#FAF7F2]/[0.08] hover:shadow-[0_28px_60px_rgba(212,175,55,0.12)] sm:rounded-2xl sm:p-6 sm:shadow-[0_20px_50px_rgba(0,0,0,0.25)]"
+              className="couple-hub-card group relative flex h-full flex-col overflow-hidden rounded-xl border border-wedding-on-dark/10 bg-wedding-on-dark/[0.05] p-4 shadow-[0_14px_36px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-wedding-gold-accent/35 hover:bg-wedding-on-dark/[0.08] hover:shadow-[0_28px_60px_rgba(212,175,55,0.12)] sm:rounded-2xl sm:p-6 sm:shadow-[0_20px_50px_rgba(0,0,0,0.25)]"
             >
               <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${accent} opacity-0 transition-opacity duration-500 group-hover:opacity-100`} aria-hidden />
               <div className="relative flex items-start justify-between gap-2 sm:gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#D4AF37]/30 bg-[#2A050B]/60 text-[#D4AF37] transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11 sm:rounded-xl">
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-wedding-gold-accent/30 bg-wedding-ink/60 text-wedding-gold-accent transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11 sm:rounded-xl">
                   <Icon className="h-[17px] w-[17px] sm:h-5 sm:w-5" strokeWidth={1.4} aria-hidden />
                 </span>
                 <ChevronRight
                   size={16}
-                  className="mt-0.5 shrink-0 text-[#C48B92]/50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-[#D4AF37] sm:mt-1 sm:h-[18px] sm:w-[18px]"
+                  className="mt-0.5 shrink-0 text-[#C48B92]/50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-wedding-gold-accent sm:mt-1 sm:h-[18px] sm:w-[18px]"
                   aria-hidden
                 />
               </div>
-              <h2 className="relative mt-3 font-display text-xl text-[#FAF7F2] sm:mt-5 sm:text-2xl">{title}</h2>
+              <h2 className="relative mt-3 font-display text-xl text-wedding-on-dark sm:mt-5 sm:text-2xl">{title}</h2>
               <p className="relative mt-1.5 flex-1 text-xs leading-relaxed text-[#C48B92]/85 sm:mt-2 sm:text-sm">{desc}</p>
-              <p className="relative mt-2.5 font-cinzel text-[8px] tracking-[0.18em] uppercase text-[#D4AF37]/80 sm:mt-4 sm:text-[9px] sm:tracking-[0.2em]">
+              <p className="relative mt-2.5 font-cinzel text-[8px] tracking-[0.18em] uppercase text-wedding-gold-accent/80 sm:mt-4 sm:text-[9px] sm:tracking-[0.2em]">
                 {badge}
               </p>
             </Link>
@@ -134,14 +134,14 @@ export default function CoupleHub() {
         className="mt-8 flex flex-col items-center gap-3 sm:mt-12 sm:gap-4"
       >
         <div className="flex items-center gap-2 text-[#C48B92]/60">
-          <Heart size={14} className="text-[#ED1E79]/70" fill="currentColor" aria-hidden />
+          <Heart size={14} className="text-wedding-rose/70" fill="currentColor" aria-hidden />
           <span className="font-cinzel text-[9px] tracking-[0.25em] uppercase">{t.wish}</span>
         </div>
         <button
           type="button"
           data-testid="couple-logout"
           onClick={signOut}
-          className="inline-flex items-center gap-2 rounded-full border border-[#FAF7F2]/15 px-5 py-2.5 font-cinzel text-[10px] tracking-[0.22em] uppercase text-[#C48B92] transition-all hover:border-[#C48B92]/40 hover:text-[#FAF7F2]"
+          className="inline-flex items-center gap-2 rounded-full border border-wedding-on-dark/15 px-5 py-2.5 font-cinzel text-[10px] tracking-[0.22em] uppercase text-[#C48B92] transition-all hover:border-[#C48B92]/40 hover:text-wedding-on-dark"
         >
           <LogOut size={14} strokeWidth={1.5} aria-hidden />
           {t.logout}

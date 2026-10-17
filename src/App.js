@@ -36,6 +36,7 @@ import CoupleSpace from "@/components/invite/CoupleSpace";
 import RequireCoupleAuth from "@/components/invite/RequireCoupleAuth";
 import { SETTINGS_CHANGE_EVENT } from "@/lib/invite-defaults";
 import { useStoreSync } from "@/lib/useStoreSync";
+import ThemeApplier from "@/components/invite/ThemeApplier";
 
 /** Paramètres partagés (espace mariés & pages admin hors invitation). */
 function SharedSettings({ children }) {
@@ -142,7 +143,7 @@ function Invitation() {
   return (
     <SettingsContext.Provider value={settings}>
       <PhotosContext.Provider value={photos}>
-        <div className="page-flow relative text-[#2A050B] antialiased overflow-x-clip">
+        <div className="page-flow relative text-wedding-ink antialiased overflow-x-clip">
           <InvitationSeo />
           <div className="grain-overlay" />
           {!opened && <LangToggle floating />}
@@ -157,18 +158,18 @@ function Invitation() {
               <Marquee />
               <InviteCard />
               <Verses />
-              <TornDivider top="#FFF0F4" bottom="#5C0A20" />
+              <TornDivider top="var(--ivory)" bottom="var(--wine-deep)" />
               <BigDay />
-              <TornDivider top="#5C0A20" bottom="#FFE0EA" />
+              <TornDivider top="var(--wine-deep)" bottom="var(--ivory-deep)" />
               <Program />
-              <TornDivider top="#FFE0EA" bottom="#FFF0F4" />
+              <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
               <Venues />
               <Tenues />
-              <TornDivider top="#FFE0EA" bottom="#5C0A20" />
+              <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
               <Rsvp />
-              <TornDivider top="#5C0A20" bottom="#FFE0EA" />
+              <TornDivider top="var(--wine-deep)" bottom="var(--ivory-deep)" />
               <Guestbook />
-              <TornDivider top="#FFE0EA" bottom="#5C0A20" />
+              <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
             </main>
             <Footer />
           </div>
@@ -185,6 +186,7 @@ export default function App() {
     <MotionConfig reducedMotion="never">
       <BrowserRouter>
         <LocaleProvider>
+          <ThemeApplier />
           <SharedSettings>
             <Routes>
               <Route path="/" element={<Invitation />} />

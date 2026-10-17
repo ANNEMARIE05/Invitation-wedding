@@ -29,15 +29,15 @@ function Vinyl({ size = "md", playing }) {
           : "linear-gradient(135deg, rgba(212,175,55,0.55), rgba(237,30,121,0.35))",
       }}
     >
-      <div className="relative h-full w-full overflow-hidden rounded-full bg-[#1a0308] ring-1 ring-white/10">
+      <div className="relative h-full w-full overflow-hidden rounded-full bg-wedding-wine-deep ring-1 ring-white/10">
         {thumbUrl ? (
           <img src={thumbUrl} alt="" className="h-full w-full object-cover opacity-85" draggable={false} />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-[#D4AF37]/80">
+          <div className="flex h-full w-full items-center justify-center text-wedding-gold-accent/80">
             <Disc3 size={size === "sm" ? 16 : 18} strokeWidth={1.4} />
           </div>
         )}
-        <span className="absolute inset-[28%] rounded-full bg-[#2A050B]/90 ring-1 ring-[#D4AF37]/40" aria-hidden />
+        <span className="absolute inset-[28%] rounded-full bg-wedding-ink/90 ring-1 ring-wedding-gold-accent/40" aria-hidden />
       </div>
     </div>
   );
@@ -49,7 +49,7 @@ function EqBars({ playing, className = "" }) {
       {[0, 1, 2].map((i) => (
         <span
           key={i}
-          className={`w-[2px] rounded-full bg-[#D4AF37] ${playing ? "eq-bar" : "scale-y-[0.3]"}`}
+          className={`w-[2px] rounded-full bg-wedding-gold-accent ${playing ? "eq-bar" : "scale-y-[0.3]"}`}
           style={{ height: "100%", animationDelay: `${i * 0.18}s`, transformOrigin: "bottom" }}
         />
       ))}
@@ -58,13 +58,13 @@ function EqBars({ playing, className = "" }) {
 }
 
 const shell =
-  "border hairline-gold bg-[#2A050B]/90 shadow-[0_10px_36px_rgba(42,5,11,0.5)] backdrop-blur-md";
+  "border hairline-gold bg-wedding-ink/90 shadow-[0_10px_36px_rgba(42,5,11,0.5)] backdrop-blur-md";
 
 const iconBtn =
-  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#FAF7F2]/75 transition-all hover:bg-white/10 hover:text-[#D4AF37] disabled:opacity-40";
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-wedding-on-dark/75 transition-all hover:bg-white/10 hover:text-wedding-gold-accent disabled:opacity-40";
 
 const playBtn =
-  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D4AF37] to-[#B89428] text-[#2A050B] shadow-[0_3px_12px_rgba(212,175,55,0.3)] transition-all hover:scale-105 disabled:opacity-40";
+  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wedding-gold-accent to-[#B89428] text-wedding-ink shadow-[0_3px_12px_rgba(212,175,55,0.3)] transition-all hover:scale-105 disabled:opacity-40";
 
 export default function MusicPlayer({ opened }) {
   const { m } = useI18n();
@@ -204,7 +204,7 @@ export default function MusicPlayer({ opened }) {
           >
             <Vinyl size="sm" playing={playing} />
             {playing ? (
-              <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#ED1E79] ring-2 ring-[#2A050B]">
+              <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-wedding-rose ring-2 ring-wedding-ink">
                 <EqBars playing className="scale-75" />
               </span>
             ) : null}
@@ -262,7 +262,7 @@ export default function MusicPlayer({ opened }) {
             <div className="flex items-center gap-2 p-2.5">
               <Vinyl playing={playing} />
               <div className="min-w-0 flex-1">
-                <p className="truncate font-display text-[13px] font-semibold leading-tight text-[#FAF7F2]">{track}</p>
+                <p className="truncate font-display text-[13px] font-semibold leading-tight text-wedding-on-dark">{track}</p>
                 <p className="truncate font-cinzel text-[9px] tracking-wide text-[#C48B92]/95">{artist}</p>
               </div>
               <button
@@ -316,7 +316,7 @@ export default function MusicPlayer({ opened }) {
               >
                 <Plus size={14} />
               </button>
-              <span className="w-8 shrink-0 text-center font-display text-[11px] tabular-nums text-[#D4AF37]" data-testid="music-volume-display">
+              <span className="w-8 shrink-0 text-center font-display text-[11px] tabular-nums text-wedding-gold-accent" data-testid="music-volume-display">
                 {volume}%
               </span>
             </div>

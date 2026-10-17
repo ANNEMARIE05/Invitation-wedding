@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Save, Users, Camera, MapPin, Video } from "lucide-react";
+import { ArrowLeft, Save, Users, Camera, MapPin, Video, Palette } from "lucide-react";
+import { applyThemeToDocument, DRESS_THEME_FIELDS, normalizeHex, SITE_THEME_FIELDS } from "@/lib/theme";
 import { toast } from "sonner";
 import { getSettings, saveSettings } from "@/lib/api";
 import {
@@ -18,17 +19,46 @@ const toInput = (iso) => {
 };
 
 const fieldCls =
-  "w-full rounded-xl border hairline-gold bg-white/[0.06] px-3.5 py-2.5 text-sm text-[#FAF7F2] placeholder:text-[#C48B92]/70 transition-all duration-300";
+  "w-full rounded-xl border hairline-gold bg-white/[0.06] px-3.5 py-2.5 text-sm text-wedding-on-dark placeholder:text-[#C48B92]/70 transition-all duration-300";
 const labelCls =
   "mb-1.5 block min-h-[2.25rem] font-cinzel text-[10px] uppercase leading-snug tracking-[0.18em] text-[#C48B92] sm:tracking-[0.2em]";
 const inputCls = `${fieldCls} h-11`;
+
+function ColorField({ label, hint, value, onChange, testId }) {
+  const hex = normalizeHex(value, "#000000");
+  return (
+    <div>
+      <label className={labelCls}>{label}</label>
+      {hint ? <p className="-mt-1 mb-2 text-[11px] text-[#C48B92]/80">{hint}</p> : null}
+      <div className="flex items-center gap-3">
+        <input
+          type="color"
+          value={hex}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-11 w-14 shrink-0 cursor-pointer rounded-lg border hairline-gold bg-transparent p-1"
+          data-testid={testId ? `${testId}-picker` : undefined}
+          aria-label={`${label} — sélecteur`}
+        />
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={`${inputCls} font-mono text-xs uppercase tracking-wider`}
+          placeholder="#7A1538"
+          spellCheck={false}
+          data-testid={testId}
+        />
+      </div>
+    </div>
+  );
+}
 
 function LocationFields({ prefix, title, hint, form, setNested }) {
   const loc = form[prefix];
   const set = (key) => (e) => setNested(prefix, key, e.target.value);
   return (
     <section className="rounded-2xl border hairline-gold bg-white/[0.04] p-5 sm:p-6">
-      <h2 className="flex items-center gap-2 font-display text-2xl text-[#D4AF37]">
+      <h2 className="flex items-center gap-2 font-display text-2xl text-wedding-gold-accent">
         <MapPin size={18} strokeWidth={1.5} /> {title}
       </h2>
       <p className="mt-1 text-xs text-[#C48B92]/90">{hint}</p>
@@ -105,9 +135,24 @@ export default function InfosAdmin() {
       });
   }, []);
 
+  useEffect(() => {
+    if (!form?.theme) return;
+    applyThemeToDocument({ theme: form.theme });
+  }, [form?.theme]);
+
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
   const setNested = (group, key, value) =>
     setForm({ ...form, [group]: { ...form[group], [key]: value } });
+
+  const setThemeColor = (group, key, raw) => {
+    setForm({
+      ...form,
+      theme: {
+        ...form.theme,
+        [group]: { ...form.theme[group], [key]: raw },
+      },
+    });
+  };
 
   const save = async (e) => {
     e.preventDefault();
@@ -129,7 +174,7 @@ export default function InfosAdmin() {
 
   const resetAllToDefaults = async () => {
     const ok = window.confirm(
-      "Remettre à jour toutes les informations (couple, date, lieux, Zoom) avec les valeurs par défaut du faire-part ? Vos modifications seront remplacées.",
+      "Remettre à jour toutes les informations (couple, date, lieux, couleurs, Zoom) avec les valeurs par défaut du faire-part ? Vos modifications seront remplacées.",
     );
     if (!ok) return;
     setSaving(true);
@@ -148,7 +193,7 @@ export default function InfosAdmin() {
 
   if (!form) {
     return (
-      <div className="min-h-screen bg-[linear-gradient(160deg,#2A050B_0%,#3B0910_60%,#58111A_100%)] text-[#FAF7F2] px-5 py-16 text-center">
+      <div className="min-h-screen bg-[linear-gradient(160deg,#2A050B_0%,#3B0910_60%,#58111A_100%)] text-wedding-on-dark px-5 py-16 text-center">
         <p className="font-display italic text-[#C48B92]">Chargement des informations…</p>
       </div>
     );
@@ -156,35 +201,35 @@ export default function InfosAdmin() {
 
   return (
     <div
-      className="min-h-screen bg-[linear-gradient(160deg,#2A050B_0%,#3B0910_60%,#58111A_100%)] text-[#FAF7F2] px-5 sm:px-10 py-10"
+      className="min-h-screen bg-[linear-gradient(160deg,#2A050B_0%,#3B0910_60%,#58111A_100%)] text-wedding-on-dark px-5 sm:px-10 py-10"
       data-testid="infos-admin"
     >
       <div className="max-w-3xl mx-auto">
         <Link
           to="/espace-maries"
           data-testid="infos-back-link"
-          className="inline-flex items-center gap-2 font-cinzel text-[11px] tracking-[0.25em] uppercase text-[#C48B92] hover:text-[#D4AF37] transition-colors"
+          className="inline-flex items-center gap-2 font-cinzel text-[11px] tracking-[0.25em] uppercase text-[#C48B92] hover:text-wedding-gold-accent transition-colors"
         >
           <ArrowLeft size={14} /> Espace mariés
         </Link>
         <h1 className="mt-4 font-display text-4xl sm:text-5xl">Vos informations</h1>
-        <p className="mt-1 font-script text-2xl text-[#D4AF37]">avec amour, pour vos invités</p>
+        <p className="mt-1 font-script text-2xl text-wedding-gold-accent">avec amour, pour vos invités</p>
         <p className="mt-3 text-sm text-[#C48B92] max-w-xl">
-          Ici, vous peaufinez ce que vos proches verront sur l’invitation — prénoms, lieux, Zoom… Un clic sur Enregistrer, et c’est à jour.
+          Ici, vous peaufinez ce que vos proches verront sur l’invitation — prénoms, lieux, couleurs, Zoom… Un clic sur Enregistrer, et c’est à jour.
         </p>
 
         <div className="mt-5 flex flex-wrap gap-3">
           <Link
             to="/reponses"
             data-testid="infos-link-reponses"
-            className="inline-flex items-center gap-2 rounded-full border hairline-gold px-5 py-2 font-cinzel text-[10px] tracking-[0.2em] uppercase text-[#C48B92] hover:text-[#D4AF37] transition-colors"
+            className="inline-flex items-center gap-2 rounded-full border hairline-gold px-5 py-2 font-cinzel text-[10px] tracking-[0.2em] uppercase text-[#C48B92] hover:text-wedding-gold-accent transition-colors"
           >
             <Users size={13} /> Les réponses
           </Link>
           <Link
             to="/photos"
             data-testid="infos-link-photos"
-            className="inline-flex items-center gap-2 rounded-full border hairline-gold px-5 py-2 font-cinzel text-[10px] tracking-[0.2em] uppercase text-[#C48B92] hover:text-[#D4AF37] transition-colors"
+            className="inline-flex items-center gap-2 rounded-full border hairline-gold px-5 py-2 font-cinzel text-[10px] tracking-[0.2em] uppercase text-[#C48B92] hover:text-wedding-gold-accent transition-colors"
           >
             <Camera size={13} /> Vos photos
           </Link>
@@ -192,7 +237,7 @@ export default function InfosAdmin() {
 
         <form onSubmit={save} className="mt-6 space-y-4" data-testid="infos-form">
           <section className="rounded-2xl border hairline-gold bg-white/[0.04] p-5 sm:p-6">
-            <h2 className="font-display text-2xl text-[#D4AF37]">Le couple</h2>
+            <h2 className="font-display text-2xl text-wedding-gold-accent">Le couple</h2>
             <p className="mt-1 text-xs text-[#C48B92]/90">Hero, bandeau, faire-part, pied de page</p>
             <div className="mt-4 grid gap-3.5 sm:grid-cols-2">
               <div>
@@ -207,7 +252,7 @@ export default function InfosAdmin() {
           </section>
 
           <section className="rounded-2xl border hairline-gold bg-white/[0.04] p-5 sm:p-6">
-            <h2 className="font-display text-2xl text-[#D4AF37]">Date & heure</h2>
+            <h2 className="font-display text-2xl text-wedding-gold-accent">Date & heure</h2>
             <p className="mt-1 text-xs text-[#C48B92]/90">Compte à rebours, faire-part, calendrier</p>
             <div className="mt-4">
               <label className={labelCls}>Événement principal</label>
@@ -222,7 +267,7 @@ export default function InfosAdmin() {
           </section>
 
           <section className="rounded-2xl border hairline-gold bg-white/[0.04] p-5 sm:p-6">
-            <h2 className="font-display text-2xl text-[#D4AF37]">Lieu principal (faire-part)</h2>
+            <h2 className="font-display text-2xl text-wedding-gold-accent">Lieu principal (faire-part)</h2>
             <p className="mt-1 text-xs text-[#C48B92]/90">Nom sous le faire-part et lien calendrier</p>
             <div className="mt-4 space-y-3.5">
               <div>
@@ -262,8 +307,45 @@ export default function InfosAdmin() {
             setNested={setNested}
           />
 
+          <section className="rounded-2xl border hairline-gold bg-white/[0.04] p-5 sm:p-6" data-testid="infos-theme-section">
+            <h2 className="flex items-center gap-2 font-display text-2xl text-wedding-gold-accent">
+              <Palette size={18} strokeWidth={1.5} /> Couleurs du site
+            </h2>
+            <p className="mt-1 text-xs text-[#C48B92]/90">
+              Boutons, bandeaux, textes, séparateurs — l’aperçu se met à jour tout de suite ; enregistrez pour vos invités.
+            </p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {SITE_THEME_FIELDS.map(({ key, label, hint }) => (
+                <ColorField
+                  key={key}
+                  label={label}
+                  hint={hint}
+                  value={form.theme.site[key]}
+                  onChange={(v) => setThemeColor("site", key, v)}
+                  testId={`infos-color-site-${key}`}
+                />
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-2xl border hairline-gold bg-white/[0.04] p-5 sm:p-6" data-testid="infos-dress-palette-section">
+            <h2 className="font-display text-2xl text-wedding-gold-accent">Code couleur (tenues)</h2>
+            <p className="mt-1 text-xs text-[#C48B92]/90">Pastilles de la section « Couleurs & tenues » sur l’invitation.</p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {DRESS_THEME_FIELDS.map(({ key, label }) => (
+                <ColorField
+                  key={key}
+                  label={label}
+                  value={form.theme.dress[key]}
+                  onChange={(v) => setThemeColor("dress", key, v)}
+                  testId={`infos-color-dress-${key}`}
+                />
+              ))}
+            </div>
+          </section>
+
           <section className="rounded-2xl border hairline-gold bg-white/[0.04] p-5 sm:p-6">
-            <h2 className="flex items-center gap-2 font-display text-2xl text-[#D4AF37]">
+            <h2 className="flex items-center gap-2 font-display text-2xl text-wedding-gold-accent">
               <Video size={18} strokeWidth={1.5} /> Zoom
             </h2>
             <p className="mt-1 text-xs text-[#C48B92]/90">Bloc « Suivre sur Zoom » et lien pour les invités en ligne</p>
@@ -299,7 +381,7 @@ export default function InfosAdmin() {
               type="submit"
               disabled={saving}
               data-testid="infos-save-button"
-              className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-[#D4AF37] text-[#2A050B] font-cinzel text-xs tracking-[0.25em] uppercase px-7 py-4 hover:bg-[#B89428] hover:shadow-[0_10px_30px_rgba(212,175,55,0.35)] transition-all duration-300 disabled:opacity-60"
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-wedding-gold-accent text-wedding-ink font-cinzel text-xs tracking-[0.25em] uppercase px-7 py-4 hover:bg-[#B89428] hover:shadow-[0_10px_30px_rgba(212,175,55,0.35)] transition-all duration-300 disabled:opacity-60"
             >
               <Save size={15} /> {saving ? "Enregistrement…" : "Enregistrer"}
             </button>
@@ -308,7 +390,7 @@ export default function InfosAdmin() {
               disabled={saving}
               data-testid="infos-reset-defaults-button"
               onClick={resetAllToDefaults}
-              className="inline-flex items-center justify-center gap-2 rounded-full border hairline-gold px-6 py-4 font-cinzel text-[10px] tracking-[0.18em] uppercase text-[#C48B92] transition-colors hover:text-[#D4AF37] disabled:opacity-60 sm:shrink-0"
+              className="inline-flex items-center justify-center gap-2 rounded-full border hairline-gold px-6 py-4 font-cinzel text-[10px] tracking-[0.18em] uppercase text-[#C48B92] transition-colors hover:text-wedding-gold-accent disabled:opacity-60 sm:shrink-0"
             >
               Remettre à jour tout
             </button>

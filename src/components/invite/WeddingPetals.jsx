@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 
-const COLORS = ["#ED1E79", "#FFD6E0", "#FFFBFC", "#F7338B", "#E8EAEF", "#9B1B4A"];
+const COLORS = [
+  "var(--rose)",
+  "var(--rose-light)",
+  "var(--on-dark)",
+  "var(--rose-bright)",
+  "var(--silver)",
+  "var(--wine-accent)",
+];
 const MOBILE_MQ = "(max-width: 639px)";
 
 function densityForViewport(density) {

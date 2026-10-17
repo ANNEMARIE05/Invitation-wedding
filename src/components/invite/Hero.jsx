@@ -75,12 +75,12 @@ export default function Hero({ start = true }) {
           className="hero-monogram mx-auto mb-7 sm:mb-9"
           data-testid="hero-monogram"
         >
-          <p className="flex items-center justify-center font-display text-[2.15rem] sm:text-[2.5rem] font-medium tracking-[0.12em] text-[#FFFBFC]">
+          <p className="flex items-center justify-center font-display text-[2.15rem] sm:text-[2.5rem] font-medium tracking-[0.12em] text-wedding-on-dark">
             <span className="hero-monogram-flower hero-monogram-flower--lead" aria-hidden="true">
               <span className="hero-monogram-flower__glyph">✿</span>
             </span>
             {letterGroom}
-            <span className="mx-2 sm:mx-3 inline-block font-cinzel text-sm sm:text-base font-normal tracking-[0.55em] text-[#FFD6E0] align-middle">
+            <span className="mx-2 sm:mx-3 inline-block font-cinzel text-sm sm:text-base font-normal tracking-[0.55em] text-wedding-rose-light align-middle">
               &
             </span>
             {letterBride}
@@ -91,13 +91,13 @@ export default function Hero({ start = true }) {
         </motion.div>
 
         <MaskedLine delay={0.6} start={start}>
-          <span className="font-cinzel text-[11px] font-semibold sm:text-xs tracking-[0.5em] uppercase text-[#F7338B]">
+          <span className="font-cinzel text-[11px] font-semibold sm:text-xs tracking-[0.5em] uppercase text-wedding-rose-bright">
             {m.hero.tagline}
           </span>
         </MaskedLine>
 
         <h1
-          className="relative z-[1] mt-6 font-display text-[#FAF7F2] leading-[0.95]"
+          className="relative z-[1] mt-6 font-display text-wedding-on-dark leading-[0.95]"
           data-testid="hero-names"
         >
           <MaskedLine delay={0.85} start={start}>
@@ -151,7 +151,7 @@ export default function Hero({ start = true }) {
           <button
             type="button"
             onClick={() => scrollToId("#faire-part")}
-            className="rounded-full border border-[#FFD6E0]/35 px-6 py-3 font-cinzel text-[10px] font-semibold uppercase tracking-[0.22em] text-[#FFD6E0] transition-colors hover:border-[#ED1E79]/60 hover:text-[#FFFBFC]"
+            className="rounded-full border border-wedding-rose-light/35 px-6 py-3 font-cinzel text-[10px] font-semibold uppercase tracking-[0.22em] text-wedding-rose-light transition-colors hover:border-wedding-rose/60 hover:text-wedding-on-dark"
           >
             {m.hero.viewInvite}
           </button>
@@ -164,7 +164,7 @@ export default function Hero({ start = true }) {
         initial={{ opacity: 0 }}
         animate={start ? { opacity: 1 } : { opacity: 0 }}
         transition={{ delay: 2.4, duration: 1 }}
-        className="hero-scroll absolute bottom-8 left-1/2 z-30 -translate-x-1/2 text-[#FFD6E0]/80 transition-colors hover:text-[#ED1E79]"
+        className="hero-scroll absolute bottom-8 left-1/2 z-30 -translate-x-1/2 text-wedding-rose-light/80 transition-colors hover:text-wedding-rose"
         aria-label={m.hero.scroll}
       >
         <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}>

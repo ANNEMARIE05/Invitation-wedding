@@ -158,7 +158,7 @@ export default function Guestbook() {
         <div className="mt-14 md:mt-16" data-testid="guestbook-list">
           {messages.length === 0 && (
             <LuxeCard animate className="guestbook-empty-card px-6 py-10 text-center sm:px-12 sm:py-12">
-              <span className="font-script text-5xl text-[#D4AF37]/80 leading-none" aria-hidden>
+              <span className="font-script text-5xl text-wedding-gold-accent/80 leading-none" aria-hidden>
                 ✒
               </span>
               <p className="mt-4 font-display text-xl italic leading-relaxed text-[#8C7B7E]" data-testid="guestbook-empty">

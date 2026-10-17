@@ -32,6 +32,24 @@ export async function dataUrlToFile(dataUrl, fileName = "carte-invitation.png") 
   return new File([blob], fileName, { type: "image/png" });
 }
 
+/** Texte WhatsApp accompagnant la carte : accroche + déroulé complet de la journée. */
+export function buildInviteCardShareText(m, guestFirstName = "", dateLabel = "") {
+  const intro = m.rsvp.waCardShareText(guestFirstName);
+  const heading = m.inviteSection.waProgramHeading;
+  const programLines = (m.program?.items ?? [])
+    .map((item) => {
+      const place = item.cardWhere?.trim() || "";
+      return place
+        ? `• ${item.time} — ${item.title}\n  ${place}`
+        : `• ${item.time} — ${item.title}`;
+    })
+    .join("\n");
+  const parts = [intro];
+  if (dateLabel) parts.push(`📅 ${dateLabel}`);
+  parts.push("", heading, programLines, "", m.inviteSection.waShareClosing);
+  return parts.join("\n");
+}
+
 /**
  * Partage la carte d'invitation sur WhatsApp :
  * - Sur smartphone (iOS / Android) : utilise le partage natif (Web Share API)

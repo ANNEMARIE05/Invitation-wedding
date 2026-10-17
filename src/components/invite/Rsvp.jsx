@@ -266,10 +266,10 @@ export default function Rsvp() {
             >
               <ReplyCard>
                 <div className="text-center">
-                  <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#D4AF37]/60 bg-[#4A0E17]">
-                    <Check size={22} className="text-[#D4AF37]" />
+                  <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-wedding-gold-accent/60 bg-wedding-wine-deep">
+                    <Check size={22} className="text-wedding-gold-accent" />
                   </span>
-                  <h3 className="mt-4 font-display text-3xl text-[#4A0E17]">{m.rsvp.thanks(firstName(confirmed.nom))}</h3>
+                  <h3 className="mt-4 font-display text-3xl text-wedding-wine-deep">{m.rsvp.thanks(firstName(confirmed.nom))}</h3>
                   <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#5C4F51]">
                     {confirmed.present && confirmed.mode === "zoom"
                       ? m.rsvp.zoomThanks(firstName(confirmed.nom))
@@ -282,7 +282,7 @@ export default function Rsvp() {
                     <button
                       type="button"
                       onClick={startEdit}
-                      className="mt-5 text-sm text-[#4A0E17] underline decoration-[#D4AF37]/50 underline-offset-4 hover:decoration-[#D4AF37]"
+                      className="mt-5 text-sm text-wedding-wine-deep underline decoration-wedding-gold-accent/50 underline-offset-4 hover:decoration-wedding-gold-accent"
                     >
                       {m.rsvp.editMyRsvp}
                     </button>
@@ -297,9 +297,9 @@ export default function Rsvp() {
                           type="button"
                           data-testid="rsvp-view-card-button"
                           onClick={() => setCardModalOpen(true)}
-                          className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#ED1E79]/35 bg-white px-7 py-3.5 font-cinzel text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5C0A20] transition-all hover:border-[#ED1E79]/55 hover:bg-[#FFF5F8]"
+                          className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-wedding-rose/35 bg-white px-7 py-3.5 font-cinzel text-[11px] font-semibold uppercase tracking-[0.18em] text-wedding-wine-deep transition-all hover:border-wedding-rose/55 hover:bg-[#FFF5F8]"
                         >
-                          <Sparkles size={15} className="text-[#ED1E79]" />
+                          <Sparkles size={15} className="text-wedding-rose" />
                           {m.inviteSection.viewCard}
                         </button>
                         <button
@@ -330,7 +330,7 @@ export default function Rsvp() {
                             href={zoom.joinUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="gold-underline text-[#4A0E17]"
+                            className="gold-underline text-wedding-wine-deep"
                           >
                             {m.rsvp.joinMeeting}
                           </a>
@@ -343,9 +343,9 @@ export default function Rsvp() {
                       href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWaMessage(confirmed))}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0E17] px-7 py-3.5 font-cinzel text-[11px] uppercase tracking-[0.18em] text-[#FAF7F2] transition-colors duration-300 hover:bg-[#6B1724]"
+                      className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-wedding-wine-deep px-7 py-3.5 font-cinzel text-[11px] uppercase tracking-[0.18em] text-wedding-on-dark transition-colors duration-300 hover:bg-[#6B1724]"
                     >
-                      <MessageCircle size={15} className="text-[#D4AF37]" /> {m.rsvp.whatsapp}
+                      <MessageCircle size={15} className="text-wedding-gold-accent" /> {m.rsvp.whatsapp}
                     </a>
                   )}
                 </div>
@@ -512,7 +512,7 @@ export default function Rsvp() {
                       data-testid="rsvp-submit-button"
                       className="rsvp-reply-submit animate-blink"
                     >
-                      <Send size={15} className="text-[#D4AF37]" aria-hidden />
+                      <Send size={15} className="text-wedding-gold-accent" aria-hidden />
                       {loading ? m.rsvp.submitting : isUpdate ? m.rsvp.submitUpdate : m.rsvp.submit}
                     </button>
                   </div>

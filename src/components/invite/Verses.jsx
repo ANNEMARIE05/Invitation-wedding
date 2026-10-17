@@ -57,7 +57,7 @@ export default function Verses() {
                         {quoteLines.map((line) => (
                           <p
                             key={line.text}
-                            className="bible-verse-quote font-display text-[1.08rem] font-semibold italic text-[#2A050B] sm:text-[1.45rem]"
+                            className="bible-verse-quote font-display text-[1.08rem] font-semibold italic text-wedding-ink sm:text-[1.45rem]"
                           >
                             {line.text.replace(/^«\s*/, "").replace(/\s*»$/, "")}
                           </p>

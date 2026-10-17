@@ -15,6 +15,24 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
+        wedding: {
+          wine: 'var(--wine)',
+          'wine-deep': 'var(--wine-deep)',
+          'wine-accent': 'var(--wine-accent)',
+          rose: 'var(--rose)',
+          'rose-bright': 'var(--rose-bright)',
+          'rose-light': 'var(--rose-light)',
+          gold: 'var(--gold)',
+          'gold-accent': 'var(--gold-accent)',
+          'gold-soft': 'var(--gold-soft)',
+          silver: 'var(--silver)',
+          ink: 'var(--ink)',
+          'ink-soft': 'var(--ink-soft)',
+          muted: 'var(--muted)',
+          ivory: 'var(--ivory)',
+          'ivory-deep': 'var(--ivory-deep)',
+          'on-dark': 'var(--on-dark)',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

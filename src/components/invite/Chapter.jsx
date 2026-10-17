@@ -2,8 +2,8 @@ import { motion } from "framer-motion";
 import { EASE } from "@/lib/invite-data";
 
 export default function Chapter({ index, eyebrow, title, script, dark = false }) {
-  const ink = dark ? "text-[#FFFBFC]" : "text-[#2A050B]";
-  const sub = dark ? "text-[#FFD6E0]" : "text-[#7A1538]";
+  const ink = dark ? "text-wedding-on-dark" : "text-wedding-ink";
+  const sub = dark ? "text-wedding-rose-light" : "text-wedding-wine";
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -17,7 +17,7 @@ export default function Chapter({ index, eyebrow, title, script, dark = false })
       </p>
       <h2 className={`mt-4 font-display text-4xl sm:text-5xl lg:text-6xl tracking-tight ${ink}`}>{title}</h2>
       {script && (
-        <p className={`mt-3 font-display text-xl italic sm:text-2xl ${dark ? "text-[#FFD6E0]/95" : "text-[#6B2440]"}`}>
+        <p className={`mt-3 font-display text-xl italic sm:text-2xl ${dark ? "text-wedding-rose-light/95" : "text-wedding-muted"}`}>
           {script}
         </p>
       )}
@@ -28,9 +28,9 @@ export default function Chapter({ index, eyebrow, title, script, dark = false })
         transition={{ duration: 0.8, ease: EASE }}
         className="mt-6 flex items-center justify-center gap-3"
       >
-        <span className="h-px w-12 bg-gradient-to-r from-transparent to-[#ED1E79]/55" />
-        <span className="font-cinzel text-[10px] tracking-[0.35em] text-[#ED1E79]">◆</span>
-        <span className="h-px w-12 bg-gradient-to-l from-transparent to-[#ED1E79]/55" />
+        <span className="h-px w-12 bg-gradient-to-r from-transparent to-wedding-rose/55" />
+        <span className="font-cinzel text-[10px] tracking-[0.35em] text-wedding-rose">◆</span>
+        <span className="h-px w-12 bg-gradient-to-l from-transparent to-wedding-rose/55" />
       </motion.div>
     </motion.div>
   );

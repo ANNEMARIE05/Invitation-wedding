@@ -7,7 +7,7 @@ export default function CoupleSpace() {
   const { authenticated, checking } = useCoupleAuth();
   if (checking) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#2A050B] text-sm text-[#C48B92]">
+      <div className="flex min-h-screen items-center justify-center bg-wedding-ink text-sm text-[#C48B92]">
         …
       </div>
     );

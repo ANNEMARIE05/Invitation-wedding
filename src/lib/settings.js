@@ -49,5 +49,7 @@ export const useSettings = () => {
       code: merged.zoom_code,
       joinUrl: merged.zoom_join_url,
     },
+    dressPalette: merged.dressPalette,
+    theme: merged.theme,
   };
 };

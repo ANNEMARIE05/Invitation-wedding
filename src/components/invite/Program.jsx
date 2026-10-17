@@ -17,7 +17,7 @@ export default function Program() {
       <div className="relative z-10 max-w-4xl mx-auto">
         <Chapter index="III" eyebrow={m.program.chapter} title={m.program.title} script={dateLabel} />
         <div className="relative max-md:px-0">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-[#D4AF37]/60 to-transparent md:left-1/2" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-wedding-gold-accent/60 to-transparent md:left-1/2" />
           <div className="space-y-12">
             {m.program.items.map((p, i) => (
               <motion.div
@@ -30,7 +30,7 @@ export default function Program() {
                 data-testid={`program-item-${i}`}
               >
                 <span
-                  className={`absolute top-6 left-1/2 z-10 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-[#C0C0C0] bg-[#FFFBFC] shadow-[0_0_0_4px_rgba(192,192,192,0.2)] md:translate-x-0 ${i % 2 === 0 ? "md:left-auto md:-right-[7px]" : "md:-left-[7px]"}`}
+                  className={`absolute top-6 left-1/2 z-10 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-[#C0C0C0] bg-wedding-on-dark shadow-[0_0_0_4px_rgba(192,192,192,0.2)] md:translate-x-0 ${i % 2 === 0 ? "md:left-auto md:-right-[7px]" : "md:-left-[7px]"}`}
                 />
                 <LuxeCard
                   lift
@@ -43,9 +43,9 @@ export default function Program() {
                       side={i % 2 === 0 ? "left" : "right"}
                     />
                   ) : null}
-                  <p className="font-display text-2xl font-semibold italic text-[#9B1B4A] lining-nums tabular-nums sm:text-3xl">{p.time}</p>
-                  <h3 className="mt-1 font-display text-xl font-semibold text-[#2A050B] sm:text-2xl">{p.title}</h3>
-                  <p className="mt-2 text-sm font-medium leading-relaxed text-[#4A1025] sm:text-base">{protectJehovah(p.text)}</p>
+                  <p className="font-display text-2xl font-semibold italic text-wedding-wine-accent lining-nums tabular-nums sm:text-3xl">{p.time}</p>
+                  <h3 className="mt-1 font-display text-xl font-semibold text-wedding-ink sm:text-2xl">{p.title}</h3>
+                  <p className="mt-2 text-sm font-medium leading-relaxed text-wedding-ink-soft sm:text-base">{protectJehovah(p.text)}</p>
                 </LuxeCard>
               </motion.div>
             ))}
