@@ -37,7 +37,7 @@ function Vinyl({ size = "md", playing }) {
             <Disc3 size={size === "sm" ? 16 : 18} strokeWidth={1.4} />
           </div>
         )}
-        <span className="absolute inset-[28%] rounded-full bg-wedding-ink/90 ring-1 ring-wedding-gold-accent/40" aria-hidden />
+        <span className="absolute inset-[28%] rounded-full bg-wedding-wine-deep/90 ring-1 ring-wedding-gold-accent/40" aria-hidden />
       </div>
     </div>
   );
@@ -58,13 +58,13 @@ function EqBars({ playing, className = "" }) {
 }
 
 const shell =
-  "border hairline-gold bg-wedding-ink/90 shadow-[0_10px_36px_rgba(42,5,11,0.5)] backdrop-blur-md";
+  "border hairline-gold bg-wedding-wine-deep/90 shadow-[0_10px_36px_rgba(42,5,11,0.5)] backdrop-blur-md";
 
 const iconBtn =
-  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-wedding-on-dark/75 transition-all hover:bg-white/10 hover:text-wedding-gold-accent disabled:opacity-40";
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-wedding-on-dark/75 transition-all duration-300 hover:scale-105 hover:bg-white/10 hover:text-wedding-gold-accent active:scale-90 disabled:opacity-40";
 
 const playBtn =
-  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wedding-gold-accent to-[#B89428] text-wedding-ink shadow-[0_3px_12px_rgba(212,175,55,0.3)] transition-all hover:scale-105 disabled:opacity-40";
+  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wedding-gold-accent to-[#B89428] text-wedding-ink shadow-[0_3px_12px_rgba(212,175,55,0.3)] transition-all duration-300 hover:scale-110 hover:shadow-[0_5px_18px_rgba(212,175,55,0.45)] active:scale-95 disabled:opacity-40";
 
 export default function MusicPlayer({ opened }) {
   const { m } = useI18n();

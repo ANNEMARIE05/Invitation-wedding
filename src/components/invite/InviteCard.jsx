@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { ensureInviteCardFontsReady } from "@/lib/invite-card-capture";
 import { buildInviteCardShareText, deliverInviteCardOnWhatsApp } from "@/lib/invite-card-share";
 import { EASE } from "@/lib/invite-data";
+import { REVEAL_VIEWPORT } from "@/lib/motion-viewport";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import SparkleField from "./SparkleField";
@@ -41,7 +42,7 @@ export function FairePart({ testId = "invite-card" }) {
         initial={{ rotateX: 10, y: 32, opacity: 0 }}
         whileInView={{ rotateX: 0, y: 0, opacity: 1 }}
         whileHover={{ y: -6, rotateX: 2, rotateY: -2 }}
-        viewport={{ once: true, margin: "0px 0px -40px 0px" }}
+        viewport={REVEAL_VIEWPORT}
         transition={{ duration: 1.1, ease: EASE }}
         className="faire-part-stage"
       >
@@ -177,14 +178,14 @@ export default function InviteCard() {
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "0px 0px -40px 0px" }}
+        viewport={REVEAL_VIEWPORT}
         transition={{ duration: 0.9, ease: EASE }}
         className="relative z-[1] mb-10 text-center"
       >
-        <p className="font-cinzel text-[11px] font-semibold tracking-[0.45em] uppercase text-wedding-rose">{m.inviteSection.eyebrow}</p>
-        <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight text-wedding-ink sm:text-5xl">{m.inviteSection.title}</h2>
+        <p className="type-eyebrow text-wedding-rose">{m.inviteSection.eyebrow}</p>
+        <h2 className="type-display mt-3 text-4xl sm:text-5xl">{m.inviteSection.title}</h2>
         {m.inviteSection.script ? (
-          <p className="mt-3 font-display text-xl italic text-wedding-wine">{m.inviteSection.script}</p>
+          <p className="type-display-script mt-3 text-xl">{m.inviteSection.script}</p>
         ) : null}
       </motion.div>
 

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { REVEAL_VIEWPORT } from "@/lib/motion-viewport";
 
 const EASE_VIEW = [0.22, 1, 0.36, 1];
 
@@ -20,9 +21,9 @@ export default function LuxeCard({
     return (
       <motion.div
         className={shell}
-        initial={{ opacity: 0, y: 28 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "0px 0px -30px 0px" }}
+        initial={{ opacity: 0, y: 32, scale: 0.98 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={REVEAL_VIEWPORT}
         transition={{ duration: 0.85, ease: EASE_VIEW }}
         {...rest}
       >

@@ -108,7 +108,7 @@ export default function CoupleHub() {
             >
               <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${accent} opacity-0 transition-opacity duration-500 group-hover:opacity-100`} aria-hidden />
               <div className="relative flex items-start justify-between gap-2 sm:gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-wedding-gold-accent/30 bg-wedding-ink/60 text-wedding-gold-accent transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11 sm:rounded-xl">
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-wedding-gold-accent/30 bg-wedding-wine-deep/60 text-wedding-gold-accent transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11 sm:rounded-xl">
                   <Icon className="h-[17px] w-[17px] sm:h-5 sm:w-5" strokeWidth={1.4} aria-hidden />
                 </span>
                 <ChevronRight

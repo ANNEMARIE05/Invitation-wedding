@@ -66,7 +66,7 @@ export default function PhotosAdmin() {
                 className="overflow-hidden rounded-2xl border hairline-gold bg-white/[0.04]"
                 data-testid={`photo-slot-${s.key}`}
               >
-                <div className="relative h-44 bg-wedding-ink">
+                <div className="relative h-44 bg-wedding-wine-deep">
                   {preview ? (
                     <img
                       src={preview}

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { CalendarPlus } from "lucide-react";
 import { toast } from "sonner";
 import { EASE } from "@/lib/invite-data";
+import { REVEAL_VIEWPORT } from "@/lib/motion-viewport";
 import { useI18n } from "@/lib/locale";
 import { useSettings, cap } from "@/lib/settings";
 import Chapter from "./Chapter";
@@ -67,9 +68,9 @@ function ChicWeddingHeart() {
 }
 
 function BigDayCountdown({ rows, onDark = false }) {
-  const valueClass = onDark ? "text-wedding-on-dark" : "text-wedding-wine-deep";
-  const sepClass = onDark ? "text-wedding-rose-light/90" : "text-wedding-wine";
-  const labelClass = onDark ? "text-wedding-rose-light/85" : "text-wedding-muted/90";
+  const valueClass = onDark ? "invite-on-wine" : "text-wedding-ink";
+  const sepClass = onDark ? "invite-on-wine-accent" : "text-wedding-wine";
+  const labelClass = onDark ? "invite-on-wine-accent" : "text-wedding-wine";
 
   return (
     <div
@@ -102,12 +103,12 @@ function BigDayCountdown({ rows, onDark = false }) {
 
 function BigDayCalendarActions({ m, downloadIcs, googleUrl }) {
   return (
-    <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+    <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
       <button
         type="button"
         data-testid="download-ics-button"
         onClick={downloadIcs}
-        className="inline-flex items-center justify-center gap-2 rounded-full bg-wedding-wine text-wedding-on-dark font-cinzel text-[10px] font-semibold tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-wedding-wine-deep transition-colors duration-300"
+        className="btn-invite-pill btn-invite-pill--wine-on-dark"
       >
         <CalendarPlus size={15} strokeWidth={1.5} /> {m.bigDay.addCalendar}
       </button>
@@ -116,7 +117,7 @@ function BigDayCalendarActions({ m, downloadIcs, googleUrl }) {
         href={googleUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center justify-center gap-2 rounded-full border border-wedding-rose-light/45 text-wedding-on-dark font-cinzel text-[10px] tracking-[0.22em] uppercase px-6 py-3.5 hover:bg-white/10 transition-colors duration-300"
+        className="btn-invite-pill btn-invite-pill--ghost-on-dark"
       >
         {m.bigDay.googleCalendar}
       </a>
@@ -231,7 +232,7 @@ export default function BigDay() {
             <motion.article
               initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={REVEAL_VIEWPORT}
               transition={{ duration: 0.9, ease: EASE }}
               className="bigday-card relative overflow-hidden rounded-sm bg-wedding-on-dark text-wedding-ink shadow-[0_24px_70px_rgba(0,0,0,0.35)] px-3 py-7 sm:px-11 sm:py-12"
               data-testid="calendar-card"
@@ -247,7 +248,7 @@ export default function BigDay() {
                 <p className="text-center font-cinzel text-[11px] font-semibold tracking-[0.38em] uppercase text-wedding-wine">
                   {cal.label}
                 </p>
-                <div className="mt-4 grid grid-cols-7 gap-1 text-center font-cinzel text-[10px] font-medium tracking-widest text-wedding-muted/75">
+                <div className="mt-4 grid grid-cols-7 gap-1 text-center font-cinzel text-[10px] font-medium tracking-widest text-wedding-wine">
                   {m.bigDay.weekdays.map((d, i) => (
                     <span key={i} className="py-1">{d}</span>
                   ))}
@@ -266,7 +267,7 @@ export default function BigDay() {
                         {isWeddingDay ? (
                           <>
                             <ChicWeddingHeart />
-                            <span className="relative z-[1] font-display text-lg font-semibold text-wedding-wine-deep">{day}</span>
+                            <span className="relative z-[1] font-display text-lg font-semibold text-wedding-ink">{day}</span>
                           </>
                         ) : (
                           day
@@ -280,7 +281,7 @@ export default function BigDay() {
           </div>
 
           <div className="mt-7 sm:mt-9 px-2 text-center">
-            <p className="font-cinzel text-[10px] sm:text-[11px] font-medium tracking-[0.28em] uppercase text-wedding-rose-light/90 leading-relaxed">
+            <p className="invite-on-wine-caption font-cinzel text-[10px] font-semibold sm:text-[11px] tracking-[0.28em] uppercase leading-relaxed">
               {m.bigDay.calendarFooter(dateLabel)}
             </p>
             <BigDayCalendarActions m={m} downloadIcs={downloadIcs} googleUrl={googleUrl} />

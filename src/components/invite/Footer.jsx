@@ -34,7 +34,7 @@ export default function Footer() {
               className="footer-couple-sketch aspect-[4/5] w-52 bg-wedding-on-dark sm:w-64"
             />
           </div>
-          <p className="mt-3 font-script text-2xl text-[#C48B92]">{m.footer.love}</p>
+          <p className="invite-on-wine-caption mt-3 font-script text-2xl">{m.footer.love}</p>
         </motion.div>
         <div ref={namesRef} className="relative z-20">
           <AnimatedCoupleNames
@@ -52,8 +52,10 @@ export default function Footer() {
           <span className="text-wedding-gold-accent">✦</span>
           <span className="h-px w-14 bg-gradient-to-l from-transparent to-[#C0C0C0]/60" />
         </div>
-        <p className="mt-6 font-cinzel text-[11px] tracking-[0.4em] uppercase text-[#C48B92]">{dateLabel}</p>
-        <p className="mt-10 text-xs text-wedding-on-dark/40">{m.footer.thanks}</p>
+        <p className="invite-on-wine-accent mt-6 font-cinzel text-[11px] tracking-[0.4em] uppercase">{dateLabel}</p>
+        <p className="invite-on-wine mx-auto mt-10 max-w-lg font-display text-sm italic leading-relaxed sm:text-base">
+          {m.footer.thanks}
+        </p>
       </div>
     </footer>
   );

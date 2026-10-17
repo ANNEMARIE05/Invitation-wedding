@@ -158,10 +158,13 @@ export default function Guestbook() {
         <div className="mt-14 md:mt-16" data-testid="guestbook-list">
           {messages.length === 0 && (
             <LuxeCard animate className="guestbook-empty-card px-6 py-10 text-center sm:px-12 sm:py-12">
-              <span className="font-script text-5xl text-wedding-gold-accent/80 leading-none" aria-hidden>
-                ✒
-              </span>
-              <p className="mt-4 font-display text-xl italic leading-relaxed text-[#8C7B7E]" data-testid="guestbook-empty">
+              <Feather
+                size={44}
+                strokeWidth={1.35}
+                className="mx-auto text-wedding-gold-accent drop-shadow-[0_2px_12px_rgba(212,175,55,0.25)]"
+                aria-hidden
+              />
+              <p className="type-display-script mt-4 text-xl" data-testid="guestbook-empty">
                 {m.guestbook.empty}
               </p>
             </LuxeCard>
@@ -207,11 +210,11 @@ export default function Guestbook() {
                       <div className="guestbook-quote-rule" aria-hidden>
                         <span className="guestbook-quote-fleuron">✦</span>
                       </div>
-                      <p className="font-script text-[1.75rem] leading-tight text-[#C48B92] sm:text-[2rem]">
+                      <p className="font-script text-[1.75rem] leading-tight text-wedding-wine-accent sm:text-[2rem]">
                         {current.nom}
                       </p>
                       <time
-                        className="mt-1 block font-cinzel text-[10px] tracking-[0.22em] text-[#8C7B7E]"
+                        className="mt-1 block font-cinzel text-[10px] tracking-[0.22em] text-wedding-wine-accent"
                         dateTime={current.created_at}
                       >
                         {formatDate(current.created_at)}

@@ -1,7 +1,7 @@
 import { useI18n } from "@/lib/locale";
 
 const btn =
-  "min-w-[2.25rem] px-2.5 py-2 font-cinzel text-[10px] font-bold tracking-[0.12em] uppercase rounded-full transition-all duration-300 leading-none";
+  "min-w-[2.25rem] px-2.5 py-2 font-cinzel text-[10px] font-bold tracking-[0.12em] uppercase rounded-full transition-all duration-300 leading-none hover:scale-[1.04] active:scale-95";
 
 export default function LangToggle({ floating = false, solid = false }) {
   const { locale, setLocale } = useI18n();
@@ -28,8 +28,8 @@ export default function LangToggle({ floating = false, solid = false }) {
           onClick={() => setLocale(code)}
           className={`${btn} ${
             locale === code
-              ? "bg-wedding-ink text-wedding-on-dark shadow-sm"
-              : "text-wedding-ink-soft hover:text-wedding-rose"
+              ? "bg-wedding-wine-deep text-wedding-on-dark shadow-sm"
+              : "text-wedding-wine hover:text-wedding-rose"
           }`}
         >
           {code.toUpperCase()}

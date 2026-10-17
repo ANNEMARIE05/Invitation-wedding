@@ -11,9 +11,9 @@ export const DEFAULT_SITE_THEME = {
   goldAccent: "#D4AF37",
   goldSoft: "#E8D5A8",
   silver: "#B8BCC8",
-  ink: "#401820",
-  inkSoft: "#5C3040",
-  muted: "#804058",
+  ink: "#6E1F3D",
+  inkSoft: "#8A2648",
+  muted: "#9B1B4A",
   ivory: "#FFF0F4",
   ivoryDeep: "#FFE0EA",
   onDark: "#FFFBFC",
@@ -62,11 +62,34 @@ export function normalizeHex(value, fallback) {
   return withHash.toUpperCase();
 }
 
+function hexLuminance(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+}
+
+/** Évite que l’or du thème soit remplacé par de l’argenté / du gris (souvent par erreur dans l’admin). */
+function guardGoldTone(key, hex, fallback) {
+  if (!["gold", "goldAccent", "goldSoft"].includes(key)) return hex;
+  const upper = hex.toUpperCase();
+  const silver = DEFAULT_SITE_THEME.silver.toUpperCase();
+  if (upper === silver) return fallback;
+  const lum = hexLuminance(hex);
+  if (lum > 0.82 && lum < 0.95 && key !== "goldSoft") {
+    const fbLum = hexLuminance(fallback);
+    if (Math.abs(lum - fbLum) > 0.08) return fallback;
+  }
+  return hex;
+}
+
 function mergeSiteTheme(stored) {
   const t = stored?.theme?.site && typeof stored.theme.site === "object" ? stored.theme.site : {};
   const out = {};
   for (const [key, def] of Object.entries(DEFAULT_SITE_THEME)) {
-    out[key] = normalizeHex(t[key], def);
+    const normalized = normalizeHex(t[key], def);
+    out[key] = guardGoldTone(key, normalized, def);
   }
   return out;
 }
@@ -152,7 +175,9 @@ export const SITE_THEME_FIELDS = [
   { key: "roseLight", label: "Rose poudré", hint: "Bordures légères, fonds clairs" },
   { key: "gold", label: "Or (texte)", hint: "Typo dorée sur fond sombre" },
   { key: "goldAccent", label: "Or (boutons admin)", hint: "Boutons enregistrer, liens hub" },
-  { key: "ink", label: "Encre", hint: "Texte principal sur fond clair" },
+  { key: "ink", label: "Encre (titres)", hint: "Titres et accents texte sur fond clair" },
+  { key: "inkSoft", label: "Framboise (corps)", hint: "Paragraphes — ton chaud, pas gris" },
+  { key: "muted", label: "Framboise (légendes)", hint: "Mentions discrètes, aligné sur wine-accent" },
   { key: "ivory", label: "Crème", hint: "Fonds clairs, séparateurs" },
 ];
 

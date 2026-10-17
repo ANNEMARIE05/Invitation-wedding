@@ -36,7 +36,7 @@ export default function Story() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9, ease: EASE }}
-              className="font-display text-2xl sm:text-3xl italic text-[#5C4F51] leading-snug"
+              className="type-display-script text-2xl sm:text-3xl"
             >
               « Certaines rencontres ressemblent à des évidences que le destin aurait signées à l'encre d'or. »
             </motion.p>
@@ -51,9 +51,9 @@ export default function Story() {
                 data-testid={`story-item-${s.year}`}
               >
                 <span className="absolute -left-[7px] top-2 w-3 h-3 rounded-full bg-wedding-gold-accent shadow-[0_0_0_4px_rgba(212,175,55,0.2)]" />
-                <p className="font-cinzel text-sm tracking-[0.3em] text-[#C48B92]">{s.year}</p>
-                <h3 className="mt-2 font-display text-2xl sm:text-3xl text-wedding-wine-deep">{s.title}</h3>
-                <p className="mt-3 text-[#5C4F51] leading-relaxed text-sm sm:text-base">{s.text}</p>
+                <p className="font-cinzel text-sm tracking-[0.3em] text-wedding-wine-accent">{s.year}</p>
+                <h3 className="type-card-title mt-2 text-2xl sm:text-3xl">{s.title}</h3>
+                <p className="type-prose mt-3 text-sm sm:text-base">{s.text}</p>
               </motion.div>
             ))}
           </div>

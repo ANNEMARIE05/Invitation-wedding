@@ -29,6 +29,8 @@ const STICKERS = {
   dining: { Icon: UtensilsCrossed, tilt: -6 },
 };
 
+const STAGGER_S = { civil: 0, church: 0.55, dining: 1.1 };
+
 export default function ProgramSticker({ kind, flip, side = "left" }) {
   const cfg = STICKERS[kind];
   if (!cfg) return null;
@@ -39,10 +41,13 @@ export default function ProgramSticker({ kind, flip, side = "left" }) {
   return (
     <span
       aria-hidden="true"
-      className={`program-sticker pointer-events-none absolute z-20 flex h-[3.25rem] w-[3.25rem] items-center justify-center rounded-xl border-2 left-auto right-[0.85rem] top-[-0.65rem] sm:h-[3.5rem] sm:w-[3.5rem] ${
-        onRight ? "md:left-auto md:right-[0.85rem]" : "md:left-[0.85rem] md:right-auto"
-      }`}
-      style={{ transform: `rotate(${rotate}deg)` }}
+      className={`program-sticker program-sticker--drift pointer-events-none absolute z-20 flex h-[3.25rem] w-[3.25rem] items-center justify-center rounded-xl border-2 left-auto right-[0.85rem] top-[-0.65rem] sm:h-[3.5rem] sm:w-[3.5rem] ${
+        flip ? "program-sticker--flip" : ""
+      } ${onRight ? "md:left-auto md:right-[0.85rem]" : "md:left-[0.85rem] md:right-auto"}`}
+      style={{
+        "--sticker-rotate": `${rotate}deg`,
+        animationDelay: `${STAGGER_S[kind] ?? 0}s`,
+      }}
     >
       {kind === "church" ? (
         <Icon className="h-[1.65rem] w-[1.65rem] sm:h-[1.75rem] sm:w-[1.75rem]" />

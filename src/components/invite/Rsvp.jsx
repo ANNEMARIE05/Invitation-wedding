@@ -269,8 +269,8 @@ export default function Rsvp() {
                   <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-wedding-gold-accent/60 bg-wedding-wine-deep">
                     <Check size={22} className="text-wedding-gold-accent" />
                   </span>
-                  <h3 className="mt-4 font-display text-3xl text-wedding-wine-deep">{m.rsvp.thanks(firstName(confirmed.nom))}</h3>
-                  <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#5C4F51]">
+                  <h3 className="mt-4 font-display text-3xl font-medium text-wedding-ink">{m.rsvp.thanks(firstName(confirmed.nom))}</h3>
+                  <p className="type-prose mx-auto mt-2 max-w-md text-sm">
                     {confirmed.present && confirmed.mode === "zoom"
                       ? m.rsvp.zoomThanks(firstName(confirmed.nom))
                       : confirmed.present
@@ -287,7 +287,7 @@ export default function Rsvp() {
                       {m.rsvp.editMyRsvp}
                     </button>
                   ) : (
-                    <p className="mx-auto mt-5 max-w-md text-xs text-[#5C4F51]/90">{m.rsvp.lookupLocked}</p>
+                    <p className="mx-auto mt-5 max-w-md text-xs text-wedding-wine-accent">{m.rsvp.lookupLocked}</p>
                   )}
 
                   {confirmed.present && confirmed.mode === "presentiel" ? (
@@ -297,7 +297,7 @@ export default function Rsvp() {
                           type="button"
                           data-testid="rsvp-view-card-button"
                           onClick={() => setCardModalOpen(true)}
-                          className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-wedding-rose/35 bg-white px-7 py-3.5 font-cinzel text-[11px] font-semibold uppercase tracking-[0.18em] text-wedding-wine-deep transition-all hover:border-wedding-rose/55 hover:bg-[#FFF5F8]"
+                          className="btn-invite-pill btn-invite-pill--card"
                         >
                           <Sparkles size={15} className="text-wedding-rose" />
                           {m.inviteSection.viewCard}
@@ -306,7 +306,7 @@ export default function Rsvp() {
                           type="button"
                           data-testid="rsvp-whatsapp-card-button"
                           onClick={() => setCardModalOpen(true)}
-                          className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#25D366]/40 bg-[#25D366]/15 px-6 py-3.5 font-cinzel text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0d5925] backdrop-blur-sm transition-all duration-300 hover:border-[#25D366]/70 hover:bg-[#25D366]/25"
+                          className="btn-invite-pill btn-invite-pill--whatsapp"
                         >
                           <MessageCircle size={15} className="text-[#25D366]" />
                           {m.inviteSection.shareWhatsApp}
@@ -321,7 +321,7 @@ export default function Rsvp() {
                       />
                     </>
                   ) : confirmed.present ? (
-                    <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-[#5C4F51]">
+                    <p className="type-prose mx-auto mt-5 max-w-md text-sm">
                       {m.rsvp.zoomCode(zoom.code)}
                       {zoom.joinUrl ? (
                         <>
@@ -343,7 +343,7 @@ export default function Rsvp() {
                       href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWaMessage(confirmed))}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-wedding-wine-deep px-7 py-3.5 font-cinzel text-[11px] uppercase tracking-[0.18em] text-wedding-on-dark transition-colors duration-300 hover:bg-[#6B1724]"
+                      className="btn-invite-pill btn-invite-pill--wine-fill mx-auto mt-6"
                     >
                       <MessageCircle size={15} className="text-wedding-gold-accent" /> {m.rsvp.whatsapp}
                     </a>

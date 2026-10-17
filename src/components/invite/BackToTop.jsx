@@ -16,16 +16,20 @@ export default function BackToTop() {
     <AnimatePresence>
       {show && (
         <motion.button
-          initial={{ opacity: 0, y: 20, scale: 0.8 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.8 }}
-          transition={{ duration: 0.4 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 16 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          whileHover={{ y: -2 }}
+          whileTap={{ opacity: 0.88 }}
           onClick={toTop}
           data-testid="back-to-top-button"
           aria-label="Revenir en haut"
-          className="fixed bottom-5 right-5 z-50 w-12 h-12 rounded-full bg-wedding-wine-deep text-wedding-gold-accent border hairline-gold flex items-center justify-center shadow-[0_10px_30px_rgba(42,5,11,0.4)] hover:bg-[#6B1724] hover:-translate-y-1 transition-all duration-300"
+          className="back-to-top-btn fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-wedding-wine-deep text-wedding-gold-accent shadow-[0_10px_30px_rgba(42,5,11,0.4)] hover:bg-[#6B1724]"
         >
-          <ArrowUp size={18} strokeWidth={1.8} />
+          <span className="back-to-top-btn__ring" aria-hidden="true" />
+          <span className="back-to-top-btn__ring back-to-top-btn__ring--trace" aria-hidden="true" />
+          <ArrowUp size={18} strokeWidth={1.8} className="relative z-[1]" />
         </motion.button>
       )}
     </AnimatePresence>

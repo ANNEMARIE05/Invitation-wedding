@@ -129,21 +129,22 @@ function Invitation() {
     document.body.style.overflow = opened ? "" : "hidden";
     if (opened) {
       window.__lenis?.start();
-      // Permet à Lenis et aux IntersectionObserver de Framer Motion de recalculer la hauteur
-      requestAnimationFrame(() => {
+      const kickMotionObservers = () => {
         window.__lenis?.resize();
         window.dispatchEvent(new Event("resize"));
         window.dispatchEvent(new Event("scroll"));
-      });
-    } else {
-      window.__lenis?.stop();
+      };
+      requestAnimationFrame(() => requestAnimationFrame(kickMotionObservers));
+      const t = window.setTimeout(kickMotionObservers, 150);
+      return () => window.clearTimeout(t);
     }
+    window.__lenis?.stop();
   }, [opened]);
 
   return (
     <SettingsContext.Provider value={settings}>
       <PhotosContext.Provider value={photos}>
-        <div className="page-flow relative text-wedding-ink antialiased overflow-x-clip">
+        <div className="page-flow invite-surface relative text-wedding-wine antialiased overflow-x-clip">
           <InvitationSeo />
           <div className="grain-overlay" />
           {!opened && <LangToggle floating />}
@@ -152,27 +153,29 @@ function Invitation() {
             {!opened && <IntroGate onOpen={() => setOpened(true)} />}
           </AnimatePresence>
           {opened && <Nav />}
-          <div className={opened ? undefined : "invite-content-pending"} aria-hidden={!opened}>
-            <main>
-              <Hero start={opened} />
-              <Marquee />
-              <InviteCard />
-              <Verses />
-              <TornDivider top="var(--ivory)" bottom="var(--wine-deep)" />
-              <BigDay />
-              <TornDivider top="var(--wine-deep)" bottom="var(--ivory-deep)" />
-              <Program />
-              <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
-              <Venues />
-              <Tenues />
-              <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
-              <Rsvp />
-              <TornDivider top="var(--wine-deep)" bottom="var(--ivory-deep)" />
-              <Guestbook />
-              <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
-            </main>
-            <Footer />
-          </div>
+          {opened ? (
+            <div className="invite-content-live" data-motion-root>
+              <main>
+                <Hero start />
+                <Marquee />
+                <InviteCard />
+                <Verses />
+                <TornDivider top="var(--ivory)" bottom="var(--wine-deep)" />
+                <BigDay />
+                <TornDivider top="var(--wine-deep)" bottom="var(--ivory-deep)" />
+                <Program />
+                <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
+                <Venues />
+                <Tenues />
+                <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
+                <Rsvp />
+                <TornDivider top="var(--wine-deep)" bottom="var(--ivory-deep)" />
+                <Guestbook />
+                <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
+              </main>
+              <Footer />
+            </div>
+          ) : null}
           <MusicPlayer opened={opened} />
           <BackToTop />
         </div>

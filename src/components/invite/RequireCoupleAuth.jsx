@@ -7,7 +7,7 @@ export default function RequireCoupleAuth({ children }) {
 
   if (checking) {
     return (
-      <div className="flex min-h-[40vh] items-center justify-center bg-wedding-ink text-sm text-[#C48B92]">
+      <div className="flex min-h-[40vh] items-center justify-center bg-wedding-wine-deep text-sm text-[#C48B92]">
         …
       </div>
     );

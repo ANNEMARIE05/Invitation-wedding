@@ -13,7 +13,7 @@ const MOBILE_MQ = "(max-width: 639px)";
 function densityForViewport(density) {
   if (typeof window === "undefined") return density;
   return window.matchMedia(MOBILE_MQ).matches
-    ? Math.max(6, Math.round(density * 0.4))
+    ? Math.max(12, Math.round(density * 0.72))
     : density;
 }
 

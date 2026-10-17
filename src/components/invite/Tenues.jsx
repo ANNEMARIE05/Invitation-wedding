@@ -58,7 +58,7 @@ export default function Tenues() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "0px 0px -40px 0px" }}
           transition={{ duration: 0.85, delay: 0.06, ease: EASE }}
-          className="mx-auto mt-10 max-w-3xl text-center font-display text-lg font-normal italic leading-relaxed text-wedding-ink-soft sm:mt-12 sm:text-xl md:text-2xl md:leading-snug"
+          className="type-display-script mx-auto mt-10 max-w-3xl text-center text-lg sm:mt-12 sm:text-xl md:text-2xl"
           data-testid="wedding-colors"
         >
           {m.tenues.paletteText}

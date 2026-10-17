@@ -146,6 +146,9 @@ export const messages = {
       chapter: "Lieux & Accès",
       title: "Où Nous Retrouver",
       script: "Cocody & Danga",
+      journeyBetween: "~15 min entre les deux lieux",
+      journeyMapsLabel: "Plans & accès",
+      mapLoading: "Chargement de la carte…",
       maps: "Voir sur Google Maps",
       mapTitle: (name) => `Carte — ${name}`,
       items: [
@@ -498,6 +501,9 @@ export const messages = {
       chapter: "Venues & Directions",
       title: "Where to Meet Us",
       script: "Cocody & Danga",
+      journeyBetween: "~15 min between venues",
+      journeyMapsLabel: "Maps & directions",
+      mapLoading: "Loading map…",
       maps: "Open in Google Maps",
       mapTitle: (name) => `Map — ${name}`,
       items: [
