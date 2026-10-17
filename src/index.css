@@ -2349,63 +2349,133 @@ body {
     user-select: none;
 }
 
-.personal-invite-overlay {
+.personal-invite-fields {
     position: absolute;
-    z-index: 1;
-    inset: 0;
+    z-index: 2;
+    top: var(--pi-fields-top, 43.75%);
+    left: var(--pi-fields-left, 14.4%);
+    width: var(--pi-fields-width, 71.2%);
+    height: var(--pi-fields-height, 11.5%);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 0;
+    padding: clamp(0.4rem, 2.2cqi, 0.6rem) clamp(0.45rem, 2.5cqi, 0.7rem)
+        clamp(0.45rem, 2.2cqi, 0.65rem);
+    overflow: hidden;
+    text-align: center;
     pointer-events: none;
 }
 
+.personal-invite-name-wrap {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 0;
+    padding-top: clamp(0.45rem, 2.4cqi, 0.75rem);
+    padding-bottom: clamp(0.05rem, 0.35cqi, 0.12rem);
+}
+
 .personal-invite-name {
-    position: absolute;
-    left: var(--pi-name-x, 50%);
-    top: var(--pi-name-y, 49.6%);
-    width: var(--pi-name-max-w, 68%);
+    width: 100%;
+    max-width: 100%;
     margin: 0;
-    transform: translate(-50%, -50%);
-    font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-    font-size: var(--pi-name-fs, 3.67cqi);
+    font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+    font-size: var(--pi-name-fs, 4.11cqi);
     font-weight: 600;
+    font-style: italic;
     font-synthesis: none;
-    line-height: 1.15;
-    letter-spacing: 0.025em;
-    text-align: center;
+    line-height: 1.08;
+    letter-spacing: 0.03em;
     text-transform: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #521018;
+    color: #5a0a18;
+    text-shadow: 0 0.5px 0 rgba(255, 252, 248, 0.35);
 }
 
 .personal-invite-name--md {
-    font-size: var(--pi-name-fs-md, 3.23cqi);
+    font-size: var(--pi-name-fs-md, 3.52cqi);
 }
 
 .personal-invite-name--sm {
-    font-size: var(--pi-name-fs-sm, 2.79cqi);
-    letter-spacing: 0.018em;
+    font-size: var(--pi-name-fs-sm, 2.93cqi);
 }
 
 .personal-invite-name--xs {
-    font-size: var(--pi-name-fs-xs, 2.35cqi);
-    letter-spacing: 0.012em;
+    font-size: var(--pi-name-fs-xs, 2.49cqi);
 }
 
-.personal-invite-count {
-    position: absolute;
-    left: var(--pi-count-x, 59.4%);
-    top: var(--pi-count-y, 55.5%);
-    margin: 0;
-    transform: translate(-50%, -50%);
-    font-family: Cinzel, "Cormorant Garamond", Georgia, serif;
-    font-size: var(--pi-count-fs, 2.13cqi);
-    font-weight: 700;
-    font-synthesis: none;
-    font-variant-numeric: tabular-nums;
+.personal-invite-sep {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.25rem, 1.2cqi, 0.45rem);
+    width: 100%;
+    margin: clamp(0.05rem, 0.35cqi, 0.15rem) 0;
+    opacity: 0.88;
+}
+
+.personal-invite-sep-line {
+    flex: 1 1 38%;
+    max-width: 5.5rem;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(201, 169, 98, 0.45) 20%,
+        rgba(201, 169, 98, 0.75) 50%,
+        rgba(201, 169, 98, 0.45) 80%,
+        transparent
+    );
+}
+
+.personal-invite-sep-gem {
+    flex-shrink: 0;
+    font-family: Cinzel, serif;
+    font-size: clamp(0.35rem, 1.05cqi, 0.5rem);
     line-height: 1;
+    color: #c9a962;
+}
+
+.personal-invite-party-line {
+    flex-shrink: 0;
+    margin: 0;
+    max-width: 100%;
+    font-family: Cinzel, "Cormorant Garamond", Georgia, serif;
+    font-size: var(--pi-party-fs, 1.69cqi);
+    font-weight: 600;
+    line-height: 1.35;
     letter-spacing: 0.05em;
-    text-align: center;
-    color: #521018;
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: #4a0e17;
+    text-shadow:
+        0 1px 0 rgba(255, 252, 248, 0.85),
+        0 0 1px rgba(255, 252, 248, 0.5);
+}
+
+.personal-invite-party-label {
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #4a0e17;
+}
+
+.personal-invite-party-count {
+    font-size: var(--pi-party-count-fs, 2.05cqi);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: #7a5a12;
+}
+
+.personal-invite-party-unit {
+    font-weight: 600;
+    color: #4a0e17;
 }
 
 .palette-gem {

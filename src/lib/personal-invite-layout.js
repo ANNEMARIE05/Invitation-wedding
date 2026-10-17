@@ -1,36 +1,39 @@
-/** Coordonnées calées sur carte-invitation-envoi.jpg (682 × 1024 px). */
+/** Coordonnées calées sur carte-invitation-envoi.jpg — faire-part florale raffinée (682 × 1024). */
 export const PERSONAL_INVITE_CARD = {
   width: 682,
   height: 1024,
-  name: {
-    x: 341,
-    y: 508,
-    maxWidth: 468,
-    fontSize: 25,
-    fontSizeMd: 22,
-    fontSizeSm: 19,
-    fontSizeXs: 16,
+  /** Intérieur du cadre rose (sous « INVITATION PERSONNELLE » imprimé). */
+  fields: {
+    top: 456,
+    left: 98,
+    width: 486,
+    height: 118,
   },
-  count: {
-    x: 405,
-    y: 568,
-    fontSize: 14.5,
+  name: {
+    fontSize: 28,
+    fontSizeMd: 24,
+    fontSizeSm: 20,
+    fontSizeXs: 17,
+  },
+  partyLine: {
+    fontSize: 11.5,
+    countFontSize: 14,
   },
 };
 
 export function personalInviteCssVars() {
-  const { width, height, name, count } = PERSONAL_INVITE_CARD;
+  const { width, height, fields, name, partyLine } = PERSONAL_INVITE_CARD;
   return {
-    "--pi-name-x": `${(name.x / width) * 100}%`,
-    "--pi-name-y": `${(name.y / height) * 100}%`,
-    "--pi-name-max-w": `${(name.maxWidth / width) * 100}%`,
-    "--pi-count-x": `${(count.x / width) * 100}%`,
-    "--pi-count-y": `${(count.y / height) * 100}%`,
+    "--pi-fields-top": `${(fields.top / height) * 100}%`,
+    "--pi-fields-left": `${(fields.left / width) * 100}%`,
+    "--pi-fields-width": `${(fields.width / width) * 100}%`,
+    "--pi-fields-height": `${(fields.height / height) * 100}%`,
     "--pi-name-fs": `${(name.fontSize / width) * 100}cqi`,
     "--pi-name-fs-md": `${(name.fontSizeMd / width) * 100}cqi`,
     "--pi-name-fs-sm": `${(name.fontSizeSm / width) * 100}cqi`,
     "--pi-name-fs-xs": `${(name.fontSizeXs / width) * 100}cqi`,
-    "--pi-count-fs": `${(count.fontSize / width) * 100}cqi`,
+    "--pi-party-fs": `${(partyLine.fontSize / width) * 100}cqi`,
+    "--pi-party-count-fs": `${(partyLine.countFontSize / width) * 100}cqi`,
   };
 }
 
