@@ -33,7 +33,7 @@ export function FairePart({ testId = "invite-card" }) {
   const ariaLabel = `${m.inviteSection.title} — ${settings.groom} & ${settings.bride}, ${settings.dateLabel}`;
 
   const articleCls =
-    "invite-card-article relative mx-auto w-full max-w-[min(100%,calc(100vw-2.3rem))] overflow-visible [container-type:inline-size] sm:max-w-[540px] md:max-w-[580px]";
+    "invite-card-article relative mx-auto w-full max-w-[min(100%,20rem)] overflow-visible [container-type:inline-size] sm:max-w-[24rem] md:max-w-[26rem]";
 
   return (
     <article data-testid={testId} className={articleCls} aria-label={ariaLabel}>
@@ -188,7 +188,7 @@ export default function InviteCard() {
         ) : null}
       </motion.div>
 
-      <div className="invite-card-showcase relative z-[1] mx-auto w-full max-w-[min(100%,calc(100vw-2.3rem))] overflow-visible sm:max-w-[540px] md:max-w-[580px]">
+      <div className="invite-card-showcase relative z-[1] mx-auto w-full max-w-[min(100%,20rem)] overflow-visible sm:max-w-[24rem] md:max-w-[26rem]">
         <FairePart />
       </div>
     </section>

@@ -2088,6 +2088,32 @@ body {
     object-position: center;
 }
 
+.invite-card-showcase {
+    max-width: min(100%, 20rem);
+}
+
+.invite-card-showcase .faire-part-stack--template {
+    --faire-stack-pad-y: clamp(0.75rem, 3.8cqi, 1.15rem);
+    --faire-stack-pad-x: clamp(0.7rem, 3.4cqi, 1.05rem);
+    padding: var(--faire-stack-pad-y) var(--faire-stack-pad-x);
+}
+
+.invite-card-showcase .faire-part-stack {
+    transform: translateY(clamp(-10px, -2.5cqi, -16px));
+}
+
+@media (min-width: 640px) {
+    .invite-card-showcase {
+        max-width: min(100%, 24rem);
+    }
+}
+
+@media (min-width: 768px) {
+    .invite-card-showcase {
+        max-width: min(100%, 26rem);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .faire-part-gold-ring,
     .faire-part-shell,
@@ -2106,11 +2132,11 @@ body {
 
     .invite-card-showcase {
         padding-inline: 0;
-        max-width: min(100%, calc(100vw - 2.3rem));
+        max-width: min(100%, 20rem);
     }
 
     .invite-card-article {
-        max-width: min(100%, calc(100vw - 2.3rem));
+        max-width: min(100%, 20rem);
     }
 
     .faire-part-stack {
