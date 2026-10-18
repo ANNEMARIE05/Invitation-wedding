@@ -9,7 +9,7 @@ export default function Chapter({ index, eyebrow, title, script, dark = false })
       whileInView={{ opacity: 1, y: 0 }}
       viewport={REVEAL_VIEWPORT}
       transition={{ duration: 0.9, ease: EASE }}
-      className="text-center mb-14 md:mb-20"
+      className="text-center mb-10 sm:mb-14 md:mb-20"
     >
       <p
         className={`type-eyebrow ${dark ? "type-eyebrow--on-dark" : ""}`}
@@ -18,13 +18,13 @@ export default function Chapter({ index, eyebrow, title, script, dark = false })
         Chapitre {index} — {eyebrow}
       </p>
       <h2
-        className={`type-display mt-4 text-4xl sm:text-5xl lg:text-6xl ${dark ? "type-display--on-dark" : ""}`}
+        className={`type-display mt-3 sm:mt-4 text-[1.75rem] leading-[1.12] sm:text-5xl lg:text-6xl ${dark ? "type-display--on-dark" : ""}`}
       >
         {title}
       </h2>
       {script && (
         <p
-          className={`type-display-script mt-3 text-xl sm:text-2xl ${dark ? "type-display-script--on-dark" : ""}`}
+          className={`type-display-script mt-2 sm:mt-3 text-base sm:text-2xl ${dark ? "type-display-script--on-dark" : ""}`}
         >
           {script}
         </p>

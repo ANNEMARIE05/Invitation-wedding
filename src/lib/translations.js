@@ -257,11 +257,13 @@ export const messages = {
       submitUpdate: "Mettre à jour ma réponse",
       submitting: "Envoi en cours…",
       lookupTitle: "Déjà inscrit·e ?",
-      lookupHint: "Entrez votre numéro WhatsApp pour retrouver ou modifier votre réponse.",
+      lookupHint:
+        "Entrez votre numéro WhatsApp pour retrouver votre carte ou modifier une réponse déjà envoyée.",
       lookupAction: "Retrouver ma réponse",
       lookupBusy: "Recherche…",
       lookupNotFound: "Aucune réponse avec ce numéro — vous pouvez vous inscrire ci-dessous.",
-      lookupFound: (name) => `Bonjour ${name} — vous pouvez modifier votre réponse ci-dessous.`,
+      lookupFound: (name) =>
+        `Bonjour ${name} — votre réponse est affichée. Ouvrez « Voir ma carte » ou modifiez votre réponse.`,
       lookupLocked: "Les modifications ne sont plus possibles à moins de deux semaines du mariage.",
       editMyRsvp: "Modifier ma réponse",
       toastLocked: "Les modifications sont closes — contactez les mariés si besoin.",
@@ -612,11 +614,13 @@ export const messages = {
       submitUpdate: "Update my reply",
       submitting: "Sending…",
       lookupTitle: "Already replied?",
-      lookupHint: "Enter your WhatsApp number to find or update your RSVP.",
+      lookupHint:
+        "Enter your WhatsApp number to retrieve your card or update a reply you already sent.",
       lookupAction: "Find my reply",
       lookupBusy: "Searching…",
       lookupNotFound: "No reply for this number — you can register below.",
-      lookupFound: (name) => `Hello ${name} — you can update your reply below.`,
+      lookupFound: (name) =>
+        `Hello ${name} — your reply is shown below. Open “View my card” or edit your reply.`,
       lookupLocked: "Changes are closed within two weeks of the wedding.",
       editMyRsvp: "Edit my reply",
       toastLocked: "Updates are closed — please contact the couple if needed.",

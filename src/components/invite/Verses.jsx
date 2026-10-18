@@ -15,12 +15,12 @@ function parseScriptureRef(ref) {
 export default function Verses() {
   const { m } = useI18n();
   return (
-    <section id="versets" className="relative py-24 md:py-36 px-5 sm:px-8 lg:px-16 overflow-hidden" data-testid="verses-section">
+    <section id="versets" className="relative py-16 px-5 sm:px-8 sm:py-24 md:py-36 lg:px-16 overflow-hidden" data-testid="verses-section">
       <SparkleField count={8} className="opacity-50" />
       <div className="relative z-10 mx-auto max-w-4xl">
         <Chapter index="I" eyebrow={m.verses.chapter} title={m.verses.title} script={m.verses.script} />
 
-        <div className="grid items-stretch gap-7 sm:gap-10 md:grid-cols-2 md:gap-12">
+        <div className="grid items-stretch gap-5 sm:gap-10 md:grid-cols-2 md:gap-12">
           {m.verses.items.map((v, i) => {
             const scripture = parseScriptureRef(v.ref);
             const leadLines = v.lines.filter((line) => !line.quote);
@@ -38,7 +38,7 @@ export default function Verses() {
                   as="blockquote"
                   lift
                   animate={false}
-                  className="bible-verse-card flex h-full min-h-0 w-full flex-col p-6 pt-7 sm:min-h-[24rem] sm:p-9 sm:pt-10"
+                  className="bible-verse-card flex h-full min-h-0 w-full flex-col p-5 pt-6 sm:min-h-[24rem] sm:p-9 sm:pt-10"
                   data-testid={`verse-${v.who.toLowerCase()}`}
                 >
                   <span className="bible-verse-ribbon bible-verse-ribbon--right" aria-hidden="true" />

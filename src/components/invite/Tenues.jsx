@@ -30,7 +30,7 @@ export default function Tenues() {
   return (
     <section
       id="tenues"
-      className="relative overflow-hidden py-24 md:py-36 px-5 sm:px-8 lg:px-16"
+      className="relative overflow-hidden py-16 px-5 sm:px-8 sm:py-24 md:py-36 lg:px-16"
       data-testid="tenues-section"
     >
       <div className="relative z-10 mx-auto max-w-6xl">
@@ -58,7 +58,7 @@ export default function Tenues() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "0px 0px -40px 0px" }}
           transition={{ duration: 0.85, delay: 0.06, ease: EASE }}
-          className="type-display-script mx-auto mt-10 max-w-3xl text-center text-lg sm:mt-12 sm:text-xl md:text-2xl"
+          className="type-display-script mx-auto mt-8 max-w-3xl text-center text-base sm:mt-12 sm:text-xl md:text-2xl"
           data-testid="wedding-colors"
         >
           {m.tenues.paletteText}

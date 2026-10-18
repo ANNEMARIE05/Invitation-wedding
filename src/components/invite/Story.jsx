@@ -7,7 +7,7 @@ export default function Story() {
   const { coupleLabel, story } = useSettings();
   const portrait = usePhoto("portrait", IMAGES.portrait);
   return (
-    <section id="histoire" className="py-24 md:py-36 px-5 sm:px-8 lg:px-16" data-testid="story-section">
+    <section id="histoire" className="py-16 px-5 sm:px-8 sm:py-24 md:py-36 lg:px-16" data-testid="story-section">
       <div className="max-w-6xl mx-auto">
         <Chapter index="I" eyebrow="Manifeste" title="Notre Histoire" script="trois instants, une vie" />
         <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
@@ -25,18 +25,18 @@ export default function Story() {
               className="relative w-full aspect-[3/4] object-cover clipped-frame"
               data-testid="story-portrait"
             />
-            <p className="absolute -bottom-6 right-6 bg-wedding-wine-deep text-wedding-on-dark font-script text-2xl px-6 py-2 shadow-xl">
+            <p className="absolute -bottom-5 right-4 bg-wedding-wine-deep text-wedding-on-dark font-script text-xl px-5 py-1.5 shadow-xl sm:-bottom-6 sm:right-6 sm:text-2xl sm:px-6 sm:py-2">
               pour toujours
             </p>
           </motion.div>
 
-          <div className="space-y-14 pt-4">
+          <div className="space-y-10 pt-2 sm:space-y-14 sm:pt-4">
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9, ease: EASE }}
-              className="type-display-script text-2xl sm:text-3xl"
+              className="type-display-script text-lg leading-snug sm:text-3xl"
             >
               « Certaines rencontres ressemblent à des évidences que le destin aurait signées à l'encre d'or. »
             </motion.p>
@@ -52,7 +52,7 @@ export default function Story() {
               >
                 <span className="absolute -left-[7px] top-2 w-3 h-3 rounded-full bg-wedding-gold-accent shadow-[0_0_0_4px_rgba(212,175,55,0.2)]" />
                 <p className="font-cinzel text-sm tracking-[0.3em] text-wedding-wine-accent">{s.year}</p>
-                <h3 className="type-card-title mt-2 text-2xl sm:text-3xl">{s.title}</h3>
+                <h3 className="type-card-title mt-2 text-xl sm:text-3xl">{s.title}</h3>
                 <p className="type-prose mt-3 text-sm sm:text-base">{s.text}</p>
               </motion.div>
             ))}

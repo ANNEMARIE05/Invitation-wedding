@@ -12,6 +12,36 @@ import LuxeCard from "./LuxeCard";
 
 const protectJehovah = (text) => String(text || "").replace(/Jéhovah/g, "Jéh\u2060ovah");
 
+function VenueMapEmbed({ venue, loadingLabel, mapTitle }) {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+  }, [venue.embedUrl]);
+
+  return (
+    <div
+      data-testid={`venue-map-${venue.id}`}
+      className={`venue-map-shell venues-stop-card__map-frame min-h-[168px] sm:min-h-[180px] ${loading ? "venue-map-shell--loading" : "venue-map-shell--loaded"}`}
+    >
+      {loading ? (
+        <div className="venue-map-loader" role="status" aria-live="polite">
+          <span className="venue-map-loader__ring" aria-hidden="true" />
+          <span className="venue-map-loader__label">{loadingLabel}</span>
+        </div>
+      ) : null}
+      <iframe
+        key={venue.id}
+        title={mapTitle(protectJehovah(venue.name))}
+        src={venue.embedUrl}
+        className="venue-map-iframe h-[168px] w-full grayscale-[0.12] sm:h-[180px]"
+        loading="lazy"
+        onLoad={() => setLoading(false)}
+      />
+    </div>
+  );
+}
+
 export default function Venues() {
   const { m } = useI18n();
   const { venueCards, zoom } = useSettings();
@@ -21,8 +51,6 @@ export default function Venues() {
     ...v,
     image: v.id === "civil" ? civilImg : v.id === "ceremony" ? ceremonyImg : v.image,
   }));
-  const [mapTab, setMapTab] = useState(venues[0]?.id ?? "civil");
-  const [mapLoading, setMapLoading] = useState(true);
   const zoomHref = zoom.joinUrl;
   const z = m.venues.zoom;
   const vCopy = m.venues;
@@ -36,15 +64,9 @@ export default function Venues() {
     show: { transition: { staggerChildren: 0.08, delayChildren: 0.12 } },
   };
 
-  const activeVenue = venues.find((v) => v.id === mapTab) || venues[0];
-
-  useEffect(() => {
-    setMapLoading(true);
-  }, [mapTab, activeVenue?.embedUrl]);
-
   return (
-    <section id="lieux" className="py-24 md:py-36 px-5 sm:px-8 lg:px-16" data-testid="venues-section">
-      <div className="max-w-4xl mx-auto">
+    <section id="lieux" className="py-16 px-5 sm:px-8 sm:py-24 md:py-36 lg:px-16" data-testid="venues-section">
+      <div className="max-w-4xl mx-auto md:max-w-5xl lg:max-w-6xl">
         <Chapter index="IV" eyebrow={vCopy.chapter} title={vCopy.title} script={vCopy.script} />
 
         <div className="relative mt-4 md:mt-8">
@@ -56,15 +78,17 @@ export default function Venues() {
             {venues.map((venue, i) => (
               <li key={venue.id} className="venues-journey-step">
                 {i > 0 ? (
-                  <motion.p
-                    initial={{ opacity: 0, scale: 0.92 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={REVEAL_VIEWPORT}
-                    transition={{ duration: 0.5, ease: EASE }}
-                    className="venues-journey-bridge"
-                  >
-                    {vCopy.journeyBetween}
-                  </motion.p>
+                  <div className="venues-journey-bridge-wrap">
+                    <motion.p
+                      initial={{ opacity: 0, scale: 0.92 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={REVEAL_VIEWPORT}
+                      transition={{ duration: 0.5, ease: EASE }}
+                      className="venues-journey-bridge"
+                    >
+                      {vCopy.journeyBetween}
+                    </motion.p>
+                  </div>
                 ) : null}
                 <motion.div
                   initial={{ opacity: 0, y: 36 }}
@@ -82,23 +106,30 @@ export default function Venues() {
                     data-testid={`venue-card-${venue.id}`}
                   >
                     <div className="flex flex-col sm:flex-row">
-                      <div className="group relative h-44 shrink-0 overflow-hidden sm:h-auto sm:w-[11.5rem] md:w-[13rem]">
+                      <div className="venues-stop-card__time-side shrink-0">
+                        <span
+                          className="venues-stop-card__time-fleuron"
+                          aria-hidden="true"
+                          style={{ "--venues-fleuron-delay": `${i * 0.45}s` }}
+                        >
+                          <span className="venues-stop-card__time-fleuron-glyph">✿</span>
+                        </span>
+                        <p className="venues-stop-card__time type-accent-time">{venue.time}</p>
+                      </div>
+                      <div className="group relative h-44 shrink-0 overflow-hidden sm:h-auto sm:min-h-[15rem] sm:w-[13.5rem] md:min-h-[17rem] md:w-[17.5rem] lg:w-[20rem]">
                         <img
                           src={venue.image}
                           alt=""
                           className="h-full w-full object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.04]"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-wedding-wine-deep/75 via-wedding-wine/25 to-transparent sm:bg-gradient-to-r sm:from-wedding-wine-deep/50 sm:via-transparent sm:to-transparent" />
-                        <p className="absolute bottom-3 left-3 font-cinzel text-[11px] font-bold uppercase tracking-[0.22em] text-wedding-on-dark drop-shadow-md sm:bottom-4 sm:left-4">
-                          {venue.time}
-                        </p>
+                        <div className="absolute inset-0 bg-gradient-to-t from-wedding-wine-deep/55 via-wedding-wine/15 to-transparent sm:bg-gradient-to-r sm:from-wedding-wine-deep/35 sm:via-transparent sm:to-transparent" />
                       </div>
-                      <div className="flex min-w-0 flex-1 flex-col items-center p-6 text-center sm:items-start sm:p-7 sm:text-left">
-                        <p className="font-cinzel text-[10px] font-bold tracking-[0.28em] uppercase text-wedding-wine-accent">
+                      <div className="flex min-w-0 flex-1 flex-col items-start p-5 text-left sm:p-7">
+                        <p className="font-cinzel text-[9px] font-bold tracking-[0.24em] uppercase text-wedding-wine-accent sm:text-[10px] sm:tracking-[0.28em]">
                           {venue.eyebrow}
                         </p>
-                        <h3 className="type-card-title mt-1 text-xl italic sm:text-2xl">{protectJehovah(venue.name)}</h3>
-                        <div className="mt-3 flex items-center justify-center gap-2.5 text-wedding-wine sm:items-start sm:justify-start">
+                        <h3 className="type-card-title mt-1 text-lg italic sm:text-2xl">{protectJehovah(venue.name)}</h3>
+                        <div className="mt-3 flex items-start justify-start gap-2.5 text-wedding-wine">
                           <MapPin size={17} className="mt-0.5 shrink-0 text-wedding-wine-accent" strokeWidth={1.5} />
                           <p className="type-prose text-sm">{venue.address}</p>
                         </div>
@@ -110,10 +141,15 @@ export default function Venues() {
                           rel="noopener noreferrer"
                           whileTap={{ scale: 0.96 }}
                           whileHover={{ y: -2 }}
-                          className="mt-5 inline-flex w-fit max-w-full items-center justify-center gap-2 rounded-full border border-wedding-wine-deep/20 bg-wedding-wine-deep px-6 py-3 font-cinzel text-[10px] uppercase tracking-[0.18em] text-wedding-on-dark transition-all duration-300 hover:bg-wedding-wine-accent sm:text-[11px]"
+                          className="venue-action-btn mt-4 inline-flex w-fit max-w-full items-center justify-center gap-1.5 rounded-full border border-wedding-wine-deep/20 bg-wedding-wine-deep px-5 py-2.5 font-cinzel text-[9px] uppercase tracking-[0.14em] text-wedding-on-dark transition-all duration-300 hover:bg-wedding-wine-accent sm:mt-5 sm:gap-2 sm:px-6 sm:py-3 sm:text-[11px] sm:tracking-[0.18em]"
                         >
                           <Navigation size={14} /> {vCopy.maps}
                         </motion.a>
+                        {venue.embedUrl ? (
+                          <div className="venues-stop-card__map mt-6 w-full">
+                            <VenueMapEmbed venue={venue} loadingLabel={vCopy.mapLoading} mapTitle={vCopy.mapTitle} />
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                   </LuxeCard>
@@ -122,74 +158,6 @@ export default function Venues() {
             ))}
           </ol>
         </div>
-
-        {venues.length > 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={REVEAL_VIEWPORT}
-            transition={{ duration: 0.85, ease: EASE }}
-            className="mt-12 md:mt-14"
-          >
-            <p className="text-center font-cinzel text-[10px] font-bold uppercase tracking-[0.28em] text-wedding-wine-accent">
-              {vCopy.journeyMapsLabel}
-            </p>
-            <div
-              className="mt-4 flex flex-wrap justify-center gap-2"
-              role="tablist"
-              aria-label={vCopy.journeyMapsLabel}
-            >
-              {venues.map((venue) => {
-                const selected = mapTab === venue.id;
-                return (
-                  <button
-                    key={venue.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={selected}
-                    data-testid={`venue-map-tab-${venue.id}`}
-                    onClick={() => setMapTab(venue.id)}
-                    className={`rounded-full px-4 py-2 font-cinzel text-[9px] font-semibold uppercase tracking-[0.14em] transition-colors sm:text-[10px] ${
-                      selected
-                        ? "bg-wedding-wine-deep text-wedding-on-dark shadow-md"
-                        : "border border-wedding-silver/45 bg-wedding-on-dark/80 text-wedding-wine hover:border-wedding-wine-accent/40"
-                    }`}
-                  >
-                    {venue.eyebrow}
-                  </button>
-                );
-              })}
-            </div>
-            <LuxeCard noInset animate={false} className="mt-5 overflow-hidden !p-0 !rounded-xl">
-              <div
-                role="tabpanel"
-                aria-labelledby={`venue-map-tab-${mapTab}`}
-                data-testid={`venue-map-${mapTab}`}
-                className={`venue-map-shell min-h-[200px] sm:min-h-[220px] ${mapLoading ? "venue-map-shell--loading" : "venue-map-shell--loaded"}`}
-              >
-                {mapLoading ? (
-                  <div className="venue-map-loader" role="status" aria-live="polite">
-                    <span className="venue-map-loader__ring" aria-hidden="true" />
-                    <span className="venue-map-loader__label">{vCopy.mapLoading}</span>
-                  </div>
-                ) : null}
-                {activeVenue ? (
-                  <iframe
-                    key={activeVenue.id}
-                    title={vCopy.mapTitle(activeVenue.name)}
-                    src={activeVenue.embedUrl}
-                    className="venue-map-iframe h-[200px] w-full grayscale-[0.12] sm:h-[220px]"
-                    loading="lazy"
-                    onLoad={() => setMapLoading(false)}
-                  />
-                ) : null}
-              </div>
-            </LuxeCard>
-            {activeVenue ? (
-              <p className="mt-3 text-center type-prose text-xs text-wedding-muted">{protectJehovah(activeVenue.name)}</p>
-            ) : null}
-          </motion.div>
-        ) : null}
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}

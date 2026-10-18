@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Feather, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
@@ -10,6 +10,25 @@ import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
 import LuxeCard from "./LuxeCard";
 import SparkleField from "./SparkleField";
+
+/** Messages de test / maquette — non affichés (état vide à la place). */
+function isPlaceholderGuestbookEntry(row) {
+  const nom = String(row?.nom || "").trim();
+  return /^testeur$/i.test(nom);
+}
+
+function GuestbookEmptyState({ text, testId = "guestbook-empty" }) {
+  return (
+    <LuxeCard animate className="guestbook-empty-card px-6 py-9 text-center sm:px-12 sm:py-11">
+      <div className="guestbook-empty-card__icon" aria-hidden="true">
+        <Feather size={40} strokeWidth={1.35} className="guestbook-empty-card__feather" />
+      </div>
+      <p className="guestbook-empty-card__text" data-testid={testId}>
+        {text}
+      </p>
+    </LuxeCard>
+  );
+}
 
 function GuestField({ label, htmlFor, className = "", children }) {
   return (
@@ -28,15 +47,13 @@ export default function Guestbook() {
   const locTag = locale === "en" ? "en-GB" : "fr-FR";
 
   const formatDate = useCallback(
-    (iso) => {
-      const raw = new Date(iso).toLocaleDateString(locTag, {
+    (iso) =>
+      new Date(iso).toLocaleDateString(locTag, {
         day: "numeric",
         month: "long",
         year: "numeric",
-      });
-      return locale === "en" ? raw : raw.toLocaleUpperCase(locTag);
-    },
-    [locale, locTag],
+      }),
+    [locTag],
   );
 
   const [messages, setMessages] = useState([]);
@@ -46,14 +63,24 @@ export default function Guestbook() {
   const [loading, setLoading] = useState(false);
   const [carouselPaused, setCarouselPaused] = useState(false);
 
-  useEffect(() => {
-    if (messages.length < 2 || carouselPaused) return;
-    const t = setInterval(() => setIndex((i) => (i + 1) % messages.length), 7000);
-    return () => clearInterval(t);
-  }, [messages.length, carouselPaused]);
+  const displayMessages = useMemo(
+    () => messages.filter((row) => !isPlaceholderGuestbookEntry(row)),
+    [messages],
+  );
 
-  const prev = () => setIndex((i) => (i - 1 + messages.length) % messages.length);
-  const next = () => setIndex((i) => (i + 1) % messages.length);
+  useEffect(() => {
+    setIndex((i) => (displayMessages.length ? Math.min(i, displayMessages.length - 1) : 0));
+  }, [displayMessages.length]);
+
+  useEffect(() => {
+    if (displayMessages.length < 2 || carouselPaused) return;
+    const t = setInterval(() => setIndex((i) => (i + 1) % displayMessages.length), 7000);
+    return () => clearInterval(t);
+  }, [displayMessages.length, carouselPaused]);
+
+  const prev = () =>
+    setIndex((i) => (displayMessages.length ? (i - 1 + displayMessages.length) % displayMessages.length : 0));
+  const next = () => setIndex((i) => (displayMessages.length ? (i + 1) % displayMessages.length : 0));
 
   const reloadMessages = useCallback(() => {
     getGuestbook()
@@ -84,12 +111,12 @@ export default function Guestbook() {
     }
   };
 
-  const current = messages[index];
+  const current = displayMessages[index];
 
   return (
     <section
       id="livre-or"
-      className="guestbook-section relative overflow-hidden px-5 py-24 sm:px-8 md:py-36 lg:px-16"
+      className="guestbook-section relative overflow-hidden px-5 py-16 sm:px-8 sm:py-24 md:py-36 lg:px-16"
       data-testid="guestbook-section"
     >
       <SparkleField count={10} className="opacity-45" />
@@ -156,21 +183,9 @@ export default function Guestbook() {
         </LuxeCard>
 
         <div className="mt-14 md:mt-16" data-testid="guestbook-list">
-          {messages.length === 0 && (
-            <LuxeCard animate className="guestbook-empty-card px-6 py-10 text-center sm:px-12 sm:py-12">
-              <Feather
-                size={44}
-                strokeWidth={1.35}
-                className="mx-auto text-wedding-gold-accent drop-shadow-[0_2px_12px_rgba(212,175,55,0.25)]"
-                aria-hidden
-              />
-              <p className="type-display-script mt-4 text-xl" data-testid="guestbook-empty">
-                {m.guestbook.empty}
-              </p>
-            </LuxeCard>
-          )}
+          {displayMessages.length === 0 && <GuestbookEmptyState text={m.guestbook.empty} />}
 
-          {messages.length > 0 && current && (
+          {displayMessages.length > 0 && current && (
             <div
               className="guestbook-carousel relative mx-auto max-w-2xl px-2 sm:px-14"
               onMouseEnter={() => setCarouselPaused(true)}
@@ -180,9 +195,9 @@ export default function Guestbook() {
                 if (!e.currentTarget.contains(e.relatedTarget)) setCarouselPaused(false);
               }}
             >
-              {messages.length > 1 && (
+              {displayMessages.length > 1 && (
                 <p className="guestbook-carousel-meta mb-4 text-center" aria-live="polite">
-                  {m.guestbook.messageOf(index + 1, messages.length)}
+                  {m.guestbook.messageOf(index + 1, displayMessages.length)}
                 </p>
               )}
 
@@ -210,7 +225,7 @@ export default function Guestbook() {
                       <div className="guestbook-quote-rule" aria-hidden>
                         <span className="guestbook-quote-fleuron">✦</span>
                       </div>
-                      <p className="font-script text-[1.75rem] leading-tight text-wedding-wine-accent sm:text-[2rem]">
+                      <p className="font-script text-[1.45rem] leading-tight text-wedding-wine-accent sm:text-[2rem]">
                         {current.nom}
                       </p>
                       <time
@@ -224,7 +239,7 @@ export default function Guestbook() {
                 </motion.div>
               </AnimatePresence>
 
-              {messages.length > 1 && (
+              {displayMessages.length > 1 && (
                 <>
                   <button
                     type="button"
@@ -243,13 +258,13 @@ export default function Guestbook() {
                     <ChevronRight size={20} strokeWidth={2.25} />
                   </button>
                   <div className="mt-7 flex justify-center gap-2" role="tablist" aria-label={m.guestbook.chapter}>
-                    {messages.map((msg, i) => (
+                    {displayMessages.map((msg, i) => (
                       <button
                         key={msg.id ?? i}
                         type="button"
                         role="tab"
                         aria-selected={i === index}
-                        aria-label={m.guestbook.messageOf(i + 1, messages.length)}
+                        aria-label={m.guestbook.messageOf(i + 1, displayMessages.length)}
                         onClick={() => setIndex(i)}
                         className={`guestbook-dot ${i === index ? "guestbook-dot--active" : ""}`}
                       />

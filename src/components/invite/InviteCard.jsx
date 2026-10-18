@@ -12,7 +12,7 @@ import { useSettings } from "@/lib/settings";
 import SparkleField from "./SparkleField";
 
 /** Faire-part affiché sur le site (visuel complet, sans personnalisation). */
-const SHOWCASE_CARD_BG = `${process.env.PUBLIC_URL || ""}/images/carte-invitation-showcase.jpg?v=20261017-florale`;
+const SHOWCASE_CARD_BG = `${process.env.PUBLIC_URL || ""}/images/carte-invitation-showcase.jpg?v=20261018-floral-dore`;
 
 function ShowcaseCardArt({ className = "faire-part-bg" }) {
   return (
@@ -34,7 +34,7 @@ export function FairePart({ testId = "invite-card" }) {
   const ariaLabel = `${m.inviteSection.title} — ${settings.groom} & ${settings.bride}, ${settings.dateLabel}`;
 
   const articleCls =
-    "invite-card-article relative mx-auto w-full max-w-[min(100%,20rem)] overflow-visible [container-type:inline-size] sm:max-w-[24rem] md:max-w-[26rem]";
+    "invite-card-article relative mx-auto w-full max-w-[min(100%,17.5rem)] overflow-visible [container-type:inline-size] sm:max-w-[24rem] md:max-w-[26rem]";
 
   return (
     <article data-testid={testId} className={articleCls} aria-label={ariaLabel}>
@@ -141,7 +141,7 @@ export function CardActions({
 
   return (
     <div
-      className={`mt-6 flex flex-wrap items-center justify-center gap-3 ${className}`.trim()}
+      className={`mt-5 flex flex-wrap items-center justify-center gap-2 sm:mt-6 sm:gap-3 ${className}`.trim()}
       data-testid={`${cardTestId}-actions`}
     >
       {showWhatsApp ? (
@@ -150,9 +150,9 @@ export function CardActions({
           data-testid={`${cardTestId}-share-whatsapp`}
           onClick={shareWhatsApp}
           disabled={busy || busyWa}
-          className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#25D366]/40 bg-[#25D366]/15 px-6 py-3.5 font-cinzel text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0d5925] backdrop-blur-sm transition-all duration-300 hover:border-[#25D366]/70 hover:bg-[#25D366]/25 disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-1.5 rounded-full border-2 border-[#25D366]/40 bg-[#25D366]/15 px-4 py-2.5 font-cinzel text-[9px] font-semibold uppercase tracking-[0.12em] text-[#0d5925] backdrop-blur-sm transition-all duration-300 hover:border-[#25D366]/70 hover:bg-[#25D366]/25 disabled:opacity-60 sm:gap-2 sm:px-6 sm:py-3.5 sm:text-[11px] sm:tracking-[0.16em]"
         >
-          <MessageCircle size={16} className="text-[#25D366]" />
+          <MessageCircle size={14} className="text-[#25D366] sm:h-4 sm:w-4" />
           {busyWa ? m.inviteSection.shareWhatsAppBusy : m.inviteSection.shareWhatsApp}
         </button>
       ) : null}
@@ -161,9 +161,9 @@ export function CardActions({
         data-testid={`${cardTestId}-download`}
         onClick={downloadCard}
         disabled={busy || busyWa}
-        className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-wedding-rose/30 bg-white/90 px-6 py-3.5 font-cinzel text-[11px] font-semibold uppercase tracking-[0.16em] text-wedding-wine-deep backdrop-blur-sm transition-all duration-300 hover:border-wedding-rose/55 hover:bg-[#FFF5F8] disabled:opacity-60"
+        className="inline-flex items-center justify-center gap-1.5 rounded-full border-2 border-wedding-rose/30 bg-white/90 px-4 py-2.5 font-cinzel text-[9px] font-semibold uppercase tracking-[0.12em] text-wedding-wine-deep backdrop-blur-sm transition-all duration-300 hover:border-wedding-rose/55 hover:bg-[#FFF5F8] disabled:opacity-60 sm:gap-2 sm:px-6 sm:py-3.5 sm:text-[11px] sm:tracking-[0.16em]"
       >
-        <Download size={15} className="text-wedding-rose" />
+        <Download size={14} className="text-wedding-rose sm:h-[15px] sm:w-[15px]" />
         {busy ? m.inviteSection.downloadBusy : m.inviteSection.download}
       </button>
     </div>
@@ -183,13 +183,13 @@ export default function InviteCard() {
         className="relative z-[1] mb-10 text-center"
       >
         <p className="type-eyebrow text-wedding-rose">{m.inviteSection.eyebrow}</p>
-        <h2 className="type-display mt-3 text-4xl sm:text-5xl">{m.inviteSection.title}</h2>
+        <h2 className="type-display mt-3 text-[1.75rem] leading-[1.12] sm:text-5xl">{m.inviteSection.title}</h2>
         {m.inviteSection.script ? (
-          <p className="type-display-script mt-3 text-xl">{m.inviteSection.script}</p>
+          <p className="type-display-script mt-2 text-base sm:mt-3 sm:text-xl">{m.inviteSection.script}</p>
         ) : null}
       </motion.div>
 
-      <div className="invite-card-showcase relative z-[1] mx-auto w-full max-w-[min(100%,20rem)] overflow-visible sm:max-w-[24rem] md:max-w-[26rem]">
+      <div className="invite-card-showcase relative z-[1] mx-auto w-full max-w-[min(100%,17.5rem)] overflow-visible sm:max-w-[24rem] md:max-w-[26rem]">
         <FairePart />
       </div>
     </section>

@@ -40,5 +40,5 @@ CREATE TABLE IF NOT EXISTS photos (
 
 CREATE TABLE IF NOT EXISTS admin_sessions (
   token TEXT PRIMARY KEY,
-  expires_at INTEGER NOT NULL
+  expires_at BIGINT NOT NULL
 );

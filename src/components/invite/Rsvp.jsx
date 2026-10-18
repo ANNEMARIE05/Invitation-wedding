@@ -85,6 +85,35 @@ const ReplyCard = ({ children }) => (
   </div>
 );
 
+function RsvpPhoneLookup({ m, lookupPhone, setLookupPhone, lookup, lookupBusy }) {
+  return (
+    <footer className="rsvp-recall">
+      <p className="rsvp-recall-title">{m.rsvp.lookupTitle}</p>
+      <p className="rsvp-recall-hint">{m.rsvp.lookupHint}</p>
+      <form onSubmit={lookup} className="rsvp-recall-form">
+        <input
+          type="tel"
+          inputMode="tel"
+          value={lookupPhone}
+          onChange={(e) => setLookupPhone(e.target.value)}
+          placeholder={m.rsvp.phonePh}
+          className="rsvp-line rsvp-line--compact"
+          data-testid="rsvp-lookup-phone"
+        />
+        <button
+          type="submit"
+          disabled={lookupBusy || !lookupPhone.trim()}
+          className="rsvp-recall-btn"
+          data-testid="rsvp-lookup-submit"
+        >
+          <Search size={14} aria-hidden />
+          {lookupBusy ? m.rsvp.lookupBusy : m.rsvp.lookupAction}
+        </button>
+      </form>
+    </footer>
+  );
+}
+
 export default function Rsvp() {
   const { deadlineLabel, zoom } = useSettings();
   const { m } = useI18n();
@@ -121,13 +150,11 @@ export default function Rsvp() {
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("wedding_guest_rsvp") || "null");
-      if (saved?.nom && saved?.telephone) {
-        setSent(saved);
-        setForm(rsvpToForm(saved, m.rsvp.regimes));
-        setIsUpdate(true);
+      if (saved?.telephone) {
+        setLookupPhone(String(saved.telephone));
       }
     } catch {}
-  }, [m.rsvp.regimes]);
+  }, []);
 
   const lookup = async (e) => {
     e?.preventDefault?.();
@@ -173,9 +200,6 @@ export default function Rsvp() {
         localStorage.setItem("wedding_guest_rsvp", JSON.stringify(rsvpData));
       } catch {}
 
-      if (rsvpData.present && rsvpData.mode === "presentiel") {
-        setCardModalOpen(true);
-      }
       toast.success(m.rsvp.lookupFound(firstName(rsvpData.nom)));
     } catch {
       toast.error(m.rsvp.toastErr);
@@ -206,10 +230,6 @@ export default function Rsvp() {
       try {
         localStorage.setItem("wedding_guest_rsvp", JSON.stringify(data));
       } catch {}
-      if (data?.present && data?.mode === "presentiel") {
-        setCardModalOpen(true);
-        setAutoShareCard(true);
-      }
       toast.success(data?.present ? m.rsvp.toastPresent : m.rsvp.toastAbsent);
     } catch (err) {
       if (err instanceof ApiError) {
@@ -259,9 +279,9 @@ export default function Rsvp() {
           {confirmed ? (
             <motion.div
               key="done"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, ease: EASE }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.45, ease: EASE }}
               data-testid="rsvp-confirmation"
             >
               <ReplyCard>
@@ -269,7 +289,7 @@ export default function Rsvp() {
                   <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-wedding-gold-accent/60 bg-wedding-wine-deep">
                     <Check size={22} className="text-wedding-gold-accent" />
                   </span>
-                  <h3 className="mt-4 font-display text-3xl font-medium text-wedding-ink">{m.rsvp.thanks(firstName(confirmed.nom))}</h3>
+                  <h3 className="mt-4 font-display text-2xl font-medium text-wedding-ink sm:text-3xl">{m.rsvp.thanks(firstName(confirmed.nom))}</h3>
                   <p className="type-prose mx-auto mt-2 max-w-md text-sm">
                     {confirmed.present && confirmed.mode === "zoom"
                       ? m.rsvp.zoomThanks(firstName(confirmed.nom))
@@ -296,7 +316,10 @@ export default function Rsvp() {
                         <button
                           type="button"
                           data-testid="rsvp-view-card-button"
-                          onClick={() => setCardModalOpen(true)}
+                          onClick={() => {
+                            setAutoShareCard(false);
+                            setCardModalOpen(true);
+                          }}
                           className="btn-invite-pill btn-invite-pill--card"
                         >
                           <Sparkles size={15} className="text-wedding-rose" />
@@ -305,7 +328,10 @@ export default function Rsvp() {
                         <button
                           type="button"
                           data-testid="rsvp-whatsapp-card-button"
-                          onClick={() => setCardModalOpen(true)}
+                          onClick={() => {
+                            setAutoShareCard(true);
+                            setCardModalOpen(true);
+                          }}
                           className="btn-invite-pill btn-invite-pill--whatsapp"
                         >
                           <MessageCircle size={15} className="text-[#25D366]" />
@@ -349,6 +375,13 @@ export default function Rsvp() {
                     </a>
                   )}
                 </div>
+                <RsvpPhoneLookup
+                  m={m}
+                  lookupPhone={lookupPhone}
+                  setLookupPhone={setLookupPhone}
+                  lookup={lookup}
+                  lookupBusy={lookupBusy}
+                />
               </ReplyCard>
             </motion.div>
           ) : (
@@ -360,8 +393,15 @@ export default function Rsvp() {
               transition={{ duration: 0.9, ease: EASE }}
             >
               <ReplyCard>
+                <RsvpPhoneLookup
+                  m={m}
+                  lookupPhone={lookupPhone}
+                  setLookupPhone={setLookupPhone}
+                  lookup={lookup}
+                  lookupBusy={lookupBusy}
+                />
+                <ClassicRule className="rsvp-reply-rule mt-6" gem="♥" />
                 <p className="rsvp-reply-lead">{m.rsvp.formIntro}</p>
-                <ClassicRule className="rsvp-reply-rule" gem="♥" />
 
                 <form onSubmit={submit} className="rsvp-reply-form" data-testid="rsvp-form">
                   <RsvpSection title={m.rsvp.sectionIdentity}>
@@ -518,30 +558,6 @@ export default function Rsvp() {
                   </div>
                 </form>
 
-                <footer className="rsvp-recall">
-                  <p className="rsvp-recall-title">{m.rsvp.lookupTitle}</p>
-                  <p className="rsvp-recall-hint">{m.rsvp.lookupHint}</p>
-                  <form onSubmit={lookup} className="rsvp-recall-form">
-                    <input
-                      type="tel"
-                      inputMode="tel"
-                      value={lookupPhone}
-                      onChange={(e) => setLookupPhone(e.target.value)}
-                      placeholder={m.rsvp.phonePh}
-                      className="rsvp-line rsvp-line--compact"
-                      data-testid="rsvp-lookup-phone"
-                    />
-                    <button
-                      type="submit"
-                      disabled={lookupBusy || !lookupPhone.trim()}
-                      className="rsvp-recall-btn"
-                      data-testid="rsvp-lookup-submit"
-                    >
-                      <Search size={14} aria-hidden />
-                      {lookupBusy ? m.rsvp.lookupBusy : m.rsvp.lookupAction}
-                    </button>
-                  </form>
-                </footer>
               </ReplyCard>
             </motion.div>
           )}

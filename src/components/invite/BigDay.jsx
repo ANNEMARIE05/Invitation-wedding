@@ -81,14 +81,14 @@ function BigDayCountdown({ rows, onDark = false }) {
         <Fragment key={key}>
           {i > 0 ? (
             <span
-              className={`bigday-countdown__sep font-display text-[1.65rem] sm:text-[2.75rem] leading-none select-none shrink-0 ${sepClass}`}
+              className={`bigday-countdown__sep font-display text-[1.35rem] sm:text-[2.75rem] leading-none select-none shrink-0 ${sepClass}`}
               aria-hidden="true"
             >
               :
             </span>
           ) : null}
           <div className="bigday-countdown__unit text-center shrink-0" data-testid={`countdown-${key}`}>
-            <p className={`bigday-countdown__value font-display text-[1.65rem] sm:text-[2.75rem] font-semibold tabular-nums leading-none ${valueClass}`}>
+            <p className={`bigday-countdown__value font-display text-[1.35rem] sm:text-[2.75rem] font-semibold tabular-nums leading-none ${valueClass}`}>
               {key === "days" ? String(value) : String(value).padStart(2, "0")}
             </p>
             <p className={`bigday-countdown__label mt-2 sm:mt-2.5 font-cinzel text-[8px] sm:text-[10px] font-semibold tracking-[0.14em] sm:tracking-[0.32em] uppercase ${labelClass}`}>
@@ -103,7 +103,7 @@ function BigDayCountdown({ rows, onDark = false }) {
 
 function BigDayCalendarActions({ m, downloadIcs, googleUrl }) {
   return (
-    <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
+    <div className="mt-7 flex w-full max-w-sm flex-col items-stretch justify-center gap-2 sm:mt-9 sm:max-w-none sm:flex-row sm:items-center sm:gap-3">
       <button
         type="button"
         data-testid="download-ics-button"
@@ -190,7 +190,7 @@ export default function BigDay() {
   return (
     <section
       id="grand-jour"
-      className="relative py-24 md:py-36 px-2.5 sm:px-8 lg:px-16 overflow-hidden bg-gradient-to-br from-wedding-wine-deep via-wedding-wine-accent to-wedding-wine"
+      className="relative py-16 px-2.5 sm:px-8 sm:py-24 md:py-36 lg:px-16 overflow-hidden bg-gradient-to-br from-wedding-wine-deep via-wedding-wine-accent to-wedding-wine"
       data-testid="bigday-section"
     >
       <SparkleField count={18} chic className="z-[1] opacity-75" />

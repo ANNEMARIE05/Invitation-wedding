@@ -37,6 +37,15 @@ import RequireCoupleAuth from "@/components/invite/RequireCoupleAuth";
 import { SETTINGS_CHANGE_EVENT } from "@/lib/invite-defaults";
 import { useStoreSync } from "@/lib/useStoreSync";
 import ThemeApplier from "@/components/invite/ThemeApplier";
+import PersonalInviteCard from "@/components/invite/PersonalInviteCard";
+
+function PersonalCardPreview() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#2a0511] p-4">
+      <PersonalInviteCard guest={{ nom: "Agbonou Kossiwa Anne Marie", accompagnants: 1 }} />
+    </div>
+  );
+}
 
 /** Paramètres partagés (espace mariés & pages admin hors invitation). */
 function SharedSettings({ children }) {
@@ -193,6 +202,9 @@ export default function App() {
           <SharedSettings>
             <Routes>
               <Route path="/" element={<Invitation />} />
+              {process.env.NODE_ENV === "development" ? (
+                <Route path="/preview-carte" element={<PersonalCardPreview />} />
+              ) : null}
               <Route path="/espace-maries" element={<CoupleSpace />} />
               <Route
                 path="/reponses"

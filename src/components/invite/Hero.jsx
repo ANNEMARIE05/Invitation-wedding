@@ -75,7 +75,7 @@ export default function Hero({ start = true }) {
           className="hero-monogram mx-auto mb-7 sm:mb-9"
           data-testid="hero-monogram"
         >
-          <p className="flex items-center justify-center font-display text-[2.15rem] sm:text-[2.5rem] font-medium tracking-[0.12em] text-wedding-on-dark">
+          <p className="flex items-center justify-center font-display text-[1.85rem] sm:text-[2.5rem] font-medium tracking-[0.12em] text-wedding-on-dark">
             <span className="hero-monogram-flower hero-monogram-flower--lead" aria-hidden="true">
               <span className="hero-monogram-flower__glyph">✿</span>
             </span>
@@ -91,7 +91,7 @@ export default function Hero({ start = true }) {
         </motion.div>
 
         <MaskedLine delay={0.6} start={start}>
-          <span className="font-cinzel text-[11px] font-semibold sm:text-xs tracking-[0.5em] uppercase text-wedding-rose-bright">
+          <span className="font-cinzel text-[9px] font-semibold sm:text-xs tracking-[0.38em] uppercase text-wedding-rose-bright sm:tracking-[0.5em]">
             {m.hero.tagline}
           </span>
         </MaskedLine>
@@ -108,13 +108,13 @@ export default function Hero({ start = true }) {
                 delay={200}
                 speed={72}
                 showCursor={false}
-                className="hero-name couple-name-shimmer couple-name-shimmer--a text-6xl italic font-medium sm:text-7xl lg:text-8xl"
+                className="hero-name couple-name-shimmer couple-name-shimmer--a text-[clamp(2.25rem,10vw,2.85rem)] italic font-medium sm:text-7xl lg:text-8xl"
               />
             </CoupleNameMotion>
           </MaskedLine>
           <MaskedLine delay={1.05} start={start}>
             <CoupleNameMotion preset="hero-amp" as="span" className="my-1 block">
-              <span className="hero-amp couple-name-amp couple-name-amp--hero inline-block text-3xl not-italic font-normal tracking-[0.2em] sm:text-4xl">
+              <span className="hero-amp couple-name-amp couple-name-amp--hero inline-block text-2xl not-italic font-normal tracking-[0.2em] sm:text-4xl">
                 &
               </span>
             </CoupleNameMotion>
@@ -127,7 +127,7 @@ export default function Hero({ start = true }) {
                 delay={200 + groom.length * 72 + 280}
                 speed={72}
                 showCursor={false}
-                className="hero-name couple-name-shimmer couple-name-shimmer--b text-6xl italic font-medium sm:text-7xl lg:text-8xl"
+                className="hero-name couple-name-shimmer couple-name-shimmer--b text-[clamp(2.25rem,10vw,2.85rem)] italic font-medium sm:text-7xl lg:text-8xl"
               />
             </CoupleNameMotion>
           </MaskedLine>
@@ -146,12 +146,12 @@ export default function Hero({ start = true }) {
             data-testid="hero-rsvp-button"
           >
             <span className="relative z-[1]">{m.hero.confirm}</span>
-            <ChevronDown size={16} className="btn-rejoindre-icon relative z-[1] rotate-[-90deg]" aria-hidden />
+            <ChevronDown size={14} className="btn-rejoindre-icon relative z-[1] rotate-[-90deg] sm:w-4 sm:h-4" aria-hidden />
           </button>
           <button
             type="button"
             onClick={() => scrollToId("#faire-part")}
-            className="rounded-full border border-wedding-rose-light/35 px-6 py-3 font-cinzel text-[10px] font-semibold uppercase tracking-[0.22em] text-wedding-rose-light transition-colors hover:border-wedding-rose/60 hover:text-wedding-on-dark"
+            className="hero-outline-btn rounded-full border border-wedding-rose-light/35 px-5 py-2.5 font-cinzel text-[9px] font-semibold uppercase tracking-[0.16em] text-wedding-rose-light transition-colors hover:border-wedding-rose/60 hover:text-wedding-on-dark sm:px-6 sm:py-3 sm:text-[10px] sm:tracking-[0.22em]"
           >
             {m.hero.viewInvite}
           </button>

@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const { DatabaseSync } = require("node:sqlite");
 
 const ROOT = path.join(__dirname, "..");
 const DEFAULT_DB_PATH = path.join(ROOT, "data", "wedding.db");
@@ -11,19 +10,94 @@ function ensureDataDir(dbPath) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-function loadSchema(db) {
+function loadSchema(sqlite) {
   const sql = fs.readFileSync(SCHEMA_PATH, "utf8");
-  db.exec(sql);
+  sqlite.exec(sql);
 }
 
-function openDatabase() {
+const PG_SCHEMA = `
+CREATE TABLE IF NOT EXISTS settings (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  payload TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS rsvps (
+  id TEXT PRIMARY KEY,
+  telephone_norm TEXT NOT NULL UNIQUE,
+  nom TEXT NOT NULL,
+  telephone TEXT NOT NULL,
+  present INTEGER NOT NULL,
+  mode TEXT,
+  accompagnants INTEGER NOT NULL DEFAULT 0,
+  regime TEXT,
+  chanson TEXT,
+  message TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_rsvps_telephone_norm ON rsvps (telephone_norm);
+
+CREATE TABLE IF NOT EXISTS guestbook (
+  id TEXT PRIMARY KEY,
+  nom TEXT NOT NULL,
+  message TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS photos (
+  slot TEXT PRIMARY KEY,
+  data_url TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS admin_sessions (
+  token TEXT PRIMARY KEY,
+  expires_at BIGINT NOT NULL
+);
+`;
+
+async function openDatabase() {
+  const connString = (process.env.DATABASE_URL || "").trim();
+  if (connString) {
+    console.log("[DB] Initialisation connexion PostgreSQL (DATABASE_URL détectée)...");
+    const { Pool } = require("pg");
+    const isLocal =
+      connString.includes("localhost") ||
+      connString.includes("127.0.0.1") ||
+      connString.includes("sslmode=disable");
+
+    const pool = new Pool({
+      connectionString: connString,
+      ssl: isLocal ? false : { rejectUnauthorized: false },
+    });
+
+    try {
+      const client = await pool.connect();
+      try {
+        await client.query(PG_SCHEMA);
+      } finally {
+        client.release();
+      }
+      console.log("[DB] Connecté avec succès à PostgreSQL (Render / Cloud).");
+      return { isPg: true, pool };
+    } catch (err) {
+      console.error("[DB ERROR] Échec de la connexion PostgreSQL :", err.message);
+      throw err;
+    }
+  }
+
+  // Fallback SQLite local
+  console.log("[DB] Aucune DATABASE_URL détectée. Utilisation de SQLite local.");
+  const { DatabaseSync } = require("node:sqlite");
   const dbPath = process.env.DATABASE_PATH
     ? path.resolve(process.env.DATABASE_PATH)
     : DEFAULT_DB_PATH;
   ensureDataDir(dbPath);
-  const db = new DatabaseSync(dbPath);
-  loadSchema(db);
-  return db;
+  const sqlite = new DatabaseSync(dbPath);
+  loadSchema(sqlite);
+  return { isPg: false, sqlite };
 }
 
 function normalizePhone(telephone) {
@@ -34,8 +108,18 @@ function defaultSettingsPayload() {
   return {};
 }
 
-function getSettingsRow(db) {
-  const row = db.prepare("SELECT payload FROM settings WHERE id = 1").get();
+async function getSettingsRow(db) {
+  if (db.isPg) {
+    const res = await db.pool.query("SELECT payload FROM settings WHERE id = 1");
+    if (!res.rows[0]) return defaultSettingsPayload();
+    try {
+      const parsed = JSON.parse(res.rows[0].payload);
+      return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+  const row = db.sqlite.prepare("SELECT payload FROM settings WHERE id = 1").get();
   if (!row) return defaultSettingsPayload();
   try {
     const parsed = JSON.parse(row.payload);
@@ -45,31 +129,39 @@ function getSettingsRow(db) {
   }
 }
 
-function saveSettingsRow(db, payload) {
+async function saveSettingsRow(db, payload) {
   const now = new Date().toISOString();
-  db.prepare(
+  if (db.isPg) {
+    await db.pool.query(
+      `INSERT INTO settings (id, payload, updated_at) VALUES (1, $1, $2)
+       ON CONFLICT(id) DO UPDATE SET payload = EXCLUDED.payload, updated_at = EXCLUDED.updated_at`,
+      [JSON.stringify(payload), now],
+    );
+    return payload;
+  }
+  db.sqlite.prepare(
     `INSERT INTO settings (id, payload, updated_at) VALUES (1, ?, ?)
      ON CONFLICT(id) DO UPDATE SET payload = excluded.payload, updated_at = excluded.updated_at`,
   ).run(JSON.stringify(payload), now);
   return payload;
 }
 
-function weddingDateIso(db) {
-  const s = getSettingsRow(db);
+async function weddingDateIso(db) {
+  const s = await getSettingsRow(db);
   if (s.date_iso) return s.date_iso;
   return process.env.WEDDING_DATE_ISO || "2026-12-04T13:30:00.000Z";
 }
 
-/** À partir de cette date, les RSVP existants ne sont plus modifiables (14 jours avant le mariage). */
-function rsvpEditLockAt(db) {
-  const d = new Date(weddingDateIso(db));
+async function rsvpEditLockAt(db) {
+  const iso = await weddingDateIso(db);
+  const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return null;
   d.setDate(d.getDate() - 14);
   return d;
 }
 
-function isRsvpEditLocked(db) {
-  const lockAt = rsvpEditLockAt(db);
+async function isRsvpEditLocked(db) {
+  const lockAt = await rsvpEditLockAt(db);
   if (!lockAt) return false;
   return Date.now() >= lockAt.getTime();
 }
@@ -82,31 +174,57 @@ function rowToRsvp(row) {
     telephone: row.telephone,
     present: Boolean(row.present),
     mode: row.mode || "presentiel",
-    accompagnants: row.accompagnants,
+    accompagnants: Number(row.accompagnants) || 0,
     regime: row.regime || "",
     chanson: row.chanson || "",
     message: row.message || "",
-    created_at: row.created_at,
-    updated_at: row.updated_at || null,
+    created_at:
+      typeof row.created_at === "object" && row.created_at?.toISOString
+        ? row.created_at.toISOString()
+        : String(row.created_at),
+    updated_at: row.updated_at
+      ? typeof row.updated_at === "object" && row.updated_at?.toISOString
+        ? row.updated_at.toISOString()
+        : String(row.updated_at)
+      : null,
   };
 }
 
-function listRsvps(db) {
-  const rows = db
+async function listRsvps(db) {
+  if (db.isPg) {
+    const res = await db.pool.query("SELECT * FROM rsvps ORDER BY created_at DESC");
+    return res.rows.map(rowToRsvp);
+  }
+  const rows = db.sqlite
     .prepare("SELECT * FROM rsvps ORDER BY datetime(created_at) DESC")
     .all();
   return rows.map(rowToRsvp);
 }
 
-function findRsvpByPhone(db, telephone) {
+async function findRsvpByPhone(db, telephone) {
   const key = normalizePhone(telephone);
   if (!key) return null;
-  let row = db.prepare("SELECT * FROM rsvps WHERE telephone_norm = ?").get(key);
+  if (db.isPg) {
+    let res = await db.pool.query("SELECT * FROM rsvps WHERE telephone_norm = $1", [key]);
+    if (res.rows[0]) return rowToRsvp(res.rows[0]);
+
+    if (key.length >= 8) {
+      const suffix = key.slice(-8);
+      res = await db.pool.query(
+        "SELECT * FROM rsvps WHERE telephone_norm LIKE $1 OR $2 LIKE '%' || telephone_norm ORDER BY created_at DESC LIMIT 1",
+        [`%${suffix}`, key],
+      );
+      if (res.rows[0]) return rowToRsvp(res.rows[0]);
+    }
+    return null;
+  }
+
+  let row = db.sqlite.prepare("SELECT * FROM rsvps WHERE telephone_norm = ?").get(key);
   if (row) return rowToRsvp(row);
 
   if (key.length >= 8) {
     const suffix = key.slice(-8);
-    row = db.prepare(
+    row = db.sqlite.prepare(
       "SELECT * FROM rsvps WHERE telephone_norm LIKE ? OR ? LIKE '%' || telephone_norm ORDER BY datetime(created_at) DESC LIMIT 1",
     ).get(`%${suffix}`, key);
     if (row) return rowToRsvp(row);
@@ -114,15 +232,15 @@ function findRsvpByPhone(db, telephone) {
   return null;
 }
 
-function upsertRsvp(db, payload, { allowUpdate }) {
+async function upsertRsvp(db, payload, { allowUpdate }) {
   const key = normalizePhone(payload.telephone);
   if (!key) {
     const err = new Error("invalid_phone");
     err.code = "invalid_phone";
     throw err;
   }
-  const existing = findRsvpByPhone(db, payload.telephone);
-  const locked = isRsvpEditLocked(db);
+  const existing = await findRsvpByPhone(db, payload.telephone);
+  const locked = await isRsvpEditLocked(db);
 
   if (existing) {
     if (locked) {
@@ -137,83 +255,167 @@ function upsertRsvp(db, payload, { allowUpdate }) {
       throw err;
     }
     const updated_at = new Date().toISOString();
-    db.prepare(
-      `UPDATE rsvps SET
-        nom = ?, telephone = ?, telephone_norm = ?,
-        present = ?, mode = ?, accompagnants = ?,
-        regime = ?, chanson = ?, message = ?, updated_at = ?
-       WHERE id = ?`,
+    if (db.isPg) {
+      await db.pool.query(
+        `UPDATE rsvps SET
+          nom = $1, telephone = $2, telephone_norm = $3,
+          present = $4, mode = $5, accompagnants = $6,
+          regime = $7, chanson = $8, message = $9, updated_at = $10
+         WHERE id = $11`,
+        [
+          payload.nom,
+          payload.telephone,
+          key,
+          payload.present ? 1 : 0,
+          payload.mode || "presentiel",
+          Number(payload.accompagnants) || 0,
+          payload.regime || "",
+          payload.chanson || "",
+          payload.message || "",
+          updated_at,
+          existing.id,
+        ],
+      );
+    } else {
+      db.sqlite.prepare(
+        `UPDATE rsvps SET
+          nom = ?, telephone = ?, telephone_norm = ?,
+          present = ?, mode = ?, accompagnants = ?,
+          regime = ?, chanson = ?, message = ?, updated_at = ?
+         WHERE id = ?`,
+      ).run(
+        payload.nom,
+        payload.telephone,
+        key,
+        payload.present ? 1 : 0,
+        payload.mode || "presentiel",
+        Number(payload.accompagnants) || 0,
+        payload.regime || "",
+        payload.chanson || "",
+        payload.message || "",
+        updated_at,
+        existing.id,
+      );
+    }
+    return findRsvpByPhone(db, payload.telephone);
+  }
+
+  const id = `rsvp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const created_at = new Date().toISOString();
+  if (db.isPg) {
+    await db.pool.query(
+      `INSERT INTO rsvps (
+        id, telephone_norm, nom, telephone, present, mode, accompagnants,
+        regime, chanson, message, created_at, updated_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NULL)`,
+      [
+        id,
+        key,
+        payload.nom,
+        payload.telephone,
+        payload.present ? 1 : 0,
+        payload.mode || "presentiel",
+        Number(payload.accompagnants) || 0,
+        payload.regime || "",
+        payload.chanson || "",
+        payload.message || "",
+        created_at,
+      ],
+    );
+  } else {
+    db.sqlite.prepare(
+      `INSERT INTO rsvps (
+        id, telephone_norm, nom, telephone, present, mode, accompagnants,
+        regime, chanson, message, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)`,
     ).run(
+      id,
+      key,
       payload.nom,
       payload.telephone,
-      key,
       payload.present ? 1 : 0,
       payload.mode || "presentiel",
       Number(payload.accompagnants) || 0,
       payload.regime || "",
       payload.chanson || "",
       payload.message || "",
-      updated_at,
-      existing.id,
+      created_at,
     );
-    return findRsvpByPhone(db, payload.telephone);
   }
-
-  const id = `rsvp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const created_at = new Date().toISOString();
-  db.prepare(
-    `INSERT INTO rsvps (
-      id, telephone_norm, nom, telephone, present, mode, accompagnants,
-      regime, chanson, message, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)`,
-  ).run(
-    id,
-    key,
-    payload.nom,
-    payload.telephone,
-    payload.present ? 1 : 0,
-    payload.mode || "presentiel",
-    Number(payload.accompagnants) || 0,
-    payload.regime || "",
-    payload.chanson || "",
-    payload.message || "",
-    created_at,
-  );
   return findRsvpByPhone(db, payload.telephone);
 }
 
-function listGuestbook(db) {
-  return db
-    .prepare("SELECT id, nom, message, created_at FROM guestbook ORDER BY datetime(created_at) DESC")
-    .all();
+function mapGuestbookRow(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    nom: row.nom,
+    message: row.message,
+    created_at:
+      typeof row.created_at === "object" && row.created_at?.toISOString
+        ? row.created_at.toISOString()
+        : String(row.created_at),
+  };
 }
 
-function addGuestbook(db, { nom, message }) {
+async function listGuestbook(db) {
+  if (db.isPg) {
+    const res = await db.pool.query("SELECT id, nom, message, created_at FROM guestbook ORDER BY created_at DESC");
+    return res.rows.map(mapGuestbookRow);
+  }
+  const rows = db.sqlite
+    .prepare("SELECT id, nom, message, created_at FROM guestbook ORDER BY datetime(created_at) DESC")
+    .all();
+  return rows.map(mapGuestbookRow);
+}
+
+async function addGuestbook(db, { nom, message }) {
   const entry = {
     id: `gb-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     nom,
     message,
     created_at: new Date().toISOString(),
   };
-  db.prepare("INSERT INTO guestbook (id, nom, message, created_at) VALUES (?, ?, ?, ?)").run(
-    entry.id,
-    entry.nom,
-    entry.message,
-    entry.created_at,
-  );
+  if (db.isPg) {
+    await db.pool.query(
+      "INSERT INTO guestbook (id, nom, message, created_at) VALUES ($1, $2, $3, $4)",
+      [entry.id, entry.nom, entry.message, entry.created_at],
+    );
+  } else {
+    db.sqlite.prepare("INSERT INTO guestbook (id, nom, message, created_at) VALUES (?, ?, ?, ?)").run(
+      entry.id,
+      entry.nom,
+      entry.message,
+      entry.created_at,
+    );
+  }
   return entry;
 }
 
-function getPhotoMap(db) {
-  const rows = db.prepare("SELECT slot, data_url FROM photos").all();
+async function getPhotoMap(db) {
+  if (db.isPg) {
+    const res = await db.pool.query("SELECT slot, data_url FROM photos");
+    const out = {};
+    for (const row of res.rows) out[row.slot] = row.data_url;
+    return out;
+  }
+  const rows = db.sqlite.prepare("SELECT slot, data_url FROM photos").all();
   const out = {};
   for (const row of rows) out[row.slot] = row.data_url;
   return out;
 }
 
-function setPhotoSlot(db, slot, dataUrl) {
+async function setPhotoSlot(db, slot, dataUrl) {
   const updated_at = new Date().toISOString();
-  db.prepare(
+  if (db.isPg) {
+    await db.pool.query(
+      `INSERT INTO photos (slot, data_url, updated_at) VALUES ($1, $2, $3)
+       ON CONFLICT(slot) DO UPDATE SET data_url = EXCLUDED.data_url, updated_at = EXCLUDED.updated_at`,
+      [slot, dataUrl, updated_at],
+    );
+    return { slot, path: dataUrl };
+  }
+  db.sqlite.prepare(
     `INSERT INTO photos (slot, data_url, updated_at) VALUES (?, ?, ?)
      ON CONFLICT(slot) DO UPDATE SET data_url = excluded.data_url, updated_at = excluded.updated_at`,
   ).run(slot, dataUrl, updated_at);

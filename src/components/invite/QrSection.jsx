@@ -15,7 +15,7 @@ export default function QrSection() {
         className="max-w-sm mx-auto text-center"
       >
         <p className="type-eyebrow">Un geste, un souvenir</p>
-        <p className="type-script mt-3 text-4xl sm:text-5xl">Partagez l'invitation</p>
+        <p className="type-script mt-3 text-[1.65rem] sm:text-5xl">Partagez l'invitation</p>
 
         <div className="relative mt-9 mx-auto w-fit bg-wedding-on-dark p-7 rounded-sm shadow-[0_20px_50px_rgba(74,14,23,0.12)]">
           <div className="absolute inset-2 border border-wedding-gold-accent/60 pointer-events-none" />

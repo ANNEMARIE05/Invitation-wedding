@@ -14,7 +14,7 @@ export default function Program() {
   const { m } = useI18n();
   const { dateLabel } = useSettings();
   return (
-    <section id="programme" className="relative overflow-hidden py-24 md:py-36 px-5 sm:px-8 lg:px-16" data-testid="program-section">
+    <section id="programme" className="relative overflow-hidden py-16 md:py-36 px-5 sm:px-8 sm:py-24 lg:px-16" data-testid="program-section">
       <div className="relative z-10 max-w-4xl mx-auto">
         <Chapter index="III" eyebrow={m.program.chapter} title={m.program.title} script={dateLabel} />
         <div className="relative">
@@ -22,7 +22,7 @@ export default function Program() {
             className="program-timeline-rail pointer-events-none absolute left-1/2 top-0 bottom-0 z-0 w-px -translate-x-1/2 max-md:w-0.5"
             aria-hidden="true"
           />
-          <div className="space-y-10 md:space-y-12">
+          <div className="space-y-8 md:space-y-12">
             {m.program.items.map((p, i) => (
               <motion.div
                 key={p.time}
@@ -42,7 +42,7 @@ export default function Program() {
                 />
                 <LuxeCard
                   lift
-                  className={`program-event-card relative overflow-visible p-6 pt-10 text-left sm:p-7 sm:pt-10 ${
+                  className={`program-event-card relative overflow-visible p-5 pt-9 text-left sm:p-7 sm:pt-10 ${
                     i % 2 === 0 ? "md:text-right" : ""
                   }`}
                 >
@@ -53,8 +53,8 @@ export default function Program() {
                       side={i % 2 === 0 ? "left" : "right"}
                     />
                   ) : null}
-                  <p className="type-accent-time text-2xl sm:text-3xl">{p.time}</p>
-                  <h3 className="type-card-title mt-1 text-xl sm:text-2xl">{p.title}</h3>
+                  <p className="type-accent-time text-xl sm:text-3xl">{p.time}</p>
+                  <h3 className="type-card-title mt-1 text-lg sm:text-2xl">{p.title}</h3>
                   <p className="type-prose mt-2 text-sm sm:text-base">{protectJehovah(p.text)}</p>
                 </LuxeCard>
               </motion.div>

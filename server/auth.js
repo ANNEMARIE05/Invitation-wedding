@@ -23,33 +23,57 @@ function createSessionToken() {
   return crypto.randomBytes(32).toString("hex");
 }
 
-function purgeExpiredSessions(db) {
-  db.prepare("DELETE FROM admin_sessions WHERE expires_at <= ?").run(Date.now());
+async function purgeExpiredSessions(db) {
+  const now = Date.now();
+  if (db.isPg) {
+    await db.pool.query("DELETE FROM admin_sessions WHERE expires_at <= $1", [now]);
+  } else {
+    db.sqlite.prepare("DELETE FROM admin_sessions WHERE expires_at <= ?").run(now);
+  }
 }
 
-function createSession(db) {
-  purgeExpiredSessions(db);
+async function createSession(db) {
+  await purgeExpiredSessions(db);
   const token = createSessionToken();
   const expires_at = Date.now() + SESSION_MS;
-  db.prepare("INSERT INTO admin_sessions (token, expires_at) VALUES (?, ?)").run(token, expires_at);
+  if (db.isPg) {
+    await db.pool.query("INSERT INTO admin_sessions (token, expires_at) VALUES ($1, $2)", [token, expires_at]);
+  } else {
+    db.sqlite.prepare("INSERT INTO admin_sessions (token, expires_at) VALUES (?, ?)").run(token, expires_at);
+  }
   return { token, expires_at };
 }
 
-function sessionFromRequest(db, req) {
+async function sessionFromRequest(db, req) {
   const token = req.cookies?.[SESSION_COOKIE];
   if (!token) return null;
-  purgeExpiredSessions(db);
-  const row = db.prepare("SELECT expires_at FROM admin_sessions WHERE token = ?").get(token);
-  if (!row || row.expires_at <= Date.now()) {
-    if (token) db.prepare("DELETE FROM admin_sessions WHERE token = ?").run(token);
+  await purgeExpiredSessions(db);
+  let expires_at = null;
+  if (db.isPg) {
+    const res = await db.pool.query("SELECT expires_at FROM admin_sessions WHERE token = $1", [token]);
+    if (!res.rows[0]) return null;
+    expires_at = Number(res.rows[0].expires_at);
+  } else {
+    const row = db.sqlite.prepare("SELECT expires_at FROM admin_sessions WHERE token = ?").get(token);
+    if (!row) return null;
+    expires_at = Number(row.expires_at);
+  }
+  if (!expires_at || expires_at <= Date.now()) {
+    if (token) {
+      if (db.isPg) await db.pool.query("DELETE FROM admin_sessions WHERE token = $1", [token]);
+      else db.sqlite.prepare("DELETE FROM admin_sessions WHERE token = ?").run(token);
+    }
     return null;
   }
-  return { token, expires_at: row.expires_at };
+  return { token, expires_at };
 }
 
-function destroySession(db, req) {
+async function destroySession(db, req) {
   const token = req.cookies?.[SESSION_COOKIE];
-  if (token) db.prepare("DELETE FROM admin_sessions WHERE token = ?").run(token);
+  if (token) {
+    if (db.isPg) await db.pool.query("DELETE FROM admin_sessions WHERE token = $1", [token]);
+    else db.sqlite.prepare("DELETE FROM admin_sessions WHERE token = ?").run(token);
+  }
 }
 
 function setSessionCookie(res, token, expires_at) {
@@ -61,9 +85,14 @@ function clearSessionCookie(res) {
 }
 
 function requireAdmin(db) {
-  return (req, res, next) => {
-    if (sessionFromRequest(db, req)) return next();
-    res.status(401).json({ error: "unauthorized" });
+  return async (req, res, next) => {
+    try {
+      const session = await sessionFromRequest(db, req);
+      if (session) return next();
+      res.status(401).json({ error: "unauthorized" });
+    } catch (err) {
+      next(err);
+    }
   };
 }
 

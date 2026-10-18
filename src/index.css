@@ -232,11 +232,19 @@ body {
 }
 
 .chapter-ornament__gem {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 0.625rem;
+    height: 0.625rem;
     font-family: 'Cinzel', serif;
     font-size: 0.5rem;
-    letter-spacing: 0.35em;
+    line-height: 1;
+    letter-spacing: 0;
     color: var(--gold-accent);
     text-shadow: 0 0 14px color-mix(in srgb, var(--gold-accent) 32%, transparent);
+    transform-origin: center center;
 }
 
 .luxe-card--light .type-prose,
@@ -307,8 +315,40 @@ body {
 }
 
 @keyframes border-glow {
-    0%, 100% { opacity: 0.85; filter: hue-rotate(0deg); }
-    50% { opacity: 1; filter: hue-rotate(8deg); }
+    0%, 100% {
+        opacity: 0.85;
+        background-position: 0% 50%;
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        opacity: 1;
+        background-position: 100% 50%;
+        filter: hue-rotate(8deg);
+    }
+}
+
+@keyframes border-glow-mobile {
+    0%, 100% {
+        opacity: 0.88;
+        background-position: 0% 40%;
+        filter: brightness(0.96);
+    }
+    50% {
+        opacity: 1;
+        background-position: 100% 60%;
+        filter: brightness(1.1);
+    }
+}
+
+@keyframes luxe-card-inset-glimmer {
+    0%, 100% {
+        border-color: rgba(155, 27, 74, 0.12);
+        opacity: 0.92;
+    }
+    50% {
+        border-color: rgba(201, 169, 98, 0.42);
+        opacity: 1;
+    }
 }
 
 @keyframes shimmer-sweep {
@@ -562,25 +602,32 @@ body {
 }
 
 @media (max-width: 639px) {
+    .type-eyebrow {
+        font-size: 0.625rem;
+        letter-spacing: 0.28em;
+        line-height: 1.45;
+    }
+
     .bigday-panel-frame {
         padding: 0.45rem;
     }
 
     .bigday-countdown__unit {
-        min-width: clamp(2.35rem, 21vw, 3.15rem);
+        min-width: clamp(2rem, 17vw, 2.65rem);
     }
 
     .bigday-countdown__value {
-        font-size: clamp(1.45rem, 5.2vw, 1.85rem);
+        font-size: clamp(1.2rem, 4.6vw, 1.45rem) !important;
     }
 
     .bigday-countdown__sep {
-        font-size: clamp(1.45rem, 5.2vw, 1.85rem);
+        font-size: clamp(1.2rem, 4.6vw, 1.45rem) !important;
     }
 
     .bigday-countdown__label {
-        font-size: clamp(7px, 2vw, 8px);
-        letter-spacing: 0.1em;
+        font-size: clamp(6px, 1.75vw, 7px);
+        letter-spacing: 0.08em;
+        margin-top: 0.35rem;
     }
 }
 
@@ -1062,7 +1109,9 @@ body {
         rgba(155, 27, 74, 0.65)
     );
     background-size: 200% 200%;
+    background-position: 0% 50%;
     animation: border-glow 10s ease-in-out infinite;
+    transform: translateZ(0);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -1099,8 +1148,8 @@ body {
 
 @media (max-width: 639px) {
     .bible-verse-card.luxe-card {
-        border-radius: 1.45rem 0.45rem 1.45rem 0.45rem;
-        max-width: min(100%, 21.5rem);
+        border-radius: 1.35rem 0.4rem 1.35rem 0.4rem;
+        max-width: min(100%, 19.5rem);
         margin-inline: auto;
     }
 
@@ -1124,9 +1173,19 @@ body {
     }
 
     .bible-verse-lead {
-        margin-top: 0.75rem;
-        font-size: 1.1rem;
-        line-height: 1.4;
+        margin-top: 0.65rem;
+        font-size: 0.98rem;
+        line-height: 1.38;
+    }
+
+    .bible-verse-quote {
+        font-size: 0.95rem !important;
+        line-height: 1.42;
+    }
+
+    .bible-verse-who {
+        font-size: 0.68rem;
+        letter-spacing: 0.22em;
     }
 
     .bible-verse-scripture {
@@ -1906,7 +1965,50 @@ body {
 }
 
 .guestbook-empty-card {
-    background: rgba(255, 251, 252, 0.92) !important;
+    background: linear-gradient(168deg, rgba(255, 252, 253, 0.98) 0%, rgba(255, 246, 249, 0.95) 100%) !important;
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.92) inset,
+        0 20px 48px rgba(155, 27, 74, 0.08);
+}
+
+.guestbook-empty-card__icon {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.35rem;
+}
+
+.guestbook-empty-card__feather {
+    color: var(--gold-accent);
+    filter: drop-shadow(0 2px 14px rgba(212, 175, 55, 0.32));
+}
+
+.guestbook-empty-card__text {
+    margin: 0.85rem auto 0;
+    max-width: min(100%, 20rem);
+    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    font-size: clamp(0.98rem, 3.4vw, 1.12rem);
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.55;
+    letter-spacing: 0.01em;
+    color: var(--wine);
+}
+
+@media (max-width: 639px) {
+    .guestbook-empty-card {
+        padding: 1.65rem 1.25rem !important;
+    }
+
+    .guestbook-empty-card__feather {
+        width: 2.15rem;
+        height: 2.15rem;
+    }
+
+    .guestbook-empty-card__text {
+        font-size: 0.92rem;
+        line-height: 1.5;
+    }
 }
 
 .guestbook-quote-card {
@@ -2154,12 +2256,12 @@ body {
 
 .venues-journey-dot {
     position: absolute;
-    left: 50%;
+    left: calc(50% - 0.4375rem);
     top: 1.35rem;
     z-index: 2;
     height: 0.875rem;
     width: 0.875rem;
-    transform: translateX(-50%);
+    transform-origin: center center;
     border-radius: 9999px;
     border: 2px solid color-mix(in srgb, var(--gold-accent, #d4af37) 85%, #fff);
     background: #fffbfc;
@@ -2168,21 +2270,28 @@ body {
         0 0 0 6px #fffbfc;
 }
 
+.venues-journey-bridge-wrap {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 0.35rem 0 0.5rem;
+}
+
 .venues-journey-bridge {
     position: relative;
     z-index: 2;
-    margin: 0.35rem auto 0.5rem;
+    margin: 0;
     width: fit-content;
-    max-width: 92%;
+    max-width: min(100%, 22rem);
     border-radius: 9999px;
     border: 1px solid color-mix(in srgb, var(--wine-deep, #6e1f3d) 14%, transparent);
-    background: color-mix(in srgb, var(--ivory, #fff0f4) 88%, #fff);
-    padding: 0.45rem 1rem;
+    background: #fffbfc;
+    padding: 0.5rem 1.15rem;
     text-align: center;
     font-family: var(--font-cinzel, "Cinzel", serif);
     font-size: 9px;
     font-weight: 600;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--wine, #8a2648) 88%, #000);
     box-shadow: 0 8px 24px rgba(155, 27, 74, 0.08);
@@ -2194,6 +2303,122 @@ body {
     margin-top: 0.75rem;
     background: #fffbfc !important;
     box-shadow: 0 16px 40px rgba(155, 27, 74, 0.09);
+}
+
+.venues-stop-card__time-side {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    padding: 0.75rem 1.15rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--wine-deep, #7a1538) 12%, transparent);
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--wine-deep, #6e1f3d) 92%, #000) 0%,
+        color-mix(in srgb, var(--wine, #8a2648) 88%, #000) 100%
+    );
+}
+
+.venues-stop-card__time-fleuron {
+    --venues-fleuron-delay: 0s;
+    display: inline-block;
+    font-size: 0.72rem;
+    line-height: 1;
+    transform-origin: center center;
+    opacity: 0;
+    animation:
+        venues-time-fleuron-in 0.75s cubic-bezier(0.34, 1.4, 0.64, 1) var(--venues-fleuron-delay) forwards,
+        venues-time-fleuron-sway 3.1s ease-in-out calc(0.75s + var(--venues-fleuron-delay)) infinite;
+}
+
+.venues-stop-card__time-fleuron-glyph {
+    display: inline-block;
+    color: color-mix(in srgb, var(--gold-accent, #d4af37) 92%, #fff);
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.35);
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+    transform-origin: center center;
+    animation: venues-time-fleuron-pulse 2.7s ease-in-out calc(0.9s + var(--venues-fleuron-delay)) infinite;
+}
+
+@keyframes venues-time-fleuron-in {
+    from {
+        opacity: 0;
+        transform: scale(0.45) rotate(-22deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes venues-time-fleuron-sway {
+    0%,
+    100% {
+        transform: rotate(-7deg);
+    }
+    50% {
+        transform: rotate(9deg);
+    }
+}
+
+@keyframes venues-time-fleuron-pulse {
+    0%,
+    100% {
+        transform: scale(0.88);
+        opacity: 0.82;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+    }
+    50% {
+        transform: scale(1.14);
+        opacity: 1;
+        filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.55));
+    }
+}
+
+.venues-stop-card__time {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    color: #fff5f8;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.22);
+}
+
+@media (min-width: 640px) {
+    .venues-stop-card__time-side {
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.85rem;
+        width: 4.15rem;
+        padding: 1.35rem 0.45rem;
+        border-bottom: none;
+        border-right: 1px solid color-mix(in srgb, var(--gold-accent, #d4af37) 22%, transparent);
+    }
+
+    .venues-stop-card__time-fleuron {
+        font-size: 0.82rem;
+    }
+
+    .venues-stop-card__time {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        font-size: 1.45rem;
+        letter-spacing: 0.1em;
+    }
+}
+
+.venues-stop-card__map {
+    max-width: 100%;
+}
+
+.venues-stop-card__map-frame {
+    overflow: hidden;
+    border-radius: 0.72rem 0.28rem 0.72rem 0.28rem;
+    border: 1px solid color-mix(in srgb, var(--wine-deep, #7a1538) 14%, transparent);
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.85) inset,
+        0 6px 18px rgba(155, 27, 74, 0.07);
 }
 
 @keyframes invite-countdown-soft {
@@ -2211,13 +2436,13 @@ body {
 @keyframes invite-journey-dot-pulse {
     0%,
     100% {
-        transform: translateX(-50%) scale(1);
+        transform: scale(1);
         box-shadow:
             0 0 0 4px rgba(192, 192, 192, 0.22),
             0 0 0 6px #fffbfc;
     }
     50% {
-        transform: translateX(-50%) scale(1.14);
+        transform: scale(1.14);
         box-shadow:
             0 0 0 5px rgba(212, 175, 55, 0.38),
             0 0 0 7px #fffbfc,
@@ -2228,10 +2453,10 @@ body {
 @keyframes invite-program-dot-pulse {
     0%,
     100% {
-        transform: translateX(-50%) scale(1);
+        transform: scale(1);
     }
     50% {
-        transform: translateX(-50%) scale(1.12);
+        transform: scale(1.12);
         box-shadow:
             0 0 0 5px rgba(212, 175, 55, 0.32),
             0 0 0 7px #fffbfc,
@@ -2239,17 +2464,44 @@ body {
     }
 }
 
-@media (max-width: 639px) {
+@keyframes chapter-gem-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        text-shadow: 0 0 14px color-mix(in srgb, var(--gold-accent) 32%, transparent);
+    }
+    50% {
+        transform: scale(1.12);
+        text-shadow:
+            0 0 20px color-mix(in srgb, var(--gold-accent) 55%, transparent),
+            0 0 32px rgba(237, 30, 121, 0.22);
+    }
+}
+
+@media (max-width: 639px), ((hover: none) and (pointer: coarse)) {
+    .luxe-card::before {
+        animation: border-glow-mobile 5.5s ease-in-out infinite;
+    }
+
+    .luxe-card::after {
+        animation: luxe-card-inset-glimmer 4.2s ease-in-out infinite;
+    }
+
+    .venues-journey-rail {
+        display: none;
+    }
+
+    /* Évite le pastille sur la jonction photo / fond (layout colonne) */
     .venues-journey-dot {
-        animation: invite-journey-dot-pulse 2.8s ease-in-out infinite;
+        display: none;
     }
 
     .program-event-dot {
+        left: calc(50% - 0.4375rem) !important;
+        right: auto !important;
+        transform: none;
+        transform-origin: center center;
         animation: invite-program-dot-pulse 2.5s ease-in-out infinite;
-    }
-
-    .venues-journey-bridge {
-        animation: float-soft 4.5s ease-in-out infinite;
     }
 
     .zoom-stream-card__cta-wrap {
@@ -2261,7 +2513,7 @@ body {
     }
 
     .chapter-ornament__gem {
-        animation: blink-glow 2.2s ease-in-out infinite;
+        animation: chapter-gem-pulse 2.2s ease-in-out infinite;
     }
 }
 
@@ -2800,6 +3052,148 @@ body {
     z-index: 1;
 }
 
+/* Mobile — boutons & textes secondaires plus compacts */
+@media (max-width: 639px) {
+    .type-prose {
+        font-size: 0.875rem;
+        line-height: 1.58;
+    }
+
+    .type-accent-time {
+        font-size: 1.125rem;
+    }
+
+    .rsvp-reply-lead,
+    .guestbook-form-lead {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .rsvp-reply-label {
+        font-size: 0.9375rem;
+    }
+
+    .rsvp-reply-question {
+        font-size: 0.9375rem;
+        line-height: 1.48;
+    }
+
+    .rsvp-radio-text {
+        font-size: 0.98rem;
+        line-height: 1.42;
+    }
+
+    .rsvp-reply-form {
+        gap: 1.5rem;
+    }
+
+    .guestbook-quote-text {
+        font-size: 1rem;
+        line-height: 1.52;
+    }
+
+    .guestbook-quote-card {
+        min-height: 12rem;
+    }
+
+    .btn-rejoindre {
+        min-width: 0;
+        max-width: 100%;
+        padding: 0.72rem 1.25rem;
+        font-size: 0.5625rem;
+        letter-spacing: 0.14em;
+        gap: 0.45rem;
+    }
+
+    .btn-rejoindre-icon {
+        width: 14px;
+        height: 14px;
+    }
+
+    .btn-hero-cta {
+        min-width: 0;
+        padding: 0.68rem 1.15rem;
+    }
+
+    .hero-outline-btn {
+        padding: 0.62rem 1.05rem;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+    }
+
+    .btn-invite-pill {
+        font-size: 9px;
+        letter-spacing: 0.13em;
+        gap: 0.35rem;
+    }
+
+    .btn-invite-pill--wine-on-dark,
+    .btn-invite-pill--ghost-on-dark {
+        width: 100%;
+        justify-content: center;
+        padding: 0.62rem 1.05rem;
+    }
+
+    .btn-invite-pill--card,
+    .btn-invite-pill--whatsapp,
+    .btn-invite-pill--wine-fill {
+        padding: 0.62rem 1.1rem;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+    }
+
+    .rsvp-reply-submit {
+        min-height: 2.45rem;
+        padding: 0.58rem 1.35rem;
+        font-size: 9px;
+        letter-spacing: 0.13em;
+    }
+
+    .guestbook-sign-btn {
+        min-height: 2.45rem;
+        padding: 0.58rem 1rem;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+    }
+
+    .zoom-stream-card__cta {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .zoom-stream-card__video-core {
+        width: 2.65rem;
+        height: 2.65rem;
+    }
+
+    .zoom-stream-card__code .type-accent-time {
+        font-size: 1.125rem;
+    }
+
+    .venue-action-btn {
+        margin-top: 1rem;
+        padding: 0.62rem 1.15rem;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+    }
+
+    [data-testid$="-actions"] {
+        gap: 0.5rem;
+    }
+
+    [data-testid$="-actions"] button {
+        padding: 0.58rem 1rem;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        gap: 0.35rem;
+    }
+
+    [data-testid$="-actions"] button svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
 /* Faire-part — luxe, relief & lumière */
 .faire-part-stage {
     position: relative;
@@ -3006,11 +3400,21 @@ body {
     }
 }
 
-@media (max-width: 639px) {
+@media (max-width: 639px), ((hover: none) and (pointer: coarse)) {
     .wedding-petals,
     .wedding-petal,
     .wedding-spark {
         transform: translateZ(0);
+    }
+
+    .faire-part-gold-ring,
+    .faire-part-shell,
+    .personal-invite-stack .personal-invite-shell {
+        transform: translateZ(0);
+    }
+
+    .faire-part-gold-ring::after {
+        animation-duration: 3.2s;
     }
 
     .wedding-petal,
@@ -3025,11 +3429,27 @@ body {
 
     .invite-card-showcase {
         padding-inline: 0;
-        max-width: min(100%, 20rem);
+        max-width: min(100%, 17.5rem);
     }
 
     .invite-card-article {
+        max-width: min(100%, 17.5rem);
+    }
+
+    .personal-invite-article {
         max-width: min(100%, 20rem);
+    }
+
+    .venues-stop-card.luxe-card {
+        margin-top: 0.5rem;
+    }
+
+    .venues-stop-card__time {
+        font-size: 1.15rem;
+    }
+
+    .zoom-stream-card .type-card-title {
+        font-size: 1.125rem;
     }
 
     .faire-part-stack {
@@ -3109,7 +3529,7 @@ body {
     background: transparent;
     box-shadow: none;
     pointer-events: none;
-    animation: invite-modal-slide-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    animation: invite-modal-fade-in 0.25s ease-out;
 }
 
 .invite-card-modal-content > * {
@@ -3141,7 +3561,7 @@ body {
 
 .invite-card-modal-card {
     flex: 0 1 auto;
-    width: min(420px, calc(100vw - 2rem), calc((100dvh - 10rem) * 682 / 1024));
+    width: min(420px, calc(100vw - 2rem), calc((100dvh - 10rem) * 725 / 1024));
     min-height: 0;
     max-height: calc(100dvh - 10rem);
 }
@@ -3218,12 +3638,20 @@ body {
 .personal-invite-shell {
     position: relative;
     z-index: 1;
+    display: block;
     width: 100%;
-    aspect-ratio: 682 / 1024;
+    aspect-ratio: 725 / 1024;
+    line-height: 0;
     overflow: hidden;
     border-radius: 2px;
     box-shadow: 0 16px 48px rgba(42, 5, 11, 0.14);
     container-type: inline-size;
+}
+
+.personal-invite-shell--flat,
+.personal-invite-shell.personal-invite-shell--flat {
+    animation: none !important;
+    transform: none !important;
 }
 
 .personal-invite-shell.faire-part-shell--capture {
@@ -3231,14 +3659,10 @@ body {
 }
 
 .personal-invite-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
     display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
+    height: auto;
+    vertical-align: top;
     pointer-events: none;
     user-select: none;
 }
@@ -3246,18 +3670,14 @@ body {
 .personal-invite-fields {
     position: absolute;
     z-index: 2;
-    top: var(--pi-fields-top, 43.75%);
-    left: var(--pi-fields-left, 14.4%);
-    width: var(--pi-fields-width, 71.2%);
-    height: var(--pi-fields-height, 11.5%);
+    line-height: normal;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
     gap: 0;
-    padding: clamp(0.4rem, 2.2cqi, 0.6rem) clamp(0.45rem, 2.5cqi, 0.7rem)
-        clamp(0.45rem, 2.2cqi, 0.65rem);
+    padding: 0 clamp(0.45rem, 2.5cqi, 0.7rem);
     overflow: hidden;
     text-align: center;
     pointer-events: none;
@@ -3266,30 +3686,74 @@ body {
 .personal-invite-name-wrap {
     display: flex;
     flex: 1 1 auto;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
+    width: 100%;
     min-height: 0;
-    padding-top: clamp(0.45rem, 2.4cqi, 0.75rem);
-    padding-bottom: clamp(0.05rem, 0.35cqi, 0.12rem);
+    text-align: center;
+}
+
+.personal-invite-stack {
+    --faire-stack-pad-y: clamp(0.7rem, 3.6cqi, 1.05rem);
+    --faire-stack-pad-x: clamp(0.65rem, 3.2cqi, 0.95rem);
+    padding: var(--faire-stack-pad-y) var(--faire-stack-pad-x);
+}
+
+.personal-invite-stack .personal-invite-gold-ring {
+    aspect-ratio: 725 / 1024;
+}
+
+.personal-invite-stack .personal-invite-shell {
+    transform-origin: center center;
+    animation: faire-part-front-cross 9s ease-in-out infinite;
+}
+
+.personal-invite-shell.faire-part-shell--capture {
+    animation: none !important;
+    transform: none !important;
+    box-shadow: none;
+}
+
+.personal-invite-stage .personal-invite-aura {
+    inset: -6%;
+}
+
+.personal-invite-count-badge {
+    position: absolute;
+    z-index: 2;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: Cinzel, "Cormorant Garamond", Georgia, serif;
+    font-size: var(--pi-count-fs, 2.2cqi);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: #6a4418;
+    text-shadow: 0 1px 0 rgba(255, 252, 248, 0.85);
+    pointer-events: none;
 }
 
 .personal-invite-name {
     width: 100%;
     max-width: 100%;
     margin: 0;
+    text-align: center;
     font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-    font-size: var(--pi-name-fs, 4.11cqi);
+    font-size: var(--pi-name-fs, 4.14cqi);
     font-weight: 600;
     font-style: italic;
     font-synthesis: none;
-    line-height: 1.08;
-    letter-spacing: 0.03em;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
     text-transform: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: var(--ink);
-    text-shadow: 0 0.5px 0 rgba(255, 252, 248, 0.35);
+    color: #2a0511;
+    text-shadow: 0 0.5px 0 rgba(255, 252, 248, 0.4);
 }
 
 .personal-invite-name--md {
