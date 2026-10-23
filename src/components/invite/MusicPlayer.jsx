@@ -58,13 +58,13 @@ function EqBars({ playing, className = "" }) {
 }
 
 const shell =
-  "border hairline-gold bg-wedding-wine-deep/90 shadow-[0_10px_36px_rgba(42,5,11,0.5)] backdrop-blur-md";
+  "border border-wedding-gold-accent/40 bg-[#1A040B]/95 shadow-[0_12px_40px_rgba(0,0,0,0.65),0_0_16px_rgba(212,175,55,0.18)] backdrop-blur-md";
 
 const iconBtn =
-  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-wedding-on-dark/75 transition-all duration-300 hover:scale-105 hover:bg-white/10 hover:text-wedding-gold-accent active:scale-90 disabled:opacity-40";
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-wedding-gold-soft hover:text-white hover:bg-white/10 active:scale-90 disabled:opacity-40 transition-all duration-300";
 
 const playBtn =
-  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wedding-gold-accent to-[#B89428] text-wedding-ink shadow-[0_3px_12px_rgba(212,175,55,0.3)] transition-all duration-300 hover:scale-110 hover:shadow-[0_5px_18px_rgba(212,175,55,0.45)] active:scale-95 disabled:opacity-40";
+  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wedding-gold-accent to-[#B89428] text-[#1A040B] shadow-[0_3px_12px_rgba(212,175,55,0.35)] transition-all duration-300 hover:scale-110 hover:shadow-[0_5px_18px_rgba(212,175,55,0.5)] active:scale-95 disabled:opacity-40";
 
 export default function MusicPlayer({ opened }) {
   const { m } = useI18n();
@@ -232,7 +232,7 @@ export default function MusicPlayer({ opened }) {
               aria-label={playing ? m.music.togglePause : m.music.togglePlay}
               className={playBtn}
             >
-              {playing ? <Pause size={15} /> : <Play size={15} className="ml-0.5" />}
+              {playing ? <Pause size={14} className="fill-current" /> : <Play size={14} className="ml-0.5 fill-current" />}
             </button>
             <button
               type="button"
@@ -240,10 +240,10 @@ export default function MusicPlayer({ opened }) {
               aria-label={m.music.expand}
               className={iconBtn}
             >
-              <ChevronUp size={15} />
+              <ChevronUp size={16} strokeWidth={2.4} />
             </button>
             <button type="button" onClick={() => setUi("hidden")} aria-label={m.music.hide} className={iconBtn}>
-              <X size={15} />
+              <X size={15} strokeWidth={2.4} />
             </button>
           </motion.div>
         ) : null}
@@ -263,7 +263,7 @@ export default function MusicPlayer({ opened }) {
               <Vinyl playing={playing} />
               <div className="min-w-0 flex-1">
                 <p className="truncate font-display text-[13px] font-semibold leading-tight text-wedding-on-dark">{track}</p>
-                <p className="truncate font-cinzel text-[9px] tracking-wide text-[#C48B92]/95">{artist}</p>
+                <p className="truncate font-cinzel text-[9px] tracking-wide text-wedding-gold-soft/90">{artist}</p>
               </div>
               <button
                 type="button"
@@ -273,16 +273,16 @@ export default function MusicPlayer({ opened }) {
                 aria-label={playing ? m.music.togglePause : m.music.togglePlay}
                 className={playBtn}
               >
-                {playing ? <Pause size={15} /> : <Play size={15} className="ml-0.5" />}
+                {playing ? <Pause size={14} className="fill-current" /> : <Play size={14} className="ml-0.5 fill-current" />}
               </button>
               <button type="button" onClick={() => setUi("compact")} aria-label={m.music.collapse} className={iconBtn}>
-                <ChevronDown size={15} />
+                <ChevronDown size={16} strokeWidth={2.4} />
               </button>
               <button type="button" onClick={() => setUi("hidden")} aria-label={m.music.hide} className={iconBtn}>
-                <X size={15} />
+                <X size={15} strokeWidth={2.4} />
               </button>
             </div>
-            <div className="flex items-center gap-1.5 border-t border-white/[0.06] px-2.5 py-2">
+            <div className="flex items-center gap-1.5 border-t border-wedding-gold-accent/20 px-2.5 py-2">
               <button
                 type="button"
                 data-testid="music-volume-down-button"
@@ -291,7 +291,7 @@ export default function MusicPlayer({ opened }) {
                 aria-label={m.music.volumeDown}
                 className={iconBtn}
               >
-                <Minus size={14} />
+                <Minus size={14} strokeWidth={2.4} />
               </button>
               <input
                 type="range"
@@ -314,7 +314,7 @@ export default function MusicPlayer({ opened }) {
                 aria-label={m.music.volumeUp}
                 className={iconBtn}
               >
-                <Plus size={14} />
+                <Plus size={14} strokeWidth={2.4} />
               </button>
               <span className="w-8 shrink-0 text-center font-display text-[11px] tabular-nums text-wedding-gold-accent" data-testid="music-volume-display">
                 {volume}%

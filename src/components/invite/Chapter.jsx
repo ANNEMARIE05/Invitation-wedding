@@ -2,38 +2,56 @@ import { motion } from "framer-motion";
 import { EASE } from "@/lib/invite-data";
 import { REVEAL_VIEWPORT } from "@/lib/motion-viewport";
 
+const CHAPTER_REVEAL = {
+  hidden: { opacity: 1 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.14, delayChildren: 0.04 },
+  },
+};
+
+const CHAPTER_ITEM_REVEAL = {
+  hidden: { opacity: 0, y: 18, filter: "blur(4px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.72, ease: EASE },
+  },
+};
+
 export default function Chapter({ index, eyebrow, title, script, dark = false }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial="hidden"
+      whileInView="show"
+      variants={CHAPTER_REVEAL}
       viewport={REVEAL_VIEWPORT}
-      transition={{ duration: 0.9, ease: EASE }}
       className="text-center mb-10 sm:mb-14 md:mb-20"
     >
-      <p
+      <motion.p
+        variants={CHAPTER_ITEM_REVEAL}
         className={`type-eyebrow ${dark ? "type-eyebrow--on-dark" : ""}`}
         data-testid={`chapter-${index}-eyebrow`}
       >
         Chapitre {index} — {eyebrow}
-      </p>
-      <h2
+      </motion.p>
+      <motion.h2
+        variants={CHAPTER_ITEM_REVEAL}
         className={`type-display mt-3 sm:mt-4 text-[1.75rem] leading-[1.12] sm:text-5xl lg:text-6xl ${dark ? "type-display--on-dark" : ""}`}
       >
         {title}
-      </h2>
+      </motion.h2>
       {script && (
-        <p
+        <motion.p
+          variants={CHAPTER_ITEM_REVEAL}
           className={`type-display-script mt-2 sm:mt-3 text-base sm:text-2xl ${dark ? "type-display-script--on-dark" : ""}`}
         >
           {script}
-        </p>
+        </motion.p>
       )}
       <motion.div
-        initial={{ scaleX: 0.6, opacity: 0 }}
-        whileInView={{ scaleX: 1, opacity: 1 }}
-        viewport={REVEAL_VIEWPORT}
-        transition={{ duration: 0.8, ease: EASE }}
+        variants={CHAPTER_ITEM_REVEAL}
         className="chapter-ornament mt-6"
         aria-hidden="true"
       >

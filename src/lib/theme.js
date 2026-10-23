@@ -23,7 +23,7 @@ export const DEFAULT_DRESS_PALETTE = {
   berry: "#980522",
   magenta: "#ED1E79",
   red: "#C4282A",
-  blush: "#EBAF9B",
+  blush: "#E6A8BA",
   silver: "#B8BCC8",
 };
 

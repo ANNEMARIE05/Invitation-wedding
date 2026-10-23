@@ -59,11 +59,11 @@ export default function IntroGate({ onOpen }) {
         transition={{ duration: 0.9, delay: 0.25, ease: EASE }}
         className="relative z-10 mb-5 flex flex-col items-center sm:mb-7"
       >
-        <p className="text-center font-cinzel text-[10px] font-bold uppercase tracking-[0.42em] text-wedding-rose-light sm:text-[11px]">
+        <p className="text-center font-cinzel text-xs font-semibold uppercase tracking-[0.42em] text-wedding-rose-light sm:text-sm">
           {m.intro.invited}
         </p>
         <ClassicRule className="mt-4 max-w-[11rem]" tone="light" />
-        <p className="mt-4 font-script text-xl text-wedding-gold-accent/95 sm:text-2xl">
+        <p className="mt-4 font-script text-3xl text-[#FFF3D6] drop-shadow-[0_2px_14px_rgba(212,175,55,0.75)] sm:text-4xl md:text-5xl">
           <TypewriterText text={coupleLabel} start={!opening} delay={600} speed={55} flowerAtStart flowerAtEnd />
         </p>
       </motion.div>
@@ -100,26 +100,14 @@ export default function IntroGate({ onOpen }) {
             <div className="absolute inset-1.5 rounded-sm border border-wedding-gold-accent/35 pointer-events-none" />
             <div className="absolute inset-2.5 rounded-sm border border-wedding-rose/18 pointer-events-none" />
             <div className="relative flex h-full flex-col items-center justify-center px-6 text-center">
-              <p className="font-cinzel text-[8px] tracking-[0.42em] uppercase text-wedding-wine-accent/85">{m.intro.weddingTag}</p>
+              <p className="font-cinzel text-[10px] tracking-[0.38em] uppercase text-wedding-wine-accent/85 sm:text-xs">{m.intro.weddingTag}</p>
               <ClassicRule className="my-3 max-w-[10rem]" gem="♥" />
-              <p className="font-display text-xl tracking-[0.2em] text-wedding-ink">{initials}</p>
-              <p className="mt-4 font-display text-3xl font-medium italic leading-tight text-wedding-ink sm:text-4xl">
-                <span className="block">
-                  <TypewriterText text={groom} start={!opening} delay={500} speed={65} flowerAtStart flowerAtEnd />
-                </span>
-                <span className="my-1 block font-cinzel text-sm not-italic tracking-[0.4em] text-wedding-rose">&</span>
-                <span className="block">
-                  <TypewriterText
-                    text={bride}
-                    start={!opening}
-                    delay={500 + groom.length * 65 + 320}
-                    speed={65}
-                    flowerAtEnd
-                  />
-                </span>
+              <p className="font-display text-xl tracking-[0.2em] text-wedding-ink sm:text-2xl">{initials}</p>
+              <p className="mt-3 font-display text-2xl font-medium italic leading-tight text-wedding-ink sm:text-3xl">
+                {coupleLabel}
               </p>
               <ClassicRule className="my-4 max-w-[9rem]" />
-              <p className="font-cinzel text-[9px] tracking-[0.32em] uppercase text-wedding-wine-accent">{dateLabel}</p>
+              <p className="font-cinzel text-[10px] tracking-[0.28em] uppercase text-wedding-wine-accent sm:text-[11px]">{dateLabel}</p>
             </div>
           </motion.div>
 
@@ -178,7 +166,7 @@ export default function IntroGate({ onOpen }) {
           <span className="relative z-[1]">{m.intro.open}</span>
           <ArrowRight size={17} className="btn-rejoindre-icon relative z-[1]" aria-hidden />
         </button>
-        <p className="font-cinzel text-[10px] tracking-[0.32em] uppercase text-[#E8C4CE]/90">{m.intro.tapEnvelope}</p>
+        <p className="font-cinzel text-xs tracking-[0.28em] uppercase text-[#F2D7DF] font-medium sm:text-sm">{m.intro.tapEnvelope}</p>
       </motion.div>
     </motion.div>
   );

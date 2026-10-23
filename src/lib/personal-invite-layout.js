@@ -1,27 +1,28 @@
-/** Coordonnées calées sur carte-invitation-envoi.jpg — faire-part floral romantique (725 × 1024). */
+/** Coordonnées calées sur le modèle d'invitation personnelle (682 × 1024). */
 export const PERSONAL_INVITE_CARD = {
-  width: 725,
+  width: 682,
   height: 1024,
-  /** Zone nom : dans le cartouche « INVITATION PERSONNELLE » entre le titre et la ligne « valable pour … ». */
-  fields: {
-    top: 566,
-    left: 104,
-    width: 517,
+  nameField: {
+    top: 532,
+    left: 136,
+    width: 410,
     height: 64,
   },
-  /** Cercle rose pour le nombre de personnes (entre « INVITATION VALABLE POUR » et « PERSONNE(S) »). */
-  partyCount: {
-    top: 625,
-    left: 412,
-    width: 36,
-    height: 36,
-    fontSize: 16,
+  /** Zone à gauche de « PERSONNE(S) » (texte imprimé : x 295→397, ligne de base ≈ 641). */
+  countField: {
+    top: 624,
+    left: 200,
+    width: 87,
+    height: 21,
   },
   name: {
-    fontSize: 30,
-    fontSizeMd: 26,
-    fontSizeSm: 22,
-    fontSizeXs: 18,
+    fontSize: 27,
+    fontSizeMd: 23,
+    fontSizeSm: 20,
+    fontSizeXs: 17,
+  },
+  count: {
+    fontSize: 17,
   },
 };
 
@@ -47,44 +48,46 @@ function pxStyle(rect, renderedW, renderedH) {
 }
 
 export function personalInviteCssVars() {
-  const { width, name, partyCount } = PERSONAL_INVITE_CARD;
+  const { width, name, count } = PERSONAL_INVITE_CARD;
   return {
-    "--pi-count-fs": `${(partyCount.fontSize / width) * 100}cqi`,
     "--pi-name-fs": `${(name.fontSize / width) * 100}cqi`,
     "--pi-name-fs-md": `${(name.fontSizeMd / width) * 100}cqi`,
     "--pi-name-fs-sm": `${(name.fontSizeSm / width) * 100}cqi`,
     "--pi-name-fs-xs": `${(name.fontSizeXs / width) * 100}cqi`,
+    "--pi-count-fs": `${(count.fontSize / width) * 100}cqi`,
   };
 }
 
-/** Positions en pourcentage pour affichage immédiat sans attendre la mesure. */
+/** Positions en pourcentage pour le nom. */
 export function personalInviteNameFieldStylePercent() {
-  const { fields, width, height } = PERSONAL_INVITE_CARD;
+  const { nameField, width, height } = PERSONAL_INVITE_CARD;
   return {
-    top: `${(fields.top / height) * 100}%`,
-    left: `${(fields.left / width) * 100}%`,
-    width: `${(fields.width / width) * 100}%`,
-    height: `${(fields.height / height) * 100}%`,
+    top: `${(nameField.top / height) * 100}%`,
+    left: `${(nameField.left / width) * 100}%`,
+    width: `${(nameField.width / width) * 100}%`,
+    height: `${(nameField.height / height) * 100}%`,
   };
 }
 
-export function personalInviteCountStylePercent() {
-  const { partyCount, width, height } = PERSONAL_INVITE_CARD;
-  return {
-    top: `${(partyCount.top / height) * 100}%`,
-    left: `${(partyCount.left / width) * 100}%`,
-    width: `${(partyCount.width / width) * 100}%`,
-    height: `${(partyCount.height / height) * 100}%`,
-  };
-}
-
-/** Positions en pixels, calées sur la taille réelle de l’image affichée. */
+/** Positions en pixels pour le nom. */
 export function personalInviteNameFieldStylePx(renderedW, renderedH) {
-  return pxStyle(PERSONAL_INVITE_CARD.fields, renderedW, renderedH);
+  return pxStyle(PERSONAL_INVITE_CARD.nameField, renderedW, renderedH);
 }
 
-export function personalInviteCountStylePx(renderedW, renderedH) {
-  return pxStyle(PERSONAL_INVITE_CARD.partyCount, renderedW, renderedH);
+/** Positions en pourcentage pour le nombre de personnes. */
+export function personalInviteCountFieldStylePercent() {
+  const { countField, width, height } = PERSONAL_INVITE_CARD;
+  return {
+    top: `${(countField.top / height) * 100}%`,
+    left: `${(countField.left / width) * 100}%`,
+    width: `${(countField.width / width) * 100}%`,
+    height: `${(countField.height / height) * 100}%`,
+  };
+}
+
+/** Positions en pixels pour le nombre de personnes. */
+export function personalInviteCountFieldStylePx(renderedW, renderedH) {
+  return pxStyle(PERSONAL_INVITE_CARD.countField, renderedW, renderedH);
 }
 
 /** Nom sur une ligne ; « / » → « · ». */

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { toPng } from "html-to-image";
-import { Download, MessageCircle } from "lucide-react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { Download, Eye, MessageCircle, X } from "lucide-react";
 import { toast } from "sonner";
 import { ensureInviteCardFontsReady } from "@/lib/invite-card-capture";
 import { buildInviteCardShareText, deliverInviteCardOnWhatsApp } from "@/lib/invite-card-share";
@@ -10,9 +11,10 @@ import { REVEAL_VIEWPORT } from "@/lib/motion-viewport";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import SparkleField from "./SparkleField";
+import LuxeCard from "./LuxeCard";
 
 /** Faire-part affiché sur le site (visuel complet, sans personnalisation). */
-const SHOWCASE_CARD_BG = `${process.env.PUBLIC_URL || ""}/images/carte-invitation-showcase.jpg?v=20261018-floral-dore`;
+const SHOWCASE_CARD_BG = `${process.env.PUBLIC_URL || ""}/images/carte-invitation-showcase.jpg?v=20261023-showcase-v2`;
 
 function ShowcaseCardArt({ className = "faire-part-bg" }) {
   return (
@@ -172,6 +174,7 @@ export function CardActions({
 
 export default function InviteCard() {
   const { m } = useI18n();
+  const [showcaseOpen, setShowcaseOpen] = useState(false);
   return (
     <section id="faire-part" className="relative overflow-x-visible overflow-y-visible px-[clamp(1.15rem,5.2vw,1.75rem)] py-16 sm:px-10 md:py-24" data-testid="invite-card-section">
       <SparkleField count={14} className="opacity-70" />
@@ -192,6 +195,45 @@ export default function InviteCard() {
       <div className="invite-card-showcase relative z-[1] mx-auto w-full max-w-[min(100%,17.5rem)] overflow-visible sm:max-w-[24rem] md:max-w-[26rem]">
         <FairePart />
       </div>
+
+      <div className="relative z-[1] mt-4 flex justify-center">
+        <button
+          type="button"
+          data-testid="invite-showcase-view-button"
+          onClick={() => setShowcaseOpen(true)}
+          className="btn-invite-pill btn-invite-pill--card"
+        >
+          <Eye size={16} aria-hidden="true" />
+          {m.inviteSection.showcaseViewCard}
+        </button>
+      </div>
+
+      <Dialog.Root open={showcaseOpen} onOpenChange={setShowcaseOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="invite-card-modal-overlay" />
+          <Dialog.Content
+            className="invite-card-modal-content"
+            aria-describedby={undefined}
+            data-testid="invite-showcase-modal"
+          >
+            <Dialog.Title className="sr-only">{m.inviteSection.showcaseModalTitle}</Dialog.Title>
+            <Dialog.Close
+              type="button"
+              className="invite-card-modal-close"
+              aria-label={m.inviteSection.closeModal}
+            >
+              <X size={20} strokeWidth={1.75} />
+            </Dialog.Close>
+            <div className="invite-card-modal-card">
+              <LuxeCard animate={false} className="overflow-visible p-2 sm:p-2.5">
+                <div className="faire-part-shell faire-part-shell--flat">
+                  <ShowcaseCardArt />
+                </div>
+              </LuxeCard>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </section>
   );
 }

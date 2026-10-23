@@ -23,6 +23,7 @@ import Venues from "@/components/invite/Venues";
 import Tenues from "@/components/invite/Tenues";
 import TornDivider from "@/components/invite/TornDivider";
 import Rsvp from "@/components/invite/Rsvp";
+import Cadeaux from "@/components/invite/Cadeaux";
 import Guestbook from "@/components/invite/Guestbook";
 import Footer from "@/components/invite/Footer";
 import IntroGate from "@/components/invite/IntroGate";
@@ -179,6 +180,8 @@ function Invitation() {
                 <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
                 <Rsvp />
                 <TornDivider top="var(--wine-deep)" bottom="var(--ivory-deep)" />
+                <Cadeaux />
+                <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
                 <Guestbook />
                 <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
               </main>

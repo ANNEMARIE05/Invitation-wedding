@@ -81,17 +81,17 @@ function BigDayCountdown({ rows, onDark = false }) {
         <Fragment key={key}>
           {i > 0 ? (
             <span
-              className={`bigday-countdown__sep font-display text-[1.35rem] sm:text-[2.75rem] leading-none select-none shrink-0 ${sepClass}`}
+              className={`bigday-countdown__sep font-display text-2xl sm:text-[2.75rem] leading-none select-none shrink-0 ${sepClass}`}
               aria-hidden="true"
             >
               :
             </span>
           ) : null}
           <div className="bigday-countdown__unit text-center shrink-0" data-testid={`countdown-${key}`}>
-            <p className={`bigday-countdown__value font-display text-[1.35rem] sm:text-[2.75rem] font-semibold tabular-nums leading-none ${valueClass}`}>
+            <p className={`bigday-countdown__value font-display text-2xl sm:text-[2.75rem] font-semibold tabular-nums leading-none ${valueClass}`}>
               {key === "days" ? String(value) : String(value).padStart(2, "0")}
             </p>
-            <p className={`bigday-countdown__label mt-2 sm:mt-2.5 font-cinzel text-[8px] sm:text-[10px] font-semibold tracking-[0.14em] sm:tracking-[0.32em] uppercase ${labelClass}`}>
+            <p className={`bigday-countdown__label mt-2 sm:mt-2.5 font-cinzel text-[10px] sm:text-xs font-semibold tracking-[0.16em] sm:tracking-[0.32em] uppercase ${labelClass}`}>
               {label}
             </p>
           </div>

@@ -1,3 +1,7 @@
+function withOpacity(variableName) {
+  return `color-mix(in srgb, var(${variableName}) calc(<alpha-value> * 100%), transparent)`;
+}
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     // `overline` is a Tailwind utility; without this an app's own eyebrow-label class draws a line above the text.
@@ -16,22 +20,22 @@ module.exports = {
       },
       colors: {
         wedding: {
-          wine: 'var(--wine)',
-          'wine-deep': 'var(--wine-deep)',
-          'wine-accent': 'var(--wine-accent)',
-          rose: 'var(--rose)',
-          'rose-bright': 'var(--rose-bright)',
-          'rose-light': 'var(--rose-light)',
-          gold: 'var(--gold)',
-          'gold-accent': 'var(--gold-accent)',
-          'gold-soft': 'var(--gold-soft)',
-          silver: 'var(--silver)',
-          ink: 'var(--ink)',
-          'ink-soft': 'var(--ink-soft)',
-          muted: 'var(--muted)',
-          ivory: 'var(--ivory)',
-          'ivory-deep': 'var(--ivory-deep)',
-          'on-dark': 'var(--on-dark)',
+          wine: withOpacity('--wine'),
+          'wine-deep': withOpacity('--wine-deep'),
+          'wine-accent': withOpacity('--wine-accent'),
+          rose: withOpacity('--rose'),
+          'rose-bright': withOpacity('--rose-bright'),
+          'rose-light': withOpacity('--rose-light'),
+          gold: withOpacity('--gold'),
+          'gold-accent': withOpacity('--gold-accent'),
+          'gold-soft': withOpacity('--gold-soft'),
+          silver: withOpacity('--silver'),
+          ink: withOpacity('--ink'),
+          'ink-soft': withOpacity('--ink-soft'),
+          muted: withOpacity('--muted'),
+          ivory: withOpacity('--ivory'),
+          'ivory-deep': withOpacity('--ivory-deep'),
+          'on-dark': withOpacity('--on-dark'),
         },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

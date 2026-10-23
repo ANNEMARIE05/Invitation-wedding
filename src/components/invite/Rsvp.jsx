@@ -7,7 +7,6 @@ import { EASE, WHATSAPP_NUMBER } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
-import ClassicRule from "./ClassicRule";
 import InviteCardModal from "./InviteCardModal";
 
 const partySize = (d) => (d.present ? 1 + Number(d.accompagnants || 0) : 0);
@@ -77,8 +76,8 @@ function RsvpRadio({ active, onClick, testId, children }) {
   );
 }
 
-const ReplyCard = ({ children }) => (
-  <div className="rsvp-reply-card">
+const ReplyCard = ({ children, className = "" }) => (
+  <div className={`rsvp-reply-card ${className}`.trim()}>
     <div className="rsvp-reply-card__frame rsvp-reply-card__frame--gold" aria-hidden />
     <div className="rsvp-reply-card__frame rsvp-reply-card__frame--rose" aria-hidden />
     <div className="rsvp-reply-card__body">{children}</div>
@@ -201,6 +200,12 @@ export default function Rsvp() {
       } catch {}
 
       toast.success(m.rsvp.lookupFound(firstName(rsvpData.nom)));
+
+      // Carte retrouvée → l'afficher directement (invités présents sur place uniquement)
+      setAutoShareCard(false);
+      setCardModalOpen(
+        Boolean(rsvpData.present && (rsvpData.mode || "presentiel") === "presentiel")
+      );
     } catch {
       toast.error(m.rsvp.toastErr);
     } finally {
@@ -227,6 +232,8 @@ export default function Rsvp() {
       setSent(data);
       setIsUpdate(true);
       setEditLocked(false);
+      setAutoShareCard(false);
+      setCardModalOpen(Boolean(data?.present && (data.mode || "presentiel") === "presentiel"));
       try {
         localStorage.setItem("wedding_guest_rsvp", JSON.stringify(data));
       } catch {}
@@ -273,7 +280,7 @@ export default function Rsvp() {
       className="relative bg-[linear-gradient(135deg,#5C0A20_0%,#9B1B4A_50%,#7A1538_100%)] px-5 py-16 sm:px-8 md:py-24 lg:px-16"
       data-testid="rsvp-section"
     >
-      <div className="relative z-10 mx-auto max-w-xl lg:max-w-2xl">
+      <div className={`relative z-10 mx-auto ${confirmed ? "max-w-4xl" : "max-w-xl lg:max-w-2xl"}`}>
         <Chapter index="VI" eyebrow={m.rsvp.chapter} title={m.rsvp.title} script={deadlineLabel} dark />
         <AnimatePresence mode="wait">
           {confirmed ? (
@@ -284,96 +291,104 @@ export default function Rsvp() {
               transition={{ duration: 0.45, ease: EASE }}
               data-testid="rsvp-confirmation"
             >
-              <ReplyCard>
-                <div className="text-center">
-                  <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-wedding-gold-accent/60 bg-wedding-wine-deep">
-                    <Check size={22} className="text-wedding-gold-accent" />
-                  </span>
-                  <h3 className="mt-4 font-display text-2xl font-medium text-wedding-ink sm:text-3xl">{m.rsvp.thanks(firstName(confirmed.nom))}</h3>
-                  <p className="type-prose mx-auto mt-2 max-w-md text-sm">
-                    {confirmed.present && confirmed.mode === "zoom"
-                      ? m.rsvp.zoomThanks(firstName(confirmed.nom))
-                      : confirmed.present
-                        ? m.rsvp.cardThanks(confirmed.nom, partySize(confirmed))
-                        : m.rsvp.absentThanks}
-                  </p>
-
-                  {!editLocked ? (
-                    <button
-                      type="button"
-                      onClick={startEdit}
-                      className="mt-5 text-sm text-wedding-wine-deep underline decoration-wedding-gold-accent/50 underline-offset-4 hover:decoration-wedding-gold-accent"
-                    >
-                      {m.rsvp.editMyRsvp}
-                    </button>
-                  ) : (
-                    <p className="mx-auto mt-5 max-w-md text-xs text-wedding-wine-accent">{m.rsvp.lookupLocked}</p>
-                  )}
-
-                  {confirmed.present && confirmed.mode === "presentiel" ? (
-                    <>
-                      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                        <button
-                          type="button"
-                          data-testid="rsvp-view-card-button"
-                          onClick={() => {
-                            setAutoShareCard(false);
-                            setCardModalOpen(true);
-                          }}
-                          className="btn-invite-pill btn-invite-pill--card"
-                        >
-                          <Sparkles size={15} className="text-wedding-rose" />
-                          {m.inviteSection.viewCard}
-                        </button>
-                        <button
-                          type="button"
-                          data-testid="rsvp-whatsapp-card-button"
-                          onClick={() => {
-                            setAutoShareCard(true);
-                            setCardModalOpen(true);
-                          }}
-                          className="btn-invite-pill btn-invite-pill--whatsapp"
-                        >
-                          <MessageCircle size={15} className="text-[#25D366]" />
-                          {m.inviteSection.shareWhatsApp}
-                        </button>
-                      </div>
-                      <InviteCardModal
-                        open={cardModalOpen}
-                        onOpenChange={setCardModalOpen}
-                        guest={confirmed}
-                        autoShareWhenOpen={autoShareCard}
-                        onAutoShareDone={handleAutoShareDone}
-                      />
-                    </>
-                  ) : confirmed.present ? (
-                    <p className="type-prose mx-auto mt-5 max-w-md text-sm">
-                      {m.rsvp.zoomCode(zoom.code)}
-                      {zoom.joinUrl ? (
-                        <>
-                          {" "}
-                          <a
-                            href={zoom.joinUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="gold-underline text-wedding-wine-deep"
-                          >
-                            {m.rsvp.joinMeeting}
-                          </a>
-                        </>
-                      ) : null}
+              <ReplyCard className="rsvp-reply-card--confirmed">
+                <div className="rsvp-confirmation-layout">
+                  <div className="rsvp-confirmation-copy">
+                    <span className="rsvp-confirmation-mark">
+                      <Check size={22} className="text-wedding-gold-accent" />
+                    </span>
+                    <h3 className="mt-4 font-display text-2xl font-medium text-wedding-ink sm:text-3xl">
+                      {m.rsvp.thanks(firstName(confirmed.nom))}
+                    </h3>
+                    <p className="type-prose mx-auto mt-2 max-w-md text-sm md:mx-0">
+                      {confirmed.present && confirmed.mode === "zoom"
+                        ? m.rsvp.zoomThanks(firstName(confirmed.nom))
+                        : confirmed.present
+                          ? m.rsvp.cardThanks(confirmed.nom, partySize(confirmed))
+                          : m.rsvp.absentThanks}
                     </p>
-                  ) : (
-                    <a
-                      data-testid="rsvp-whatsapp-button"
-                      href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWaMessage(confirmed))}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-invite-pill btn-invite-pill--wine-fill mx-auto mt-6"
-                    >
-                      <MessageCircle size={15} className="text-wedding-gold-accent" /> {m.rsvp.whatsapp}
-                    </a>
-                  )}
+
+                    {!editLocked ? (
+                      <button
+                        type="button"
+                        onClick={startEdit}
+                        className="mt-5 text-sm text-wedding-wine-deep underline decoration-wedding-gold-accent/50 underline-offset-4 hover:decoration-wedding-gold-accent"
+                      >
+                        {m.rsvp.editMyRsvp}
+                      </button>
+                    ) : (
+                      <p className="mx-auto mt-5 max-w-md text-xs text-wedding-wine-accent md:mx-0">
+                        {m.rsvp.lookupLocked}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="rsvp-confirmation-actions">
+                    {confirmed.present && confirmed.mode === "presentiel" ? (
+                      <>
+                        <div className="flex flex-wrap items-center justify-center gap-3">
+                          <button
+                            type="button"
+                            data-testid="rsvp-view-card-button"
+                            onClick={() => {
+                              setAutoShareCard(false);
+                              setCardModalOpen(true);
+                            }}
+                            className="btn-invite-pill btn-invite-pill--card"
+                          >
+                            <Sparkles size={15} className="text-wedding-rose" />
+                            {m.inviteSection.viewCard}
+                          </button>
+                          <button
+                            type="button"
+                            data-testid="rsvp-whatsapp-card-button"
+                            onClick={() => {
+                              setAutoShareCard(true);
+                              setCardModalOpen(true);
+                            }}
+                            className="btn-invite-pill btn-invite-pill--whatsapp"
+                          >
+                            <MessageCircle size={15} className="text-[#25D366]" />
+                            {m.inviteSection.shareWhatsApp}
+                          </button>
+                        </div>
+                        <InviteCardModal
+                          open={cardModalOpen}
+                          onOpenChange={setCardModalOpen}
+                          guest={confirmed}
+                          autoShareWhenOpen={autoShareCard}
+                          onAutoShareDone={handleAutoShareDone}
+                        />
+                      </>
+                    ) : confirmed.present ? (
+                      <p className="type-prose mx-auto max-w-md text-sm md:mx-0">
+                        {m.rsvp.zoomCode(zoom.code)}
+                        {zoom.joinUrl ? (
+                          <>
+                            {" "}
+                            <a
+                              href={zoom.joinUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="gold-underline text-wedding-wine-deep"
+                            >
+                              {m.rsvp.joinMeeting}
+                            </a>
+                          </>
+                        ) : null}
+                      </p>
+                    ) : (
+                      <a
+                        data-testid="rsvp-whatsapp-button"
+                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWaMessage(confirmed))}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-invite-pill btn-invite-pill--wine-fill mx-auto mt-6"
+                      >
+                        <MessageCircle size={15} className="text-wedding-gold-accent" /> {m.rsvp.whatsapp}
+                      </a>
+                    )}
+                  </div>
                 </div>
                 <RsvpPhoneLookup
                   m={m}
@@ -393,16 +408,6 @@ export default function Rsvp() {
               transition={{ duration: 0.9, ease: EASE }}
             >
               <ReplyCard>
-                <RsvpPhoneLookup
-                  m={m}
-                  lookupPhone={lookupPhone}
-                  setLookupPhone={setLookupPhone}
-                  lookup={lookup}
-                  lookupBusy={lookupBusy}
-                />
-                <ClassicRule className="rsvp-reply-rule mt-6" gem="♥" />
-                <p className="rsvp-reply-lead">{m.rsvp.formIntro}</p>
-
                 <form onSubmit={submit} className="rsvp-reply-form" data-testid="rsvp-form">
                   <RsvpSection title={m.rsvp.sectionIdentity}>
                     <RsvpField label={m.rsvp.name} htmlFor="rsvp-nom">
@@ -484,7 +489,7 @@ export default function Rsvp() {
                     ) : null}
 
                     {form.present && form.mode === "presentiel" ? (
-                      <div className="mt-7 grid gap-6 sm:grid-cols-2">
+                      <div className="mt-7">
                         <RsvpField label={m.rsvp.guests} htmlFor="rsvp-accompagnants">
                           <select
                             id="rsvp-accompagnants"
@@ -500,49 +505,8 @@ export default function Rsvp() {
                             ))}
                           </select>
                         </RsvpField>
-                        <RsvpField label={m.rsvp.diet} htmlFor="rsvp-regime">
-                          <select
-                            id="rsvp-regime"
-                            data-testid="rsvp-select-regime"
-                            value={form.regimeIdx}
-                            onChange={(e) => setForm({ ...form, regimeIdx: Number(e.target.value) })}
-                            className="rsvp-line rsvp-line--select"
-                          >
-                            {m.rsvp.regimes.map((r, i) => (
-                              <option key={r} value={i}>
-                                {r}
-                              </option>
-                            ))}
-                          </select>
-                        </RsvpField>
                       </div>
                     ) : null}
-                  </RsvpSection>
-
-                  <RsvpSection title={m.rsvp.sectionOptional}>
-                    {form.present ? (
-                      <RsvpField label={m.rsvp.song} htmlFor="rsvp-chanson">
-                        <input
-                          id="rsvp-chanson"
-                          data-testid="rsvp-input-chanson"
-                          placeholder={m.rsvp.songPh}
-                          value={form.chanson}
-                          onChange={set("chanson")}
-                          className="rsvp-line"
-                        />
-                      </RsvpField>
-                    ) : null}
-                    <RsvpField label={m.rsvp.note} htmlFor="rsvp-message" className={form.present ? "mt-6" : ""}>
-                      <textarea
-                        id="rsvp-message"
-                        data-testid="rsvp-input-message"
-                        rows={3}
-                        placeholder={m.rsvp.notePh}
-                        value={form.message}
-                        onChange={set("message")}
-                        className="rsvp-line rsvp-line--area"
-                      />
-                    </RsvpField>
                   </RsvpSection>
 
                   <div className="rsvp-reply-actions">
@@ -558,6 +522,13 @@ export default function Rsvp() {
                   </div>
                 </form>
 
+                <RsvpPhoneLookup
+                  m={m}
+                  lookupPhone={lookupPhone}
+                  setLookupPhone={setLookupPhone}
+                  lookup={lookup}
+                  lookupBusy={lookupBusy}
+                />
               </ReplyCard>
             </motion.div>
           )}

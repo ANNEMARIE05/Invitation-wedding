@@ -21,10 +21,10 @@ export default function LuxeCard({
     return (
       <motion.div
         className={shell}
-        initial={{ opacity: 0, y: 32, scale: 0.98 }}
-        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        initial={{ opacity: 0, y: 28, scale: 0.985, filter: "blur(5px)" }}
+        whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
         viewport={REVEAL_VIEWPORT}
-        transition={{ duration: 0.85, ease: EASE_VIEW }}
+        transition={{ duration: 0.9, ease: EASE_VIEW }}
         {...rest}
       >
         {children}

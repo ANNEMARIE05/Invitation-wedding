@@ -125,15 +125,15 @@ export default function Venues() {
                         <div className="absolute inset-0 bg-gradient-to-t from-wedding-wine-deep/55 via-wedding-wine/15 to-transparent sm:bg-gradient-to-r sm:from-wedding-wine-deep/35 sm:via-transparent sm:to-transparent" />
                       </div>
                       <div className="flex min-w-0 flex-1 flex-col items-start p-5 text-left sm:p-7">
-                        <p className="font-cinzel text-[9px] font-bold tracking-[0.24em] uppercase text-wedding-wine-accent sm:text-[10px] sm:tracking-[0.28em]">
+                        <p className="font-cinzel text-[11px] font-bold tracking-[0.24em] uppercase text-wedding-wine-accent sm:text-xs sm:tracking-[0.28em]">
                           {venue.eyebrow}
                         </p>
                         <h3 className="type-card-title mt-1 text-lg italic sm:text-2xl">{protectJehovah(venue.name)}</h3>
                         <div className="mt-3 flex items-start justify-start gap-2.5 text-wedding-wine">
                           <MapPin size={17} className="mt-0.5 shrink-0 text-wedding-wine-accent" strokeWidth={1.5} />
-                          <p className="type-prose text-sm">{venue.address}</p>
+                          <p className="type-prose text-sm sm:text-base">{venue.address}</p>
                         </div>
-                        <p className="type-prose mt-3 text-sm">{protectJehovah(venue.note)}</p>
+                        <p className="type-prose mt-3 text-sm sm:text-base">{protectJehovah(venue.note)}</p>
                         <motion.a
                           data-testid={`venue-directions-${venue.id}`}
                           href={venue.mapsUrl}
@@ -141,7 +141,7 @@ export default function Venues() {
                           rel="noopener noreferrer"
                           whileTap={{ scale: 0.96 }}
                           whileHover={{ y: -2 }}
-                          className="venue-action-btn mt-4 inline-flex w-fit max-w-full items-center justify-center gap-1.5 rounded-full border border-wedding-wine-deep/20 bg-wedding-wine-deep px-5 py-2.5 font-cinzel text-[9px] uppercase tracking-[0.14em] text-wedding-on-dark transition-all duration-300 hover:bg-wedding-wine-accent sm:mt-5 sm:gap-2 sm:px-6 sm:py-3 sm:text-[11px] sm:tracking-[0.18em]"
+                          className="venue-action-btn mt-4 inline-flex w-fit max-w-full items-center justify-center gap-1.5 rounded-full border border-wedding-wine-deep/20 bg-wedding-wine-deep px-5 py-2.5 font-cinzel text-[11px] uppercase tracking-[0.14em] text-wedding-on-dark transition-all duration-300 hover:bg-wedding-wine-accent sm:mt-5 sm:gap-2 sm:px-6 sm:py-3 sm:text-xs sm:tracking-[0.18em]"
                         >
                           <Navigation size={14} /> {vCopy.maps}
                         </motion.a>

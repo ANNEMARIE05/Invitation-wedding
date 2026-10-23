@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { EASE, IMAGES } from "@/lib/invite-data";
+import { EASE } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import { mergeTheme } from "@/lib/theme";
@@ -36,29 +36,12 @@ export default function Tenues() {
       <div className="relative z-10 mx-auto max-w-6xl">
         <Chapter index="V" eyebrow={m.tenues.chapter} title={m.tenues.title} script={m.tenues.script} />
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "0px 0px -40px 0px" }}
-          transition={{ duration: 0.9, ease: EASE }}
-          className="mt-10 sm:mt-14"
-          data-testid="dresscode-inspiration"
-        >
-          <img
-            src={IMAGES.dresscodeInspiration}
-            alt={m.tenues.inspirationAlt}
-            className="mx-auto block h-auto w-full max-w-5xl object-contain"
-            loading="lazy"
-            decoding="async"
-          />
-        </motion.div>
-
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "0px 0px -40px 0px" }}
           transition={{ duration: 0.85, delay: 0.06, ease: EASE }}
-          className="type-display-script mx-auto mt-8 max-w-3xl text-center text-base sm:mt-12 sm:text-xl md:text-2xl"
+          className="type-display-script mx-auto mt-6 max-w-3xl text-center text-lg sm:mt-10 sm:text-2xl md:text-3xl leading-relaxed sm:leading-relaxed"
           data-testid="wedding-colors"
         >
           {m.tenues.paletteText}
@@ -73,9 +56,13 @@ export default function Tenues() {
           role="img"
           aria-label={colorNames}
         >
-          {palette.map((color) => (
-            <span
+          {palette.map((color, index) => (
+            <motion.span
               key={color.id}
+              initial={{ opacity: 0, scale: 0.72, rotate: -12 }}
+              whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{ duration: 0.65, delay: 0.12 + index * 0.08, ease: EASE }}
               className="relative flex h-[3.25rem] w-[3.25rem] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#F7ECD0] via-wedding-gold to-[#8A6424] p-[3px] shadow-[0_6px_18px_rgba(201,169,98,0.28)] sm:h-14 sm:w-14"
               title={m.tenues.colorLabels[color.id] || color.label}
               data-testid={`color-${color.id}`}
@@ -85,7 +72,7 @@ export default function Tenues() {
                 style={swatchStyle(color)}
                 aria-hidden="true"
               />
-            </span>
+            </motion.span>
           ))}
         </motion.div>
       </div>

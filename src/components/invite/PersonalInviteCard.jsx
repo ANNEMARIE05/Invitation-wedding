@@ -2,16 +2,16 @@ import { ensureInviteCardFontsReady } from "@/lib/invite-card-capture";
 import {
   guestNameDisplay,
   guestNameSizeClass,
-  personalInviteCountStylePx,
-  personalInviteCountStylePercent,
   personalInviteCssVars,
   personalInviteNameFieldStylePx,
   personalInviteNameFieldStylePercent,
+  personalInviteCountFieldStylePx,
+  personalInviteCountFieldStylePercent,
 } from "@/lib/personal-invite-layout";
 import { useI18n } from "@/lib/locale";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
-const SEND_CARD_BG = `${process.env.PUBLIC_URL || ""}/images/carte-invitation-envoi.jpg?v=20261018-v6`;
+const SEND_CARD_BG = `${process.env.PUBLIC_URL || ""}/images/carte-invitation-personnelle.png?v=20261023-template-v3`;
 
 const partySize = (guest) => 1 + Number(guest?.accompagnants || 0);
 
@@ -57,15 +57,15 @@ export default function PersonalInviteCard({ guest, testId = "personal-invite-ca
       ? personalInviteNameFieldStylePx(renderedSize.w, renderedSize.h)
       : personalInviteNameFieldStylePercent();
 
-  const countStyle =
+  const countFieldStyle =
     renderedSize != null
-      ? personalInviteCountStylePx(renderedSize.w, renderedSize.h)
-      : personalInviteCountStylePercent();
+      ? personalInviteCountFieldStylePx(renderedSize.w, renderedSize.h)
+      : personalInviteCountFieldStylePercent();
 
   return (
     <article
       data-testid={testId}
-      data-personal-invite-layout="v5"
+      data-personal-invite-layout="v7"
       className="personal-invite-article relative mx-auto w-full max-w-[min(100%,480px)] overflow-visible [container-type:inline-size] sm:max-w-[520px]"
     >
       <div
@@ -81,21 +81,21 @@ export default function PersonalInviteCard({ guest, testId = "personal-invite-ca
           aria-hidden
           decoding="async"
           draggable={false}
-          width={725}
+          width={682}
           height={1024}
         />
         {displayName ? (
           <>
-            <div className="personal-invite-fields" style={nameFieldStyle}>
-              <div className="personal-invite-name-wrap">
-                <p className={`personal-invite-name ${guestNameSizeClass(displayName)}`.trim()}>
-                  {displayName}
-                </p>
-              </div>
+            <div className="personal-invite-name-field" style={nameFieldStyle}>
+              <p className={`personal-invite-name ${guestNameSizeClass(displayName)}`.trim()}>
+                {displayName}
+              </p>
             </div>
-            <span className="personal-invite-count-badge" style={countStyle} aria-hidden="true">
-              {count}
-            </span>
+            <div className="personal-invite-count-field" style={countFieldStyle}>
+              <span className="personal-invite-count">
+                {count}
+              </span>
+            </div>
           </>
         ) : null}
       </div>

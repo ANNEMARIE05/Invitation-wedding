@@ -603,7 +603,7 @@ body {
 
 @media (max-width: 639px) {
     .type-eyebrow {
-        font-size: 0.625rem;
+        font-size: 0.75rem;
         letter-spacing: 0.28em;
         line-height: 1.45;
     }
@@ -613,21 +613,25 @@ body {
     }
 
     .bigday-countdown__unit {
-        min-width: clamp(2rem, 17vw, 2.65rem);
+        min-width: clamp(3rem, 18vw, 4.25rem);
     }
 
     .bigday-countdown__value {
-        font-size: clamp(1.2rem, 4.6vw, 1.45rem) !important;
+        font-size: clamp(1.95rem, 7.5vw, 2.75rem) !important;
+        font-weight: 600;
+        letter-spacing: -0.02em;
     }
 
     .bigday-countdown__sep {
-        font-size: clamp(1.2rem, 4.6vw, 1.45rem) !important;
+        font-size: clamp(1.65rem, 6.5vw, 2.35rem) !important;
+        opacity: 0.8;
     }
 
     .bigday-countdown__label {
-        font-size: clamp(6px, 1.75vw, 7px);
-        letter-spacing: 0.08em;
-        margin-top: 0.35rem;
+        font-size: clamp(8.5px, 2.2vw, 11px);
+        letter-spacing: 0.16em;
+        margin-top: 0.45rem;
+        font-weight: 600;
     }
 }
 
@@ -1468,6 +1472,64 @@ body {
     }
 }
 
+.rsvp-reply-card--confirmed .rsvp-reply-card__body {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.rsvp-confirmation-layout {
+    display: grid;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.rsvp-confirmation-copy {
+    text-align: center;
+}
+
+.rsvp-confirmation-mark {
+    display: flex;
+    width: 3.25rem;
+    height: 3.25rem;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    border-radius: 999px;
+    background: linear-gradient(145deg, #6e1f3d, #4a0e17);
+    box-shadow: 0 0 0 5px rgba(212, 175, 55, 0.1);
+}
+
+.rsvp-confirmation-actions {
+    display: flex;
+    min-height: 5.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    border: 1px solid rgba(155, 27, 74, 0.12);
+    border-radius: 1rem;
+    background: linear-gradient(145deg, rgba(255, 245, 248, 0.8), rgba(255, 251, 252, 0.95));
+}
+
+.rsvp-reply-card--confirmed .rsvp-recall {
+    margin-top: 0;
+}
+
+@media (min-width: 768px) {
+    .rsvp-confirmation-layout {
+        grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+        gap: 2.5rem;
+    }
+
+    .rsvp-confirmation-copy {
+        text-align: left;
+    }
+
+    .rsvp-confirmation-mark {
+        margin-left: 0;
+    }
+}
+
 .rsvp-reply-lead {
     margin: 0;
     text-align: center;
@@ -1707,15 +1769,16 @@ body {
 .rsvp-recall-title {
     margin: 0;
     font-family: 'Cinzel', serif;
-    font-size: 8px;
-    letter-spacing: 0.24em;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: #9b1b4a;
 }
 
 .rsvp-recall-hint {
-    margin: 0.35rem 0 0.85rem;
-    font-size: 0.8125rem;
+    margin: 0.25rem 0 0.65rem;
+    font-size: 0.875rem;
     line-height: 1.45;
     color: var(--muted);
 }
@@ -1740,8 +1803,9 @@ body {
     background: transparent;
     padding: 0.35rem 0;
     font-family: 'Cinzel', serif;
-    font-size: 8px;
-    letter-spacing: 0.18em;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink);
     text-decoration: underline;
@@ -3052,35 +3116,39 @@ body {
     z-index: 1;
 }
 
-/* Mobile — boutons & textes secondaires plus compacts */
+/* Mobile — boutons & textes secondaires plus lisibles */
 @media (max-width: 639px) {
     .type-prose {
-        font-size: 0.875rem;
-        line-height: 1.58;
+        font-size: 0.975rem;
+        line-height: 1.6;
     }
 
     .type-accent-time {
-        font-size: 1.125rem;
+        font-size: 1.25rem;
     }
 
     .rsvp-reply-lead,
     .guestbook-form-lead {
-        font-size: 0.95rem;
-        line-height: 1.5;
+        font-size: 1.05rem;
+        line-height: 1.55;
     }
 
     .rsvp-reply-label {
-        font-size: 0.9375rem;
+        font-size: 1.05rem;
     }
 
     .rsvp-reply-question {
-        font-size: 0.9375rem;
-        line-height: 1.48;
+        font-size: 1.05rem;
+        line-height: 1.5;
     }
 
     .rsvp-radio-text {
-        font-size: 0.98rem;
-        line-height: 1.42;
+        font-size: 1.05rem;
+        line-height: 1.45;
+    }
+
+    .rsvp-line {
+        font-size: 1.05rem;
     }
 
     .rsvp-reply-form {
@@ -3640,7 +3708,7 @@ body {
     z-index: 1;
     display: block;
     width: 100%;
-    aspect-ratio: 725 / 1024;
+    aspect-ratio: 682 / 1024;
     line-height: 0;
     overflow: hidden;
     border-radius: 2px;
@@ -3667,6 +3735,32 @@ body {
     user-select: none;
 }
 
+.personal-invite-name-field {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: normal;
+    box-sizing: border-box;
+    padding: 0 clamp(0.25rem, 1.5cqi, 0.6rem);
+    overflow: hidden;
+    text-align: center;
+    pointer-events: none;
+}
+
+.personal-invite-count-field {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    line-height: 1;
+    box-sizing: border-box;
+    overflow: visible;
+    pointer-events: none;
+}
+
 .personal-invite-fields {
     position: absolute;
     z-index: 2;
@@ -3676,8 +3770,6 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0;
-    padding: 0 clamp(0.45rem, 2.5cqi, 0.7rem);
     overflow: hidden;
     text-align: center;
     pointer-events: none;
@@ -3700,7 +3792,7 @@ body {
 }
 
 .personal-invite-stack .personal-invite-gold-ring {
-    aspect-ratio: 725 / 1024;
+    aspect-ratio: 682 / 1024;
 }
 
 .personal-invite-stack .personal-invite-shell {
@@ -3727,11 +3819,11 @@ body {
     justify-content: center;
     text-align: center;
     font-family: Cinzel, "Cormorant Garamond", Georgia, serif;
-    font-size: var(--pi-count-fs, 2.2cqi);
+    font-size: var(--pi-count-fs, 2.12cqi);
     font-weight: 700;
     line-height: 1;
     letter-spacing: 0.02em;
-    color: #6a4418;
+    color: #5b0e16;
     text-shadow: 0 1px 0 rgba(255, 252, 248, 0.85);
     pointer-events: none;
 }
@@ -3742,7 +3834,7 @@ body {
     margin: 0;
     text-align: center;
     font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-    font-size: var(--pi-name-fs, 4.14cqi);
+    font-size: var(--pi-name-fs, 3.95cqi);
     font-weight: 600;
     font-style: italic;
     font-synthesis: none;
@@ -3752,12 +3844,37 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #2a0511;
-    text-shadow: 0 0.5px 0 rgba(255, 252, 248, 0.4);
+    color: #5b0e16;
+    text-shadow: 0 0.5px 0.5px rgba(255, 252, 248, 0.5);
+}
+
+.personal-invite-count {
+    display: inline-block;
+    margin: 0;
+    font-family: Cinzel, Georgia, "Times New Roman", serif;
+    font-size: var(--pi-count-fs, 2.95cqi);
+    font-weight: 700;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: #5b0e16;
+    text-shadow: 0 0.5px 0.5px rgba(255, 252, 248, 0.5);
+}
+
+.personal-invite-validity {
+    margin: 0;
+    font-family: Cinzel, Georgia, serif;
+    font-size: clamp(0.42rem, 2.05cqi, 1rem);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #5b0e16;
 }
 
 .personal-invite-name--md {
-    font-size: var(--pi-name-fs-md, 3.52cqi);
+    font-size: var(--pi-name-fs-md, 3.37cqi);
 }
 
 .personal-invite-name--sm {
@@ -4412,8 +4529,9 @@ input:focus, select:focus, textarea:focus {
 
 .typewriter-flower {
     display: inline-block;
-    font-size: 0.78em;
-    color: #ed1e79;
+    font-size: 0.85em;
+    color: #FEE6A8;
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.7));
     vertical-align: middle;
     opacity: 0;
     transform: scale(0.5) rotate(-18deg);
@@ -4682,3 +4800,68 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* Typewriter & monogramme conservent leur animation fluide */
+
+/* Une surface plus calme laisse les textes et les actions guider la lecture. */
+body {
+    background: #fbf7f1;
+}
+
+.page-flow {
+    background-color: #fbf7f1;
+    background-image:
+        radial-gradient(ellipse 80% 50% at 12% 8%, rgba(255, 232, 237, 0.48), transparent 62%),
+        radial-gradient(ellipse 65% 45% at 88% 22%, rgba(173, 46, 88, 0.07), transparent 58%),
+        radial-gradient(ellipse 50% 36% at 50% 100%, rgba(110, 31, 61, 0.06), transparent 55%),
+        radial-gradient(ellipse 40% 30% at 70% 65%, rgba(201, 169, 98, 0.12), transparent 50%),
+        linear-gradient(175deg, #fffaf5 0%, #fff7f7 42%, #faf5f0 100%);
+}
+
+.hero-veil {
+    background:
+        linear-gradient(180deg, rgba(42, 5, 11, 0.2) 0%, rgba(42, 5, 11, 0.06) 42%, rgba(42, 5, 11, 0.24) 100%);
+}
+
+.hero-lockup .text-wedding-rose-bright {
+    color: #fff0f4;
+    text-shadow: 0 1px 12px rgba(42, 5, 11, 0.55);
+}
+
+.hero-name.couple-name-shimmer {
+    color: #fff8f2 !important;
+    -webkit-text-fill-color: #fff8f2;
+    animation: none;
+    text-shadow: 0 2px 12px rgba(42, 5, 11, 0.65);
+}
+
+.couple-name-amp--hero {
+    color: #fee6a8;
+}
+
+.hero-outline-btn {
+    border-color: rgba(255, 240, 244, 0.78);
+    background: rgba(42, 5, 11, 0.2);
+    color: #fff8f2;
+    text-shadow: 0 1px 8px rgba(42, 5, 11, 0.45);
+}
+
+.hero-outline-btn:hover {
+    border-color: #fff0f4;
+    background: rgba(42, 5, 11, 0.36);
+    color: #fff;
+}
+
+.mobile-nav-panel {
+    background: rgba(255, 251, 252, 0.98);
+    backdrop-filter: blur(16px);
+}
+
+.invite-main-nav button:focus-visible {
+    outline: 2px solid var(--wine-deep);
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-name.couple-name-shimmer {
+        animation: none;
+    }
+}

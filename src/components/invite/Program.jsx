@@ -29,7 +29,7 @@ export default function Program() {
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={REVEAL_VIEWPORT}
-                transition={{ duration: 0.9, ease: EASE }}
+                transition={{ duration: 0.9, delay: i * 0.1, ease: EASE }}
                 className={`program-event-row relative z-[1] isolate w-full md:w-[52%] ${
                   i % 2 === 0 ? "md:pr-12 md:text-right" : "md:ml-auto md:pl-12"
                 }`}
@@ -55,7 +55,7 @@ export default function Program() {
                   ) : null}
                   <p className="type-accent-time text-xl sm:text-3xl">{p.time}</p>
                   <h3 className="type-card-title mt-1 text-lg sm:text-2xl">{p.title}</h3>
-                  <p className="type-prose mt-2 text-sm sm:text-base">{protectJehovah(p.text)}</p>
+                  <p className="type-prose mt-2 text-base">{protectJehovah(p.text)}</p>
                 </LuxeCard>
               </motion.div>
             ))}

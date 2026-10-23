@@ -48,7 +48,7 @@ export const WEDDING_PALETTE = [
   { id: "berry", label: "Framboise profonde", hex: "#980522" },
   { id: "magenta", label: "Framboise vif", hex: "#ED1E79" },
   { id: "red", label: "Rouge", hex: "#C4282A" },
-  { id: "blush", label: "Rose poudré", hex: "#EBAF9B" },
+  { id: "blush", label: "Rose poudré", hex: "#E6A8BA" },
   { id: "silver", label: "Argenté", hex: "#B8BCC8", metallic: true },
 ];
 
@@ -91,7 +91,7 @@ export const IMAGES = {
 
 
 export const GALLERY = [
-  { src: IMAGES.hero, caption: "Berry Love", span: "wide" },
+  { src: IMAGES.hero, caption: "Harmonie", span: "wide" },
   { src: IMAGES.footerPhoto, caption: "Alliances", span: "square" },
   { src: IMAGES.venue, caption: "Notre journée", span: "tall" },
 ];
@@ -105,9 +105,93 @@ export const scrollToId = (href) => {
 
 /** Bande-son YouTube (iframe cachée — contrôles via MusicPlayer) */
 export const WEDDING_SONG = {
-  youtubeId: "t_0C9rQBCSE",
+  youtubeId: "06-XXOTP3Gc",
   startSeconds: 0,
-  track: "Longtemps",
-  artist: "Amir",
-  thumbUrl: "https://i.ytimg.com/vi/t_0C9rQBCSE/hqdefault.jpg",
+  track: "Beautiful In White",
+  artist: "Shane Filan",
+  thumbUrl: "https://i.ytimg.com/vi/06-XXOTP3Gc/hqdefault.jpg",
 };
+
+export const GIFTS_PRIMARY_PHONE = "01 72 31 79 83";
+export const GIFTS_PRIMARY_PHONE_RAW = "0172317983";
+
+/** Compte Wave pour les cadeaux & participations */
+export const WAVE_ACCOUNT = {
+  name: "Wave",
+  number: "01 72 31 79 83",
+  rawNumber: "0172317983",
+  recipient: "Stéphane & Marie",
+  color: "#1DC3F4",
+  actionUrl: "https://wave.com",
+};
+
+/** Comptes Mobile Money pour les cadeaux & participations */
+export const MOBILE_MONEY_ACCOUNTS = [
+  {
+    id: "wave",
+    name: "Wave",
+    shortName: "Wave",
+    number: "01 72 31 79 83",
+    rawNumber: "0172317983",
+    recipient: "Stéphane & Marie",
+    color: "#1DC3F4",
+    bgLight: "rgba(29, 195, 244, 0.08)",
+    badgeBg: "bg-[#1DC3F4]/15",
+    badgeText: "text-[#0094C6]",
+    border: "border-[#1DC3F4]/50",
+    actionUrl: "https://wave.com",
+    actionType: "link",
+    iconEmoji: "🌊",
+    logoUrl: publicImage("wave-money-logo.png"),
+  },
+  {
+    id: "orange",
+    name: "Orange Money",
+    shortName: "Orange",
+    number: "01 72 31 79 83",
+    rawNumber: "0172317983",
+    recipient: "Stéphane & Marie",
+    color: "#FF7900",
+    bgLight: "rgba(255, 121, 0, 0.08)",
+    badgeBg: "bg-[#FF7900]/15",
+    badgeText: "text-[#D35400]",
+    border: "border-[#FF7900]/50",
+    actionUrl: "tel:*144#",
+    actionType: "ussd",
+    iconEmoji: "🟠",
+    logoUrl: publicImage("Orange-Money-logo.png"),
+  },
+  {
+    id: "moov",
+    name: "Moov Money",
+    shortName: "Moov",
+    number: "01 72 31 79 83",
+    rawNumber: "0172317983",
+    recipient: "Stéphane & Marie",
+    color: "#0099D8",
+    bgLight: "rgba(0, 153, 216, 0.08)",
+    badgeBg: "bg-[#0099D8]/15",
+    badgeText: "text-[#007EA7]",
+    border: "border-[#0099D8]/50",
+    actionUrl: "tel:*155#",
+    actionType: "ussd",
+    iconEmoji: "🔵",
+  },
+  {
+    id: "mtn",
+    name: "MTN MoMo",
+    shortName: "MTN",
+    number: "01 72 31 79 83",
+    rawNumber: "0172317983",
+    recipient: "Stéphane & Marie",
+    color: "#FFCC00",
+    bgLight: "rgba(255, 204, 0, 0.12)",
+    badgeBg: "bg-[#FFCC00]/25",
+    badgeText: "text-[#996500]",
+    border: "border-[#FFCC00]/60",
+    actionUrl: "tel:*133#",
+    actionType: "ussd",
+    iconEmoji: "🟡",
+  },
+];
+
