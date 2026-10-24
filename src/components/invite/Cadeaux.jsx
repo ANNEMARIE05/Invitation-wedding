@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Copy, Check, Gift, Heart, MessageCircle, ArrowUpRight, PhoneCall, Sparkles } from "lucide-react";
+import { ArrowUpRight, Copy, Check, Gift, Heart, PhoneCall, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import { EASE, WHATSAPP_NUMBER, MOBILE_MONEY_ACCOUNTS } from "@/lib/invite-data";
+import { EASE, MOBILE_MONEY_ACCOUNTS } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
@@ -37,10 +37,6 @@ export default function Cadeaux() {
       toast.error(m.gifts.copyError);
     }
   };
-
-  const waGiftUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    m.gifts?.waGiftMessage || "Bonjour Stéphane et Marie, je souhaite vous bénir avec un cadeau pour votre mariage !"
-  )}`;
 
   return (
     <section
@@ -172,9 +168,9 @@ export default function Cadeaux() {
               })}
             </div>
 
-            {/* Note douce : Urne & WhatsApp */}
-            <div className="mt-8 grid gap-4 border-t border-wedding-rose-light/50 pt-6 text-left sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-6">
-              <div className="flex items-start gap-3 rounded-2xl border border-wedding-rose-light/40 bg-white/75 p-4 sm:p-5">
+            {/* Note douce : Urne */}
+            <div className="mt-8 border-t border-wedding-rose-light/50 pt-6 text-left">
+              <div className="flex w-full items-start gap-3 rounded-2xl border border-wedding-rose-light/40 bg-white/75 p-4 sm:p-5">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-wedding-ivory text-wedding-wine">
                   <Gift size={18} strokeWidth={1.7} aria-hidden="true" />
                 </span>
@@ -183,17 +179,6 @@ export default function Cadeaux() {
                     "Une boîte à vœux et enveloppes sera également à votre disposition le jour de la réception."}
                 </p>
               </div>
-
-              <a
-                href={waGiftUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full border border-[#25D366]/35 bg-[#25D366]/10 px-5 py-3 text-center text-sm font-semibold text-[#167C3A] transition-all duration-300 hover:border-[#25D366] hover:bg-[#25D366] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366] sm:min-w-[13rem]"
-              >
-                <MessageCircle size={18} className="shrink-0" aria-hidden="true" />
-                <span>{m.gifts.contactWhatsApp || "Écrire aux mariés"}</span>
-                <ArrowUpRight size={15} className="shrink-0" aria-hidden="true" />
-              </a>
             </div>
           </LuxeCard>
         </motion.div>

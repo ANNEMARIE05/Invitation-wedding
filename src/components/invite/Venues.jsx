@@ -189,11 +189,21 @@ export default function Venues() {
                   <h3 className="type-card-title text-xl italic sm:text-[1.65rem]">{z.title}</h3>
                 </div>
                 <p className="type-prose mt-2.5 text-sm sm:text-[15px]">{z.text}</p>
-                <div className="zoom-stream-card__code mt-3 inline-flex w-fit flex-col items-center gap-0.5 sm:items-start">
-                  <p className="font-cinzel text-[9px] font-medium uppercase tracking-[0.18em] text-wedding-wine-accent">
-                    {z.codeLabel}
-                  </p>
-                  <p className="type-accent-time text-xl not-italic tabular-nums tracking-[0.05em]">{zoom.code}</p>
+                <div className="mt-3 flex flex-wrap items-center justify-center gap-2.5 sm:justify-start">
+                  <div className="zoom-stream-card__code inline-flex flex-col items-center gap-0.5 sm:items-start">
+                    <p className="font-cinzel text-[9px] font-medium uppercase tracking-[0.18em] text-wedding-wine-accent">
+                      {z.codeLabel}
+                    </p>
+                    <p className="type-accent-time text-base sm:text-xl not-italic tabular-nums tracking-[0.05em]">{zoom.code}</p>
+                  </div>
+                  {zoom.passcode ? (
+                    <div className="zoom-stream-card__code inline-flex flex-col items-center gap-0.5 sm:items-start">
+                      <p className="font-cinzel text-[9px] font-medium uppercase tracking-[0.18em] text-wedding-wine-accent">
+                        {z.passcodeLabel}
+                      </p>
+                      <p className="type-accent-time text-base sm:text-xl not-italic tabular-nums tracking-[0.05em]">{zoom.passcode}</p>
+                    </div>
+                  ) : null}
                 </div>
               </motion.div>
 

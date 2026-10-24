@@ -34,7 +34,9 @@ function mergeLocation(stored, id) {
 export function mergeSettings(stored) {
   const s = stored && typeof stored === "object" ? stored : {};
   const zoom_url = (s.zoom_url || "").trim() || ZOOM.url || "";
-  const zoom_code = (s.zoom_code || "").trim() || ZOOM.code || "";
+  const storedZoomCode = (s.zoom_code || "").trim();
+  const zoom_code = !storedZoomCode || storedZoomCode === "0000" ? ZOOM.code : storedZoomCode;
+  const zoom_passcode = (s.zoom_passcode || "").trim() || ZOOM.passcode || "";
   return {
     bride: (s.bride || "").trim() || COUPLE.bride,
     groom: (s.groom || "").trim() || COUPLE.groom,
@@ -47,7 +49,8 @@ export function mergeSettings(stored) {
     },
     zoom_url,
     zoom_code,
-    zoom_join_url: getZoomJoinUrl({ url: zoom_url, code: zoom_code }),
+    zoom_passcode,
+    zoom_join_url: getZoomJoinUrl({ url: zoom_url, code: zoom_code, passcode: zoom_passcode }),
     theme: mergeTheme(s),
     dressPalette: mergeTheme(s).dressPalette,
   };
@@ -133,6 +136,7 @@ export function settingsFromForm(form) {
     },
     zoom_url: form.zoom_url.trim(),
     zoom_code: form.zoom_code.trim(),
+    zoom_passcode: (form.zoom_passcode || "").trim(),
     theme: themeFromForm(form.theme),
   };
 }
@@ -149,6 +153,7 @@ export function formFromSettings(stored) {
     ceremony: { ...merged.locations.ceremony },
     zoom_url: merged.zoom_url,
     zoom_code: merged.zoom_code,
+    zoom_passcode: merged.zoom_passcode,
     theme: formThemeFromSettings(stored),
   };
 }

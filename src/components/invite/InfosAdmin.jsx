@@ -373,6 +373,16 @@ export default function InfosAdmin() {
                   Si le lien est vide, un ID différent de « 0000 » génère un lien zoom.us/j/… automatique.
                 </p>
               </div>
+              <div>
+                <label className={labelCls}>Code secret / Mot de passe (Passcode)</label>
+                <input
+                  data-testid="infos-input-zoom-passcode"
+                  value={form.zoom_passcode || ""}
+                  onChange={set("zoom_passcode")}
+                  className={fieldCls}
+                  placeholder="Ex. 112233"
+                />
+              </div>
             </div>
           </section>
 

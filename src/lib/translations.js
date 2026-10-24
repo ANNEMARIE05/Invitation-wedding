@@ -177,7 +177,8 @@ export const messages = {
         eyebrow: "Cérémonie en ligne",
         title: "Suivre sur Zoom",
         text: "Vous ne pouvez pas être sur place ? Rejoignez le discours de mariage en direct — un clic suffit.",
-        codeLabel: "Code de réunion",
+        codeLabel: "N° de réunion",
+        passcodeLabel: "Code secret",
         join: "Rejoindre",
         foot: "Ouverture automatique de Zoom",
         toastTitle: "Lien bientôt actif",
@@ -190,7 +191,7 @@ export const messages = {
       script: "framboise, rouge & argent",
       paletteTitle: "Code couleur",
       paletteText:
-        "Costume, robe, combinaison, polo ou imprimé : portez ce dans quoi vous vous sentez élégants. L’essentiel, c’est de reprendre les couleurs de la session — framboise, rouge, rose poudré, crème ou beige — avec une touche d’argent si vous le souhaitez, pour que nous formions un même tableau ce jour-là.",
+        "Vous pouvez choisir l’une des couleurs suivantes pour votre tenue : rouge bordeaux, rouge, rose clair ou rose fuchsia.",
       paletteRibbonCaption: "Les tons qui marquent la session",
       inspirationAlt:
         "Collage d’invités en tenues variées — robes, costumes, polos — dans les couleurs framboise, bordeaux, rose et crème",
@@ -237,7 +238,10 @@ export const messages = {
       zoomThanks: (name) => `Merci ${name} — nous vous retrouverons en ligne pour le discours.`,
       cardThanks: (name, n) => `La carte au nom de ${name} est valable pour ${n} personne${n > 1 ? "s" : ""}.`,
       absentThanks: "Nous sommes tristes de ne pas vous avoir à nos côtés, mais nous vous remercions de votre réponse.",
-      zoomCode: (code) => `Merci ! Nous vous attendons sur Zoom — code de réunion : ${code}.`,
+      zoomCode: (code, passcode) =>
+        passcode
+          ? `Merci ! Nous vous attendons sur Zoom — N° de réunion : ${code} (Code secret : ${passcode}).`
+          : `Merci ! Nous vous attendons sur Zoom — code de réunion : ${code}.`,
       joinMeeting: "Rejoindre la réunion",
       whatsapp: "Envoyer ma réponse sur WhatsApp",
       again: "Envoyer une autre réponse",
@@ -303,10 +307,10 @@ export const messages = {
       copied: "Numéro copié ! Merci du fond du cœur 💖🥂",
       copyError: "Impossible de copier le numéro.",
       openWave: "Ouvrir l'application Wave",
-      orangeAction: "Composer *144#",
+      orangeAction: "Composer #144#",
       waveHint: "Envoyez votre cadeau directement aux mariés.",
       urnTitle: "L'Urne du Mariage",
-      urnNote: "Une boîte à vœux et enveloppes sera également à votre disposition le jour de la réception pour vos cartes et vœux.",
+      urnNote: "Si vous souhaitez nous témoigner votre affection par une attention particulière, une enveloppe ou un cadeau de votre choix sera accueilli avec joie et gratitude. Une table dédiée aux cadeaux sera mise à votre disposition.",
       contactWhatsApp: "Écrire aux mariés sur WhatsApp",
       waGiftMessage: "Bonjour Stéphane et Marie, je souhaite vous bénir avec un cadeau pour votre mariage !",
     },
@@ -560,6 +564,7 @@ export const messages = {
         title: "Join on Zoom",
         text: "Can't be there in person? Join the wedding discourse live — one click away.",
         codeLabel: "Meeting ID",
+        passcodeLabel: "Passcode",
         join: "Join",
         foot: "Zoom opens automatically",
         toastTitle: "Link coming soon",
@@ -619,7 +624,10 @@ export const messages = {
       zoomThanks: (name) => `Thank you ${name} — we'll see you online for the discourse.`,
       cardThanks: (name, n) => `Your card for ${name} is valid for ${n} guest${n > 1 ? "s" : ""}.`,
       absentThanks: "We're sad you can't join us, but thank you for letting us know.",
-      zoomCode: (code) => `Thank you! See you on Zoom — meeting ID: ${code}.`,
+      zoomCode: (code, passcode) =>
+        passcode
+          ? `Thank you! See you on Zoom — meeting ID: ${code} (Passcode: ${passcode}).`
+          : `Thank you! See you on Zoom — meeting ID: ${code}.`,
       joinMeeting: "Join the meeting",
       whatsapp: "Send my reply on WhatsApp",
       again: "Submit another reply",
@@ -685,10 +693,10 @@ export const messages = {
       copied: "Number copied! Heartfelt thanks 💖🥂",
       copyError: "Unable to copy number.",
       openWave: "Open Wave app",
-      orangeAction: "Dial *144#",
+      orangeAction: "Dial #144#",
       waveHint: "Send your gift directly to the couple.",
       urnTitle: "Wedding Wishing Well",
-      urnNote: "A wishing well and card box will also be available at the venue on our wedding day for your cards and notes.",
+      urnNote: "If you would like to show your affection with a thoughtful gesture, an envelope or a gift of your choice will be received with joy and gratitude. A dedicated gift table will be available for you.",
       contactWhatsApp: "Message the couple on WhatsApp",
       waGiftMessage: "Hello Stéphane and Marie, I would love to bless you with a wedding gift!",
     },

@@ -362,7 +362,7 @@ export default function Rsvp() {
                       </>
                     ) : confirmed.present ? (
                       <p className="type-prose mx-auto max-w-md text-sm md:mx-0">
-                        {m.rsvp.zoomCode(zoom.code)}
+                        {m.rsvp.zoomCode(zoom.code, zoom.passcode)}
                         {zoom.joinUrl ? (
                           <>
                             {" "}

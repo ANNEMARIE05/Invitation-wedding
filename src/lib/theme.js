@@ -1,22 +1,22 @@
 /** Palette « Berry Love » — valeurs par défaut (alignées sur index.css & invite-data) */
 
 export const DEFAULT_SITE_THEME = {
-  wine: "#8A2648",
-  wineDeep: "#6E1F3D",
-  wineAccent: "#AD2E58",
-  rose: "#ED1E79",
-  roseBright: "#F7338B",
-  roseLight: "#FFD6E0",
-  gold: "#C9A962",
-  goldAccent: "#D4AF37",
-  goldSoft: "#E8D5A8",
-  silver: "#B8BCC8",
-  ink: "#6E1F3D",
-  inkSoft: "#8A2648",
-  muted: "#9B1B4A",
-  ivory: "#FFF0F4",
-  ivoryDeep: "#FFE0EA",
-  onDark: "#FFFBFC",
+  wine: "#A3235A",
+  wineDeep: "#6A1037",
+  wineAccent: "#C43673",
+  rose: "#E83D89",
+  roseBright: "#FA5C9F",
+  roseLight: "#F2ABC9",
+  gold: "#D4AF37",
+  goldAccent: "#E5C158",
+  goldSoft: "#F5E5B8",
+  silver: "#C6C7D0",
+  ink: "#520B2A",
+  inkSoft: "#70143D",
+  muted: "#9E285B",
+  ivory: "#F7D2E2",
+  ivoryDeep: "#F0B5CE",
+  onDark: "#FFF8FB",
 };
 
 export const DEFAULT_DRESS_PALETTE = {

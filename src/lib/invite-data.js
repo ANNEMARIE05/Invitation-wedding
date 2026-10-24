@@ -37,10 +37,10 @@ export const VENUE_MEDIA = [
   },
 ];
 
-/** Renseignez l'URL complète Zoom lorsque vous l'aurez reçue. */
 export const ZOOM = {
-  url: "",
-  code: "0000",
+  url: "https://jworg.zoom.us/j/81660790733?pwd=wdgUK83NbeGYfWXnAoroQGAsplLt6T.1",
+  code: "816 6079 0733",
+  passcode: "112233",
 };
 
 /** Couleurs officielles du mariage (Berry Love + touche argentée) — calées sur le mood board */
@@ -56,7 +56,10 @@ export function getZoomJoinUrl(zoom = ZOOM) {
   const direct = zoom.url?.trim();
   if (direct) return direct;
   const id = zoom.code?.trim().replace(/\s/g, "");
-  if (id && id !== "0000") return `https://zoom.us/j/${id}`;
+  const pwd = zoom.passcode?.trim();
+  if (id && id !== "0000") {
+    return pwd ? `https://zoom.us/j/${id}?pwd=${pwd}` : `https://zoom.us/j/${id}`;
+  }
   return "";
 }
 
@@ -156,7 +159,7 @@ export const MOBILE_MONEY_ACCOUNTS = [
     badgeBg: "bg-[#FF7900]/15",
     badgeText: "text-[#D35400]",
     border: "border-[#FF7900]/50",
-    actionUrl: "tel:*144#",
+    actionUrl: "tel:%23144%23",
     actionType: "ussd",
     iconEmoji: "🟠",
     logoUrl: publicImage("Orange-Money-logo.png"),
@@ -194,4 +197,3 @@ export const MOBILE_MONEY_ACCOUNTS = [
     iconEmoji: "🟡",
   },
 ];
-

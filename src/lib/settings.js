@@ -47,6 +47,7 @@ export const useSettings = () => {
     zoom: {
       url: merged.zoom_url,
       code: merged.zoom_code,
+      passcode: merged.zoom_passcode,
       joinUrl: merged.zoom_join_url,
     },
     dressPalette: merged.dressPalette,

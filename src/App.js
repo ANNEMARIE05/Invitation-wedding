@@ -42,7 +42,7 @@ import PersonalInviteCard from "@/components/invite/PersonalInviteCard";
 
 function PersonalCardPreview() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#2a0511] p-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#4f1c32] p-4">
       <PersonalInviteCard guest={{ nom: "Agbonou Kossiwa Anne Marie", accompagnants: 1 }} />
     </div>
   );
