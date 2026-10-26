@@ -4,7 +4,7 @@ import { EASE, scrollToId } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import WeddingPetals from "./WeddingPetals";
-import { FloralCornerOverlay } from "./Flowers";
+import { FloralCornerOverlay, ROSE_PINK } from "./Flowers";
 import TypewriterText from "./TypewriterText";
 import CoupleNameMotion from "./CoupleNameMotion";
 
@@ -77,7 +77,13 @@ export default function Hero({ start = true }) {
         >
           <p className="flex items-center justify-center font-display text-[1.85rem] sm:text-[2.5rem] font-medium tracking-[0.12em] text-wedding-on-dark">
             <span className="hero-monogram-flower hero-monogram-flower--lead" aria-hidden="true">
-              <span className="hero-monogram-flower__glyph">✿</span>
+              <img
+                src={ROSE_PINK}
+                alt=""
+                className="hero-monogram-flower__image"
+                decoding="async"
+                draggable={false}
+              />
             </span>
             {letterGroom}
             <span className="mx-2 sm:mx-3 inline-block font-cinzel text-sm sm:text-base font-normal tracking-[0.55em] text-wedding-rose-light align-middle">
@@ -85,7 +91,13 @@ export default function Hero({ start = true }) {
             </span>
             {letterBride}
             <span className="hero-monogram-flower hero-monogram-flower--trail" aria-hidden="true">
-              <span className="hero-monogram-flower__glyph">✿</span>
+              <img
+                src={ROSE_PINK}
+                alt=""
+                className="hero-monogram-flower__image"
+                decoding="async"
+                draggable={false}
+              />
             </span>
           </p>
         </motion.div>

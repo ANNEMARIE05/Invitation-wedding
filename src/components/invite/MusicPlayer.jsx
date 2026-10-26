@@ -58,7 +58,7 @@ function EqBars({ playing, className = "" }) {
 }
 
 const shell =
-  "border border-wedding-gold-accent/40 bg-[#1A040B]/95 shadow-[0_12px_40px_rgba(0,0,0,0.65),0_0_16px_rgba(212,175,55,0.18)] backdrop-blur-md";
+  "border border-wedding-gold-accent/40 bg-wedding-wine-deep/95 shadow-[0_12px_40px_rgba(42,5,11,0.4),0_0_16px_rgba(212,175,55,0.18)] backdrop-blur-md";
 
 const iconBtn =
   "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-wedding-gold-soft hover:text-white hover:bg-white/10 active:scale-90 disabled:opacity-40 transition-all duration-300";

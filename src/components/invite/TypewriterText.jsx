@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ROSE_PINK } from "./Flowers";
 
 /**
  * Affiche le texte lettre par lettre (effet machine à écrire).
@@ -52,7 +53,13 @@ export default function TypewriterText({
       className={`typewriter-flower typewriter-flower--${placement}`}
       aria-hidden="true"
     >
-      ✿
+      <img
+        src={ROSE_PINK}
+        alt=""
+        className="typewriter-flower__image"
+        decoding="async"
+        draggable={false}
+      />
     </span>
   );
 

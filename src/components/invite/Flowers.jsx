@@ -3,6 +3,7 @@
 const PUBLIC = process.env.PUBLIC_URL || "";
 export const FLORAL_CORNER_TL = `${PUBLIC}/images/floral-corner-tl.png`;
 export const FLORAL_CORNER_BR = `${PUBLIC}/images/floral-corner-br.png`;
+export const ROSE_PINK = `${PUBLIC}/images/rose-pink-name.png`;
 
 export function FloralCornerOverlay({ variant = "hero", className = "" }) {
   const base = variant === "hero" ? "hero-floral-corner" : "faire-part-floral-corner";

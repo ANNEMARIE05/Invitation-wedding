@@ -39,11 +39,33 @@ import { SETTINGS_CHANGE_EVENT } from "@/lib/invite-defaults";
 import { useStoreSync } from "@/lib/useStoreSync";
 import ThemeApplier from "@/components/invite/ThemeApplier";
 import PersonalInviteCard from "@/components/invite/PersonalInviteCard";
+import ModernFluidMeshBackground from "@/components/invite/ModernFluidMeshBackground";
 
 function PersonalCardPreview() {
+  const [testNom, setTestNom] = useState("Papa");
+  const [testAcc, setTestAcc] = useState(0);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#4f1c32] p-4">
-      <PersonalInviteCard guest={{ nom: "Agbonou Kossiwa Anne Marie", accompagnants: 1 }} />
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-[#3a0a16] p-4 py-8 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 hero-atmosphere opacity-90" aria-hidden="true" />
+      <ModernFluidMeshBackground />
+      <div className="relative z-10 mb-4 flex flex-wrap items-center justify-center gap-2">
+        <button
+          type="button"
+          onClick={() => { setTestNom("Papa"); setTestAcc(0); }}
+          className="rounded-full bg-white/20 px-3.5 py-1.5 text-xs font-medium text-white transition hover:bg-white/30"
+        >
+          Tester avec : Papa (1 pers.)
+        </button>
+        <button
+          type="button"
+          onClick={() => { setTestNom("Agbonou Kossiwa Anne Marie"); setTestAcc(1); }}
+          className="rounded-full bg-white/20 px-3.5 py-1.5 text-xs font-medium text-white transition hover:bg-white/30"
+        >
+          Tester avec : Nom complet (2 pers.)
+        </button>
+      </div>
+      <PersonalInviteCard guest={{ nom: testNom, accompagnants: testAcc }} />
     </div>
   );
 }
@@ -157,6 +179,7 @@ function Invitation() {
         <div className="page-flow invite-surface relative text-wedding-wine antialiased overflow-x-clip">
           <InvitationSeo />
           <div className="grain-overlay" />
+          <ModernFluidMeshBackground />
           {!opened && <LangToggle floating />}
           <WeddingPetals active={opened} density={24} />
           <AnimatePresence>
@@ -205,9 +228,7 @@ export default function App() {
           <SharedSettings>
             <Routes>
               <Route path="/" element={<Invitation />} />
-              {process.env.NODE_ENV === "development" ? (
-                <Route path="/preview-carte" element={<PersonalCardPreview />} />
-              ) : null}
+              <Route path="/preview-carte" element={<PersonalCardPreview />} />
               <Route path="/espace-maries" element={<CoupleSpace />} />
               <Route
                 path="/reponses"

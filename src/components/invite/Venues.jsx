@@ -8,6 +8,7 @@ import { useI18n } from "@/lib/locale";
 import { usePhoto } from "@/lib/photos";
 import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
+import { ROSE_PINK } from "./Flowers";
 import LuxeCard from "./LuxeCard";
 
 const protectJehovah = (text) => String(text || "").replace(/Jéhovah/g, "Jéh\u2060ovah");
@@ -112,7 +113,13 @@ export default function Venues() {
                           aria-hidden="true"
                           style={{ "--venues-fleuron-delay": `${i * 0.45}s` }}
                         >
-                          <span className="venues-stop-card__time-fleuron-glyph">✿</span>
+                          <img
+                            src={ROSE_PINK}
+                            alt=""
+                            className="venues-stop-card__time-fleuron-image"
+                            decoding="async"
+                            draggable={false}
+                          />
                         </span>
                         <p className="venues-stop-card__time type-accent-time">{venue.time}</p>
                       </div>
