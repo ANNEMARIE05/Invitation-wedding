@@ -9,6 +9,7 @@ import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
 import LuxeCard from "./LuxeCard";
+import ClassicRule from "./ClassicRule";
 import SparkleField from "./SparkleField";
 
 /** Messages de test / maquette — non affichés (état vide à la place). */
@@ -119,13 +120,19 @@ export default function Guestbook() {
       className="guestbook-section relative overflow-hidden px-5 py-16 sm:px-8 sm:py-24 md:py-36 lg:px-16"
       data-testid="guestbook-section"
     >
+      {/* Halo d'ambiance doux en arrière-plan */}
+      <div
+        className="pointer-events-none absolute -top-20 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-gradient-to-br from-wedding-rose-light/40 via-wedding-ivory to-transparent blur-3xl"
+        aria-hidden="true"
+      />
       <SparkleField count={10} className="opacity-45" />
       <div className="relative z-10 mx-auto max-w-4xl">
-        <Chapter index="VII" eyebrow={m.guestbook.chapter} title={m.guestbook.title} script={m.guestbook.script} />
+        <Chapter index="VIII" eyebrow={m.guestbook.chapter} title={m.guestbook.title} script={m.guestbook.script} />
 
-        <LuxeCard animate noInset className="guestbook-form-card px-5 py-6 sm:px-8 sm:py-7">
+        <LuxeCard animate className="guestbook-form-card mx-auto max-w-3xl overflow-hidden px-5 py-6 sm:px-8 sm:py-8">
           <form onSubmit={submit} data-testid="guestbook-form">
-          <p className="guestbook-form-lead">{m.guestbook.formLead}</p>
+          <p className="guestbook-form-lead text-center">{m.guestbook.formLead}</p>
+          <ClassicRule className="mx-auto mt-3 mb-5 max-w-[8rem]" gem="♥" />
           <div className="guestbook-form-grid mt-4">
             <GuestField
               label={m.guestbook.nameLabel}

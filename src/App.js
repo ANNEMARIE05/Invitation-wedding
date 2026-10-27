@@ -204,7 +204,7 @@ function Invitation() {
                 <Rsvp />
                 <TornDivider top="var(--wine-deep)" bottom="var(--ivory-deep)" />
                 <Cadeaux />
-                <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
+                <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
                 <Guestbook />
                 <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
               </main>
