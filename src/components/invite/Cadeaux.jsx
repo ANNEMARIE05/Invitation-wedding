@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Copy, Check, Gift, Heart, PhoneCall, Sparkles } from "lucide-react";
+import { ArrowUpRight, Copy, Check, Gift, PhoneCall } from "lucide-react";
 import { toast } from "sonner";
 import { EASE, MOBILE_MONEY_ACCOUNTS } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
 import LuxeCard from "./LuxeCard";
+import ClassicRule from "./ClassicRule";
+
+const stripEmoji = (s = "") => s.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "").trim();
 
 export default function Cadeaux() {
   const { m } = useI18n();
@@ -66,119 +69,120 @@ export default function Cadeaux() {
           transition={{ duration: 0.8, ease: EASE }}
           className="mx-auto mt-6"
         >
-          <LuxeCard animate={false} className="overflow-hidden p-5 text-center sm:p-10">
+          <LuxeCard animate={false} className="mx-auto max-w-3xl overflow-hidden p-4 text-center sm:p-7">
             {/* Mot des mariés */}
             <div className="mx-auto max-w-xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-wedding-rose-light/60 bg-white/80 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-wedding-wine sm:text-xs">
-                <Sparkles size={14} className="shrink-0 text-wedding-gold-accent" />
-                {m.gifts.tagline || "Votre présence est déjà notre plus beau cadeau 💖"}
-                <Sparkles size={14} className="shrink-0 text-wedding-gold-accent" />
-              </span>
+              <p className="font-script text-[1.65rem] leading-tight text-wedding-rose sm:text-4xl">
+                {stripEmoji(m.gifts.tagline || "Votre présence est déjà notre plus beau cadeau")}
+              </p>
 
-              <p className="mx-auto mt-5 max-w-2xl type-prose text-sm leading-7 text-wedding-wine-deep sm:text-base">
+              <ClassicRule className="mx-auto mt-3 max-w-[9rem]" gem="♥" />
+
+              <p className="mx-auto mt-4 max-w-xl font-display text-[17px] italic leading-relaxed text-wedding-wine-deep/90 sm:text-[19px] sm:leading-8">
                 {m.gifts.lead}
+              </p>
+
+              <p className="mt-4 font-cinzel text-[10px] uppercase tracking-[0.3em] text-wedding-muted sm:text-[11px]">
+                {(m.gifts.beneficiaryLabel || "Bénéficiaire").replace(/\s*:\s*$/, "")}
+                <span className="mx-2 text-wedding-gold-accent">✦</span>
+                <span className="font-semibold text-wedding-wine">{beneficiaryName}</span>
               </p>
             </div>
 
-            <div className="mx-auto mt-8 grid max-w-2xl gap-4 sm:grid-cols-2">
+            <div className="mx-auto mt-6 grid max-w-2xl gap-3 sm:grid-cols-2">
               {accounts.map((account) => {
                 const isCopied = copiedId === account.id;
                 const isOrange = account.id === "orange";
                 return (
-                  <LuxeCard
-                    as="article"
-                    animate={false}
+                  <motion.article
                     key={account.id}
-                    className="overflow-hidden p-4 text-center transition-shadow duration-300 hover:shadow-[0_18px_40px_rgba(42,5,11,0.1)] sm:p-5"
+                    whileHover={{ y: -3 }}
+                    transition={{ duration: 0.25, ease: EASE }}
+                    className="relative overflow-hidden rounded-2xl border bg-white/85 p-3.5 text-left shadow-[0_6px_20px_rgba(42,5,11,0.06)] transition-shadow duration-300 hover:shadow-[0_14px_32px_rgba(42,5,11,0.1)] sm:p-4"
+                    style={{ borderColor: `${account.color}40` }}
                   >
-                    {/* Logo officiel & Badge du service */}
-                    <div className="flex flex-col items-center">
-                      <div className="flex h-14 w-full items-center justify-center">
+                    {/* Liseré couleur de l'opérateur */}
+                    <span
+                      className="pointer-events-none absolute inset-y-0 left-0 w-1"
+                      style={{ backgroundColor: account.color }}
+                      aria-hidden="true"
+                    />
+
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
                         {account.logoUrl ? (
-                          account.id === "wave" ? (
-                            <img
-                              src={account.logoUrl}
-                              alt="Logo Wave"
-                              className="h-12 w-12 rounded-full object-contain shadow-[0_4px_16px_rgba(29,195,244,0.3)] transition-transform duration-300 hover:scale-105"
-                            />
-                          ) : (
-                            <img
-                              src={account.logoUrl}
-                              alt="Logo Orange Money"
-                              className="h-12 max-w-[120px] object-contain transition-transform duration-300 hover:scale-105"
-                            />
-                          )
+                          <img
+                            src={account.logoUrl}
+                            alt={`Logo ${account.name}`}
+                            className={account.id === "wave" ? "h-full w-full rounded-xl object-cover" : "h-8 w-9 object-contain"}
+                          />
                         ) : (
-                          <span className="text-3xl leading-none" aria-hidden="true">
+                          <span className="text-2xl leading-none" aria-hidden="true">
                             {account.iconEmoji}
                           </span>
                         )}
                       </div>
 
-                      <div
-                        className={`mt-2.5 inline-flex items-center rounded-full px-4 py-1 text-xs font-bold uppercase tracking-wider ${account.badgeBg} ${account.badgeText}`}
-                      >
-                        <span>{account.name}</span>
+                      <div className="min-w-0 flex-1">
+                        <span
+                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${account.badgeBg} ${account.badgeText}`}
+                        >
+                          {account.name}
+                        </span>
+                        <p className="mt-0.5 truncate font-display text-lg font-bold tracking-[0.06em] text-wedding-wine-deep sm:text-xl">
+                          {account.number}
+                        </p>
                       </div>
                     </div>
 
-                    <p className="my-3 font-display text-2xl font-bold tracking-[0.08em] text-wedding-wine-deep sm:text-3xl">
-                      {account.number}
-                    </p>
-
-                    <div className="mx-auto inline-flex items-center gap-2 rounded-full bg-wedding-ivory/80 px-3 py-1.5 shadow-sm">
-                      <Heart size={13} className="shrink-0 fill-wedding-rose/30 text-wedding-rose" />
-                      <span className="text-xs font-medium text-wedding-wine-deep">
-                        {m.gifts.beneficiaryLabel} <strong>{beneficiaryName}</strong>
-                      </span>
-                    </div>
-
-                    <div className="mt-5 flex flex-col gap-2.5">
+                    <div className="mt-3 grid grid-cols-2 gap-2">
                       <motion.button
                         type="button"
                         onClick={() => copyNumber(account)}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.97 }}
-                        className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-sm transition-all hover:brightness-105 ${
+                        whileTap={{ scale: 0.96 }}
+                        className={`inline-flex items-center justify-center gap-1.5 rounded-full px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em] text-white shadow-sm transition-all hover:brightness-105 ${
                           isCopied ? "bg-emerald-600" : ""
                         }`}
                         style={isCopied ? undefined : { backgroundColor: account.color }}
                         aria-label={`${m.gifts.copyNumber} ${account.name}`}
                       >
-                        {isCopied ? <Check size={16} /> : <Copy size={15} />}
-                        <span>{isCopied ? m.gifts.copied : m.gifts.copyNumber}</span>
+                        {isCopied ? <Check size={13} /> : <Copy size={12} />}
+                        <span className="truncate">{isCopied ? m.gifts.copied : m.gifts.copyNumber}</span>
                       </motion.button>
 
                       <a
                         href={account.actionUrl}
                         target={isOrange ? undefined : "_blank"}
                         rel={isOrange ? undefined : "noopener noreferrer"}
-                        className={`inline-flex w-full items-center justify-center gap-2 rounded-full border bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] transition-all duration-300 ${
+                        title={isOrange ? m.gifts.orangeAction : m.gifts.openWave}
+                        className={`inline-flex items-center justify-center gap-1.5 rounded-full border bg-white px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.08em] transition-all duration-300 ${
                           isOrange
                             ? "border-[#FF7900]/40 text-[#D35400] hover:border-[#FF7900] hover:bg-[#FF7900] hover:text-white"
                             : "border-[#1DC3F4]/40 text-[#0094C6] hover:border-[#1DC3F4] hover:bg-[#1DC3F4] hover:text-white"
                         }`}
                       >
-                        <span>{isOrange ? m.gifts.orangeAction : m.gifts.openWave}</span>
-                        {isOrange ? <PhoneCall size={14} /> : <ArrowUpRight size={14} />}
+                        <span className="truncate">{isOrange ? m.gifts.orangeAction : m.gifts.openWave}</span>
+                        {isOrange ? <PhoneCall size={12} className="shrink-0" /> : <ArrowUpRight size={12} className="shrink-0" />}
                       </a>
                     </div>
-                  </LuxeCard>
+                  </motion.article>
                 );
               })}
             </div>
 
-            {/* Note douce : Urne */}
-            <div className="mt-8 border-t border-wedding-rose-light/50 pt-6 text-left">
-              <div className="flex w-full items-start gap-3 rounded-2xl border border-wedding-rose-light/40 bg-white/75 p-4 sm:p-5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-wedding-ivory text-wedding-wine">
-                  <Gift size={18} strokeWidth={1.7} aria-hidden="true" />
+            {/* Note douce : Urne & enveloppes */}
+            <div className="mx-auto mt-8 max-w-xl">
+              <div className="flex items-center justify-center gap-3" aria-hidden="true">
+                <span className="h-px flex-1 bg-gradient-to-r from-transparent to-wedding-gold-accent/50" />
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-wedding-gold-accent/50 bg-white/80 text-wedding-wine shadow-[0_4px_14px_rgba(212,175,55,0.18)]">
+                  <Gift size={15} strokeWidth={1.6} />
                 </span>
-                <p className="type-prose self-center text-sm leading-relaxed text-wedding-muted">
-                  {m.gifts.urnNote ||
-                    "Une boîte à vœux et enveloppes sera également à votre disposition le jour de la réception."}
-                </p>
+                <span className="h-px flex-1 bg-gradient-to-l from-transparent to-wedding-gold-accent/50" />
               </div>
+              <p className="mx-auto mt-3 max-w-xl text-center font-display text-[16.5px] italic leading-relaxed text-wedding-wine-deep/85 sm:text-[18.5px] sm:leading-8">
+                {m.gifts.urnNote ||
+                  "Une boîte à vœux et enveloppes sera également à votre disposition le jour de la réception."}
+              </p>
             </div>
           </LuxeCard>
         </motion.div>
