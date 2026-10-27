@@ -32,7 +32,7 @@ export default function IntroGate({ onOpen }) {
     <motion.div
       exit={{ opacity: 0, scale: 1.02 }}
       transition={{ duration: 1, ease: EASE }}
-      className="intro-gate fixed inset-0 z-[80] flex flex-col items-center justify-center px-5 overflow-hidden"
+      className="intro-gate fixed inset-0 z-[80] flex flex-col items-center justify-between py-5 px-4 sm:py-7 sm:px-6 overflow-hidden"
       data-testid="intro-gate"
     >
       <div className="pointer-events-none absolute inset-0 hero-atmosphere" aria-hidden="true" />
@@ -53,95 +53,203 @@ export default function IntroGate({ onOpen }) {
         <span className="hero-corner hero-corner--br" />
       </div>
 
+      {/* Header section: names and welcome */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: opening ? 0 : 1, y: opening ? -8 : 0 }}
-        transition={{ duration: 0.9, delay: 0.25, ease: EASE }}
-        className="relative z-10 mb-5 flex flex-col items-center sm:mb-7"
+        animate={{ opacity: opening ? 0 : 1, y: opening ? -12 : 0 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
+        className="relative z-10 flex flex-col items-center shrink-0 mb-2 sm:mb-4"
       >
-        <p className="text-center font-cinzel text-xs font-semibold uppercase tracking-[0.42em] text-wedding-rose-light sm:text-sm">
+        <p className="text-center font-cinzel text-[11px] sm:text-xs font-semibold uppercase tracking-[0.38em] text-wedding-rose-light">
           {m.intro.invited}
         </p>
-        <ClassicRule className="mt-4 max-w-[11rem]" tone="light" />
-        <p className="mt-4 font-script text-3xl text-[#FFF3D6] drop-shadow-[0_2px_14px_rgba(212,175,55,0.75)] sm:text-4xl md:text-5xl">
+        <ClassicRule className="mt-2.5 sm:mt-3 max-w-[9rem] sm:max-w-[11rem]" tone="light" />
+        <p className="mt-2.5 sm:mt-3 font-script text-2xl sm:text-4xl md:text-5xl text-[#FFF3D6] drop-shadow-[0_2px_14px_rgba(212,175,55,0.75)]">
           <TypewriterText text={coupleLabel} start={!opening} delay={600} speed={55} flowerAtStart flowerAtEnd />
         </p>
       </motion.div>
 
+      {/* Envelope button with 3D flap and sliding letter */}
       <motion.button
         type="button"
         onClick={open}
         data-testid="open-invitation-button"
         aria-label={m.intro.openAria}
-        initial={{ opacity: 0, y: 40, rotateX: 10 }}
+        initial={{ opacity: 0, y: 30, rotateX: 8 }}
         animate={{ opacity: 1, y: 0, rotateX: 0 }}
-        transition={{ duration: 1, delay: 0.7, ease: EASE }}
+        transition={{ duration: 0.9, delay: 0.5, ease: EASE }}
         whileHover={opening ? undefined : { scale: 1.02 }}
         whileTap={opening ? undefined : { scale: 0.98 }}
         style={{ perspective: 1400 }}
         disabled={opening}
-        className="intro-envelope-stage relative z-10 cursor-pointer border-0 bg-transparent p-0 disabled:cursor-default"
+        className="intro-envelope-stage relative z-10 cursor-pointer border-0 bg-transparent p-0 disabled:cursor-default my-auto max-h-[44vh] shrink-0"
       >
         <div className="intro-envelope-glow pointer-events-none" aria-hidden="true" />
         <motion.div
-          className="intro-envelope-body relative w-[88vw] max-w-[480px] aspect-[7/5]"
-          animate={opening ? { y: 30, scale: 0.97 } : { y: [0, -8, 0], scale: 1 }}
-          transition={opening ? { duration: 0.9, delay: 1.2, ease: EASE } : { duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+          className="intro-envelope-body relative w-[min(88vw,430px)] aspect-[7/4.8] max-h-[38vh]"
+          style={{ transformStyle: "preserve-3d" }}
+          animate={opening ? { y: 24, scale: 0.98 } : { y: [0, -6, 0], scale: 1 }}
+          transition={opening ? { duration: 0.8, delay: 0.8, ease: EASE } : { duration: 4, repeat: Infinity, ease: "easeInOut" }}
           data-testid="intro-envelope"
         >
-          <div className="absolute inset-0 rounded-[0.35rem_0.35rem_0.2rem_0.2rem] bg-gradient-to-br from-wedding-wine-accent via-wedding-wine to-wedding-wine-deep shadow-[0_48px_100px_rgba(0,0,0,0.55),0_0_0_1px_rgba(212,175,55,0.15)]" />
+          {/* Envelope Back Plate (z = 0) */}
+          <div
+            className="absolute inset-0 rounded-[0.35rem_0.35rem_0.2rem_0.2rem] bg-gradient-to-br from-wedding-wine-accent via-wedding-wine to-wedding-wine-deep shadow-[0_48px_100px_rgba(0,0,0,0.55),0_0_0_1px_rgba(212,175,55,0.18)]"
+            style={{ transform: "translateZ(0px)" }}
+          />
+          <div
+            className="absolute inset-0 rounded-[0.35rem_0.35rem_0.2rem_0.2rem] bg-gradient-to-b from-black/40 via-transparent to-black/20 pointer-events-none"
+            style={{ transform: "translateZ(1px)" }}
+          />
 
+          {/* The Letter Card inside: z = 2px, slides up into view */}
           <motion.div
-            className="absolute inset-x-4 top-3 bottom-3 z-10 rounded-sm bg-wedding-on-dark shadow-[0_24px_70px_rgba(0,0,0,0.45)]"
-            animate={opening ? { y: "-72%" } : { y: 0 }}
-            transition={{ duration: 1.15, delay: 0.75, ease: EASE }}
+            className="absolute inset-x-3.5 sm:inset-x-4 top-2.5 sm:top-3 bottom-2.5 sm:bottom-3 rounded-sm bg-wedding-on-dark shadow-[0_24px_70px_rgba(0,0,0,0.45)]"
+            style={{ transform: "translateZ(2px)" }}
+            animate={opening ? { y: "-60%" } : { y: 0 }}
+            transition={{ duration: 1.1, delay: 0.65, ease: EASE }}
             data-testid="intro-letter"
           >
-            <div className="absolute inset-1.5 rounded-sm border border-wedding-gold-accent/35 pointer-events-none" />
-            <div className="absolute inset-2.5 rounded-sm border border-wedding-rose/18 pointer-events-none" />
-            <div className="relative flex h-full flex-col items-center justify-center px-6 text-center">
-              <p className="font-cinzel text-[10px] tracking-[0.38em] uppercase text-wedding-wine-accent/85 sm:text-xs">{m.intro.weddingTag}</p>
-              <ClassicRule className="my-3 max-w-[10rem]" gem="♥" />
-              <p className="font-display text-xl tracking-[0.2em] text-wedding-ink sm:text-2xl">{initials}</p>
-              <p className="mt-3 font-display text-2xl font-medium italic leading-tight text-wedding-ink sm:text-3xl">
+            <div className="absolute inset-1 sm:inset-1.5 rounded-sm border border-wedding-gold-accent/40 pointer-events-none" />
+            <div className="absolute inset-2 sm:inset-2.5 rounded-sm border border-wedding-rose/20 pointer-events-none" />
+            <div className="relative flex h-full flex-col items-center justify-center px-4 sm:px-6 text-center">
+              <p className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.38em] uppercase text-wedding-wine-accent/90">
+                {m.intro.weddingTag}
+              </p>
+              <ClassicRule className="my-2 sm:my-3 max-w-[8rem] sm:max-w-[9.5rem]" gem="♥" />
+              <p className="font-display text-lg sm:text-2xl tracking-[0.2em] font-semibold text-wedding-ink">
+                {initials}
+              </p>
+              <p className="mt-1.5 sm:mt-2 font-display text-xl sm:text-3xl font-medium italic leading-tight text-wedding-ink">
                 {coupleLabel}
               </p>
-              <ClassicRule className="my-4 max-w-[9rem]" />
-              <p className="font-cinzel text-[10px] tracking-[0.28em] uppercase text-wedding-wine-accent sm:text-[11px]">{dateLabel}</p>
+              <ClassicRule className="my-2 sm:my-3 max-w-[7rem] sm:max-w-[8.5rem]" />
+              <p className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.28em] uppercase text-wedding-wine-accent font-medium">
+                {dateLabel}
+              </p>
             </div>
           </motion.div>
 
+          {/* Front Pocket: z = 4px, covers the letter from sides and bottom */}
           <div
-            className="absolute inset-0 z-20 rounded-[0.35rem_0.35rem_0.2rem_0.2rem] pointer-events-none"
-            style={{
-              clipPath: "polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%)",
-              background: "linear-gradient(180deg, var(--wine-accent) 0%, var(--wine-deep) 55%, var(--wine) 100%)",
-              boxShadow: "inset 0 -8px 28px rgba(0,0,0,0.35)",
-            }}
-          />
+            className="absolute inset-0 pointer-events-none"
+            style={{ transform: "translateZ(4px)" }}
+          >
+            {/* Left triangular fold */}
+            <div
+              className="absolute inset-0"
+              style={{
+                clipPath: "polygon(0 0, 50% 50%, 0 100%)",
+                background: "linear-gradient(135deg, var(--wine-accent) 0%, var(--wine) 60%, var(--wine-deep) 100%)",
+              }}
+            />
+            {/* Right triangular fold */}
+            <div
+              className="absolute inset-0"
+              style={{
+                clipPath: "polygon(100% 0, 50% 50%, 100% 100%)",
+                background: "linear-gradient(225deg, var(--wine-accent) 0%, var(--wine) 60%, var(--wine-deep) 100%)",
+              }}
+            />
+            {/* Bottom fold overlapping cleanly at center */}
+            <div
+              className="absolute inset-0"
+              style={{
+                clipPath: "polygon(0 100%, 50% 50%, 100% 100%)",
+                background: "linear-gradient(0deg, var(--wine-deep) 0%, var(--wine) 65%, var(--wine-accent) 100%)",
+                filter: "drop-shadow(0 -3px 8px rgba(0, 0, 0, 0.35))",
+              }}
+            />
+            {/* Subtle gold line on the bottom fold */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-25"
+              style={{
+                clipPath: "polygon(0 100%, 50% 50%, 100% 100%)",
+                boxShadow: "inset 0 1px 0 rgba(212, 175, 55, 0.6)",
+              }}
+            />
+          </div>
 
+          {/* 3D Top Flap: starts in front (z = 6px), flips open 180deg behind letter (z = -1px) */}
           <motion.div
-            className="intro-envelope-flap absolute top-0 left-0 right-0"
+            className="intro-envelope-flap-container absolute top-0 left-0 right-0 origin-top"
             style={{
-              height: "56%",
-              transformOrigin: "top center",
-              clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-              background: "linear-gradient(180deg, var(--rose) 0%, var(--wine-accent) 45%, var(--wine-deep) 100%)",
+              height: "52%",
+              transformStyle: "preserve-3d",
+              WebkitTransformStyle: "preserve-3d",
             }}
-            animate={opening ? { rotateX: 180, zIndex: 5 } : { rotateX: 0, zIndex: 30 }}
-            transition={{ duration: 0.9, delay: 0.15, ease: EASE }}
+            animate={
+              opening
+                ? { rotateX: 180, z: [6, 6, -1] }
+                : { rotateX: 0, z: 6 }
+            }
+            transition={{
+              rotateX: { duration: 0.85, delay: 0.15, ease: [0.4, 0, 0.2, 1] },
+              z: { duration: 0.85, delay: 0.15, times: [0, 0.45, 0.55] },
+            }}
             data-testid="intro-flap"
-          />
+          >
+            {/* Flap Outer Face (faces user when closed) */}
+            <div
+              className="intro-envelope-flap-face"
+              style={{
+                clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+                background: "linear-gradient(180deg, var(--rose) 0%, var(--wine-accent) 55%, var(--wine-deep) 100%)",
+                filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.35))",
+                backfaceVisibility: "hidden",
+                WebkitBackfaceVisibility: "hidden",
+              }}
+            >
+              <div
+                className="absolute inset-0 pointer-events-none opacity-30"
+                style={{
+                  clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+                  background: "linear-gradient(180deg, transparent 70%, rgba(212, 175, 55, 0.5) 100%)",
+                }}
+              />
+            </div>
 
-          <div className="absolute left-1/2 top-1/2 z-40 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+            {/* Flap Lining Face (visible when open 180deg, pointing UP behind letter) */}
+            <div
+              className="intro-envelope-flap-face"
+              style={{
+                transform: "rotateY(180deg)",
+                clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+                background: "linear-gradient(180deg, var(--wine-deep) 0%, var(--wine) 45%, var(--wine-accent) 100%)",
+                backfaceVisibility: "hidden",
+                WebkitBackfaceVisibility: "hidden",
+              }}
+            >
+              <div
+                className="absolute inset-0 pointer-events-none opacity-40"
+                style={{
+                  clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+                  background: "radial-gradient(ellipse at 50% 100%, rgba(212, 175, 55, 0.45) 0%, transparent 70%)",
+                }}
+              />
+              <div
+                className="absolute inset-[3px] pointer-events-none opacity-60"
+                style={{
+                  clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+                  borderTop: "1.5px solid rgba(212, 175, 55, 0.65)",
+                }}
+              />
+            </div>
+          </motion.div>
+
+          {/* Wax Seal at the center junction: z = 8px */}
+          <div
+            className="absolute left-1/2 top-1/2 pointer-events-none"
+            style={{ transform: "translate(-50%, -50%) translateZ(8px)" }}
+          >
             <motion.div
-              animate={opening ? { scale: [1, 1.3, 0], opacity: [1, 1, 0], rotate: [0, 10, 0] } : { scale: 1 }}
-              transition={{ duration: 0.55, times: [0, 0.5, 1] }}
+              animate={opening ? { scale: [1, 1.35, 0], opacity: [1, 1, 0], rotate: [0, 12, 0] } : { scale: 1 }}
+              transition={{ duration: 0.5, times: [0, 0.5, 1] }}
               data-testid="intro-seal"
             >
-              <div className="flex h-[3.65rem] w-[3.65rem] items-center justify-center rounded-full border-2 border-wedding-gold-accent/75 bg-gradient-to-br from-wedding-rose-bright via-wedding-rose to-wedding-wine-deep shadow-[0_14px_36px_rgba(237,30,121,0.55),0_0_0_4px_rgba(212,175,55,0.2)]">
-                <span className="font-cinzel text-[10px] font-semibold tracking-[0.18em] text-wedding-on-dark">
-                  {letterBride}&{letterGroom}
+              <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border-2 border-wedding-gold-accent/80 bg-gradient-to-br from-wedding-rose-bright via-wedding-rose to-wedding-wine-deep shadow-[0_14px_36px_rgba(237,30,121,0.55),0_0_0_4px_rgba(212,175,55,0.25)]">
+                <span className="font-cinzel text-[11px] sm:text-xs font-semibold tracking-[0.16em] text-wedding-on-dark drop-shadow-sm">
+                  {letterGroom}&{letterBride}
                 </span>
               </div>
             </motion.div>
@@ -149,24 +257,27 @@ export default function IntroGate({ onOpen }) {
         </motion.div>
       </motion.button>
 
+      {/* Footer section: button and instructions */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: opening ? 0 : 1, y: 0 }}
-        transition={{ duration: 0.85, delay: 1.15, ease: EASE }}
-        className="relative z-10 mt-8 flex flex-col items-center gap-5"
+        animate={{ opacity: opening ? 0 : 1, y: opening ? 12 : 0 }}
+        transition={{ duration: 0.8, delay: 0.9, ease: EASE }}
+        className="relative z-10 flex flex-col items-center gap-3 sm:gap-4 shrink-0 mt-2 sm:mt-4"
       >
-        <ClassicRule className="max-w-[9rem]" tone="light" gem="✦" />
+        <ClassicRule className="max-w-[8rem] sm:max-w-[9rem]" tone="light" gem="✦" />
         <button
           type="button"
           onClick={open}
           disabled={opening}
           data-testid="intro-open-cta"
-          className="btn-rejoindre"
+          className="btn-rejoindre text-xs sm:text-sm py-2.5 px-6 sm:py-3 sm:px-8"
         >
           <span className="relative z-[1]">{m.intro.open}</span>
-          <ArrowRight size={17} className="btn-rejoindre-icon relative z-[1]" aria-hidden />
+          <ArrowRight size={16} className="btn-rejoindre-icon relative z-[1]" aria-hidden />
         </button>
-        <p className="font-cinzel text-xs tracking-[0.28em] uppercase text-[#F2D7DF] font-medium sm:text-sm">{m.intro.tapEnvelope}</p>
+        <p className="font-cinzel text-[10px] sm:text-xs tracking-[0.25em] uppercase text-[#F2D7DF] font-medium">
+          {m.intro.tapEnvelope}
+        </p>
       </motion.div>
     </motion.div>
   );
