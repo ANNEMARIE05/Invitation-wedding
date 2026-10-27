@@ -18,7 +18,6 @@ export default function IntroGate({ onOpen }) {
   const { dateLabel, coupleLabel, initials, bride, groom } = useSettings();
   const { m } = useI18n();
   const [opening, setOpening] = useState(false);
-  const [flapBehind, setFlapBehind] = useState(false);
   const letterBride = bride.charAt(0).toUpperCase();
   const letterGroom = groom.charAt(0).toUpperCase();
 
@@ -26,9 +25,7 @@ export default function IntroGate({ onOpen }) {
     if (opening) return;
     window.dispatchEvent(new Event("wedding-music-start"));
     setOpening(true);
-    // Le rabat passe derrière la lettre dès qu'il dépasse la verticale
-    setTimeout(() => setFlapBehind(true), 560);
-    setTimeout(onOpen, 2600);
+    setTimeout(onOpen, 2500);
   };
 
   return (
@@ -173,30 +170,36 @@ export default function IntroGate({ onOpen }) {
             />
           </div>
 
-          {/* Top Flap: in front when closed, flips open and drops behind the letter */}
+          {/* Top Flap: in front when closed, flips open 180deg and rests behind the letter */}
           <motion.div
-            className="intro-envelope-flap-container absolute top-0 left-0 right-0 origin-top"
+            className="intro-envelope-flap-container absolute top-0 left-0 right-0 origin-top pointer-events-none"
             style={{
               height: "52%",
-              zIndex: flapBehind ? 5 : 30,
               transformPerspective: 1200,
               transformStyle: "preserve-3d",
               WebkitTransformStyle: "preserve-3d",
             }}
             initial={false}
-            animate={{ rotateX: opening ? 180 : 0 }}
-            transition={{ duration: 0.85, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
+            animate={{
+              rotateX: opening ? 180 : 0,
+              zIndex: opening ? [30, 30, 5, 5] : 30,
+            }}
+            transition={{
+              rotateX: { duration: 0.85, delay: 0.15, ease: [0.4, 0, 0.2, 1] },
+              zIndex: { duration: 0.85, delay: 0.15, times: [0, 0.48, 0.52, 1] },
+            }}
             data-testid="intro-flap"
           >
-            {/* Flap Outer Face (faces user when closed) */}
-            <div
-              className="intro-envelope-flap-face"
+            {/* Flap Outer Face (visible when flap is closed / opening 0deg -> 90deg) */}
+            <motion.div
+              className="absolute inset-0"
+              initial={false}
+              animate={{ opacity: opening ? [1, 1, 0, 0] : 1 }}
+              transition={{ duration: 0.85, delay: 0.15, times: [0, 0.46, 0.52, 1] }}
               style={{
                 clipPath: "polygon(0 0, 100% 0, 50% 100%)",
                 background: "linear-gradient(180deg, var(--rose) 0%, var(--wine-accent) 55%, var(--wine-deep) 100%)",
-                filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.35))",
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
+                boxShadow: "0 6px 16px rgba(0,0,0,0.35)",
               }}
             >
               <div
@@ -206,34 +209,34 @@ export default function IntroGate({ onOpen }) {
                   background: "linear-gradient(180deg, transparent 70%, rgba(212, 175, 55, 0.5) 100%)",
                 }}
               />
-            </div>
+            </motion.div>
 
-            {/* Flap Lining Face (visible when open 180deg, pointing UP behind letter) */}
-            <div
-              className="intro-envelope-flap-face"
+            {/* Flap Lining Face (visible when flap opens past 90deg -> 180deg, resting pointing UP behind the letter) */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              initial={false}
+              animate={{ opacity: opening ? [0, 0, 1, 1] : 0 }}
+              transition={{ duration: 0.85, delay: 0.15, times: [0, 0.46, 0.52, 1] }}
               style={{
-                transform: "rotateY(180deg)",
                 clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                background: "linear-gradient(180deg, var(--wine-deep) 0%, var(--wine) 45%, var(--wine-accent) 100%)",
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
+                background: "linear-gradient(0deg, var(--wine-deep) 0%, var(--wine) 45%, var(--wine-accent) 100%)",
               }}
             >
               <div
-                className="absolute inset-0 pointer-events-none opacity-40"
+                className="absolute inset-0 opacity-40"
                 style={{
                   clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                  background: "radial-gradient(ellipse at 50% 100%, rgba(212, 175, 55, 0.45) 0%, transparent 70%)",
+                  background: "radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.45) 0%, transparent 70%)",
                 }}
               />
               <div
-                className="absolute inset-[3px] pointer-events-none opacity-60"
+                className="absolute inset-0 opacity-60"
                 style={{
                   clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                  borderTop: "1.5px solid rgba(212, 175, 55, 0.65)",
+                  boxShadow: "inset 0 -1.5px 0 rgba(212, 175, 55, 0.7)",
                 }}
               />
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* Wax Seal at the center junction */}
