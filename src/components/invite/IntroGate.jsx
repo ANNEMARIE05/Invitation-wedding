@@ -18,6 +18,7 @@ export default function IntroGate({ onOpen }) {
   const { dateLabel, coupleLabel, initials, bride, groom } = useSettings();
   const { m } = useI18n();
   const [opening, setOpening] = useState(false);
+  const [flapBehind, setFlapBehind] = useState(false);
   const letterBride = bride.charAt(0).toUpperCase();
   const letterGroom = groom.charAt(0).toUpperCase();
 
@@ -25,7 +26,9 @@ export default function IntroGate({ onOpen }) {
     if (opening) return;
     window.dispatchEvent(new Event("wedding-music-start"));
     setOpening(true);
-    setTimeout(onOpen, 2400);
+    // Le rabat passe derrière la lettre dès qu'il dépasse la verticale
+    setTimeout(() => setFlapBehind(true), 560);
+    setTimeout(onOpen, 2600);
   };
 
   return (
@@ -87,27 +90,27 @@ export default function IntroGate({ onOpen }) {
         <div className="intro-envelope-glow pointer-events-none" aria-hidden="true" />
         <motion.div
           className="intro-envelope-body relative w-[min(88vw,430px)] aspect-[7/4.8] max-h-[38vh]"
-          style={{ transformStyle: "preserve-3d" }}
-          animate={opening ? { y: 24, scale: 0.98 } : { y: [0, -6, 0], scale: 1 }}
-          transition={opening ? { duration: 0.8, delay: 0.8, ease: EASE } : { duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          animate={opening ? { y: 40, scale: 0.97 } : { y: [0, -6, 0], scale: 1 }}
+          transition={opening ? { duration: 1, delay: 0.7, ease: EASE } : { duration: 4, repeat: Infinity, ease: "easeInOut" }}
           data-testid="intro-envelope"
         >
-          {/* Envelope Back Plate (z = 0) */}
+          {/* Envelope Back Plate */}
           <div
             className="absolute inset-0 rounded-[0.35rem_0.35rem_0.2rem_0.2rem] bg-gradient-to-br from-wedding-wine-accent via-wedding-wine to-wedding-wine-deep shadow-[0_48px_100px_rgba(0,0,0,0.55),0_0_0_1px_rgba(212,175,55,0.18)]"
-            style={{ transform: "translateZ(0px)" }}
+            style={{ zIndex: 0 }}
           />
           <div
             className="absolute inset-0 rounded-[0.35rem_0.35rem_0.2rem_0.2rem] bg-gradient-to-b from-black/40 via-transparent to-black/20 pointer-events-none"
-            style={{ transform: "translateZ(1px)" }}
+            style={{ zIndex: 1 }}
           />
 
-          {/* The Letter Card inside: z = 2px, slides up into view */}
+          {/* The Letter Card inside: slides up out of the pocket */}
           <motion.div
             className="absolute inset-x-3.5 sm:inset-x-4 top-2.5 sm:top-3 bottom-2.5 sm:bottom-3 rounded-sm bg-wedding-on-dark shadow-[0_24px_70px_rgba(0,0,0,0.45)]"
-            style={{ transform: "translateZ(2px)" }}
-            animate={opening ? { y: "-60%" } : { y: 0 }}
-            transition={{ duration: 1.1, delay: 0.65, ease: EASE }}
+            style={{ zIndex: 10 }}
+            initial={false}
+            animate={opening ? { y: "-78%", scale: 1.03 } : { y: 0, scale: 1 }}
+            transition={{ duration: 1.25, delay: 0.75, ease: EASE }}
             data-testid="intro-letter"
           >
             <div className="absolute inset-1 sm:inset-1.5 rounded-sm border border-wedding-gold-accent/40 pointer-events-none" />
@@ -130,10 +133,10 @@ export default function IntroGate({ onOpen }) {
             </div>
           </motion.div>
 
-          {/* Front Pocket: z = 4px, covers the letter from sides and bottom */}
+          {/* Front Pocket: covers the letter from sides and bottom */}
           <div
             className="absolute inset-0 pointer-events-none"
-            style={{ transform: "translateZ(4px)" }}
+            style={{ zIndex: 20 }}
           >
             {/* Left triangular fold */}
             <div
@@ -170,23 +173,19 @@ export default function IntroGate({ onOpen }) {
             />
           </div>
 
-          {/* 3D Top Flap: starts in front (z = 6px), flips open 180deg behind letter (z = -1px) */}
+          {/* Top Flap: in front when closed, flips open and drops behind the letter */}
           <motion.div
             className="intro-envelope-flap-container absolute top-0 left-0 right-0 origin-top"
             style={{
               height: "52%",
+              zIndex: flapBehind ? 5 : 30,
+              transformPerspective: 1200,
               transformStyle: "preserve-3d",
               WebkitTransformStyle: "preserve-3d",
             }}
-            animate={
-              opening
-                ? { rotateX: 180, z: [6, 6, -1] }
-                : { rotateX: 0, z: 6 }
-            }
-            transition={{
-              rotateX: { duration: 0.85, delay: 0.15, ease: [0.4, 0, 0.2, 1] },
-              z: { duration: 0.85, delay: 0.15, times: [0, 0.45, 0.55] },
-            }}
+            initial={false}
+            animate={{ rotateX: opening ? 180 : 0 }}
+            transition={{ duration: 0.85, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
             data-testid="intro-flap"
           >
             {/* Flap Outer Face (faces user when closed) */}
@@ -237,10 +236,10 @@ export default function IntroGate({ onOpen }) {
             </div>
           </motion.div>
 
-          {/* Wax Seal at the center junction: z = 8px */}
+          {/* Wax Seal at the center junction */}
           <div
             className="absolute left-1/2 top-1/2 pointer-events-none"
-            style={{ transform: "translate(-50%, -50%) translateZ(8px)" }}
+            style={{ transform: "translate(-50%, -50%)", zIndex: 40 }}
           >
             <motion.div
               animate={opening ? { scale: [1, 1.35, 0], opacity: [1, 1, 0], rotate: [0, 12, 0] } : { scale: 1 }}
