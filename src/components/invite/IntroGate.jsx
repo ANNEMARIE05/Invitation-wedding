@@ -18,6 +18,7 @@ export default function IntroGate({ onOpen }) {
   const { dateLabel, coupleLabel, initials, bride, groom } = useSettings();
   const { m } = useI18n();
   const [opening, setOpening] = useState(false);
+  const [flapBehind, setFlapBehind] = useState(false);
   const letterBride = bride.charAt(0).toUpperCase();
   const letterGroom = groom.charAt(0).toUpperCase();
 
@@ -25,14 +26,15 @@ export default function IntroGate({ onOpen }) {
     if (opening) return;
     window.dispatchEvent(new Event("wedding-music-start"));
     setOpening(true);
-    setTimeout(onOpen, 2500);
+    setTimeout(() => setFlapBehind(true), 460);
+    setTimeout(onOpen, 2200);
   };
 
   return (
     <motion.div
       exit={{ opacity: 0, scale: 1.02 }}
-      transition={{ duration: 1, ease: EASE }}
-      className="intro-gate fixed inset-0 z-[80] flex flex-col items-center justify-between py-5 px-4 sm:py-7 sm:px-6 overflow-hidden"
+      transition={{ duration: 0.85, ease: EASE }}
+      className="intro-gate fixed inset-0 z-[80] flex flex-col items-center justify-between py-5 px-4 sm:py-7 sm:px-6 overflow-hidden bg-[#25040E]"
       data-testid="intro-gate"
     >
       <div className="pointer-events-none absolute inset-0 hero-atmosphere" aria-hidden="true" />
@@ -75,39 +77,45 @@ export default function IntroGate({ onOpen }) {
         onClick={open}
         data-testid="open-invitation-button"
         aria-label={m.intro.openAria}
-        initial={{ opacity: 0, y: 30, rotateX: 8 }}
-        animate={{ opacity: 1, y: 0, rotateX: 0 }}
-        transition={{ duration: 0.9, delay: 0.5, ease: EASE }}
-        whileHover={opening ? undefined : { scale: 1.02 }}
-        whileTap={opening ? undefined : { scale: 0.98 }}
-        style={{ perspective: 1400 }}
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.4, ease: EASE }}
+        whileHover={opening ? undefined : { scale: 1.015 }}
+        whileTap={opening ? undefined : { scale: 0.985 }}
         disabled={opening}
-        className="intro-envelope-stage relative z-10 cursor-pointer border-0 bg-transparent p-0 disabled:cursor-default my-auto max-h-[44vh] shrink-0"
+        className="intro-envelope-stage relative z-10 cursor-pointer border-0 bg-transparent p-0 disabled:cursor-default my-auto max-h-[44vh] shrink-0 select-none"
       >
         <div className="intro-envelope-glow pointer-events-none" aria-hidden="true" />
         <motion.div
-          className="intro-envelope-body relative w-[min(88vw,430px)] aspect-[7/4.8] max-h-[38vh]"
-          animate={opening ? { y: 40, scale: 0.97 } : { y: [0, -6, 0], scale: 1 }}
-          transition={opening ? { duration: 1, delay: 0.7, ease: EASE } : { duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="intro-envelope-body relative w-[min(88vw,420px)] max-h-[38vh]"
+          style={{
+            aspectRatio: "7 / 4.8",
+            minHeight: "220px",
+          }}
+          animate={opening ? { y: 28, scale: 0.98 } : { y: 0, scale: 1 }}
+          transition={{ duration: 0.8, ease: EASE }}
           data-testid="intro-envelope"
         >
           {/* Envelope Back Plate */}
           <div
-            className="absolute inset-0 rounded-[0.35rem_0.35rem_0.2rem_0.2rem] bg-gradient-to-br from-wedding-wine-accent via-wedding-wine to-wedding-wine-deep shadow-[0_48px_100px_rgba(0,0,0,0.55),0_0_0_1px_rgba(212,175,55,0.18)]"
-            style={{ zIndex: 0 }}
+            className="absolute inset-0 rounded-[0.45rem] shadow-[0_30px_70px_rgba(0,0,0,0.55),0_0_0_1px_rgba(212,175,55,0.22)]"
+            style={{
+              zIndex: 1,
+              background: "linear-gradient(145deg, var(--wine-accent) 0%, var(--wine) 55%, var(--wine-deep) 100%)",
+            }}
           />
           <div
-            className="absolute inset-0 rounded-[0.35rem_0.35rem_0.2rem_0.2rem] bg-gradient-to-b from-black/40 via-transparent to-black/20 pointer-events-none"
-            style={{ zIndex: 1 }}
+            className="absolute inset-0 rounded-[0.45rem] bg-gradient-to-b from-black/35 via-transparent to-black/25 pointer-events-none"
+            style={{ zIndex: 2 }}
           />
 
           {/* The Letter Card inside: slides up out of the pocket */}
           <motion.div
-            className="absolute inset-x-3.5 sm:inset-x-4 top-2.5 sm:top-3 bottom-2.5 sm:bottom-3 rounded-sm bg-wedding-on-dark shadow-[0_24px_70px_rgba(0,0,0,0.45)]"
+            className="absolute inset-x-3 sm:inset-x-4 top-2.5 sm:top-3 bottom-2.5 sm:bottom-3 rounded-[0.35rem] bg-wedding-on-dark shadow-[0_20px_50px_rgba(0,0,0,0.45)] pointer-events-none"
             style={{ zIndex: 10 }}
             initial={false}
-            animate={opening ? { y: "-78%", scale: 1.03 } : { y: 0, scale: 1 }}
-            transition={{ duration: 1.25, delay: 0.75, ease: EASE }}
+            animate={opening ? { y: "-74%", scale: 1.02 } : { y: 0, scale: 1 }}
+            transition={{ duration: 1.15, delay: 0.55, ease: EASE }}
             data-testid="intro-letter"
           >
             <div className="absolute inset-1 sm:inset-1.5 rounded-sm border border-wedding-gold-accent/40 pointer-events-none" />
@@ -116,14 +124,14 @@ export default function IntroGate({ onOpen }) {
               <p className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.38em] uppercase text-wedding-wine-accent/90">
                 {m.intro.weddingTag}
               </p>
-              <ClassicRule className="my-2 sm:my-3 max-w-[8rem] sm:max-w-[9.5rem]" gem="♥" />
+              <ClassicRule className="my-1.5 sm:my-2.5 max-w-[8rem] sm:max-w-[9.5rem]" gem="♥" />
               <p className="font-display text-lg sm:text-2xl tracking-[0.2em] font-semibold text-wedding-ink">
                 {initials}
               </p>
-              <p className="mt-1.5 sm:mt-2 font-display text-xl sm:text-3xl font-medium italic leading-tight text-wedding-ink">
+              <p className="mt-1 sm:mt-1.5 font-display text-xl sm:text-3xl font-medium italic leading-tight text-wedding-ink">
                 {coupleLabel}
               </p>
-              <ClassicRule className="my-2 sm:my-3 max-w-[7rem] sm:max-w-[8.5rem]" />
+              <ClassicRule className="my-1.5 sm:my-2.5 max-w-[7rem] sm:max-w-[8.5rem]" />
               <p className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.28em] uppercase text-wedding-wine-accent font-medium">
                 {dateLabel}
               </p>
@@ -175,27 +183,18 @@ export default function IntroGate({ onOpen }) {
             className="intro-envelope-flap-container absolute top-0 left-0 right-0 origin-top pointer-events-none"
             style={{
               height: "52%",
-              transformPerspective: 1200,
+              zIndex: flapBehind ? 5 : 30,
               transformStyle: "preserve-3d",
               WebkitTransformStyle: "preserve-3d",
             }}
             initial={false}
-            animate={{
-              rotateX: opening ? 180 : 0,
-              zIndex: opening ? [30, 30, 5, 5] : 30,
-            }}
-            transition={{
-              rotateX: { duration: 0.85, delay: 0.15, ease: [0.4, 0, 0.2, 1] },
-              zIndex: { duration: 0.85, delay: 0.15, times: [0, 0.48, 0.52, 1] },
-            }}
+            animate={{ rotateX: opening ? 180 : 0 }}
+            transition={{ duration: 0.85, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
             data-testid="intro-flap"
           >
-            {/* Flap Outer Face (visible when flap is closed / opening 0deg -> 90deg) */}
-            <motion.div
-              className="absolute inset-0"
-              initial={false}
-              animate={{ opacity: opening ? [1, 1, 0, 0] : 1 }}
-              transition={{ duration: 0.85, delay: 0.15, times: [0, 0.46, 0.52, 1] }}
+            {/* Flap Outer Face (visible when closed / opening 0deg -> 90deg) */}
+            <div
+              className="intro-envelope-flap-face"
               style={{
                 clipPath: "polygon(0 0, 100% 0, 50% 100%)",
                 background: "linear-gradient(180deg, var(--rose) 0%, var(--wine-accent) 55%, var(--wine-deep) 100%)",
@@ -209,14 +208,11 @@ export default function IntroGate({ onOpen }) {
                   background: "linear-gradient(180deg, transparent 70%, rgba(212, 175, 55, 0.5) 100%)",
                 }}
               />
-            </motion.div>
+            </div>
 
-            {/* Flap Lining Face (visible when flap opens past 90deg -> 180deg, resting pointing UP behind the letter) */}
-            <motion.div
-              className="absolute inset-0 pointer-events-none"
-              initial={false}
-              animate={{ opacity: opening ? [0, 0, 1, 1] : 0 }}
-              transition={{ duration: 0.85, delay: 0.15, times: [0, 0.46, 0.52, 1] }}
+            {/* Flap Lining Face (visible when open 180deg, pointing UP behind the letter) */}
+            <div
+              className="intro-envelope-flap-face intro-envelope-flap-face--back pointer-events-none"
               style={{
                 clipPath: "polygon(0 0, 100% 0, 50% 100%)",
                 background: "linear-gradient(0deg, var(--wine-deep) 0%, var(--wine) 45%, var(--wine-accent) 100%)",
@@ -236,7 +232,7 @@ export default function IntroGate({ onOpen }) {
                   boxShadow: "inset 0 -1.5px 0 rgba(212, 175, 55, 0.7)",
                 }}
               />
-            </motion.div>
+            </div>
           </motion.div>
 
           {/* Wax Seal at the center junction */}
@@ -245,8 +241,8 @@ export default function IntroGate({ onOpen }) {
             style={{ transform: "translate(-50%, -50%)", zIndex: 40 }}
           >
             <motion.div
-              animate={opening ? { scale: [1, 1.35, 0], opacity: [1, 1, 0], rotate: [0, 12, 0] } : { scale: 1 }}
-              transition={{ duration: 0.5, times: [0, 0.5, 1] }}
+              animate={opening ? { scale: 0, opacity: 0 } : { scale: 1, opacity: 1 }}
+              transition={{ duration: 0.45, ease: EASE }}
               data-testid="intro-seal"
             >
               <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border-2 border-wedding-gold-accent/80 bg-gradient-to-br from-wedding-rose-bright via-wedding-rose to-wedding-wine-deep shadow-[0_14px_36px_rgba(237,30,121,0.55),0_0_0_4px_rgba(212,175,55,0.25)]">

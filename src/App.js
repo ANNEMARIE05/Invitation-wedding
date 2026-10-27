@@ -137,6 +137,13 @@ function Invitation() {
   });
 
   useEffect(() => {
+    // Sur appareils tactiles (smartphones), préserver le défilement fluide natif du navigateur pour éviter les secousses
+    const isTouch = typeof window !== "undefined" && (window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window);
+    if (isTouch) {
+      window.__lenis = null;
+      return;
+    }
+
     const lenis = new Lenis({
       duration: 1.15,
       smoothWheel: true,
@@ -160,6 +167,7 @@ function Invitation() {
   useEffect(() => {
     document.body.style.overflow = opened ? "" : "hidden";
     if (opened) {
+      window.scrollTo(0, 0);
       window.__lenis?.start();
       const kickMotionObservers = () => {
         window.__lenis?.resize();

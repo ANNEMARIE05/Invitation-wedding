@@ -661,12 +661,12 @@ body {
         border-radius: 46% 54% 62% 38% / 48% 42% 58% 52%;
     }
     50% {
-        transform: translate3d(60px, 45px, 0) scale(1.12) rotate(18deg);
-        border-radius: 58% 42% 48% 52% / 54% 60% 40% 46%;
+        transform: translate3d(14px, 10px, 0) scale(1.05) rotate(4deg);
+        border-radius: 52% 48% 50% 50% / 50% 52% 48% 50%;
     }
     100% {
-        transform: translate3d(20px, 90px, 0) scale(0.95) rotate(-14deg);
-        border-radius: 40% 60% 55% 45% / 46% 50% 50% 54%;
+        transform: translate3d(-10px, 12px, 0) scale(0.98) rotate(-3deg);
+        border-radius: 44% 56% 54% 46% / 48% 50% 50% 52%;
     }
 }
 
@@ -676,12 +676,12 @@ body {
         border-radius: 52% 48% 45% 55% / 42% 58% 42% 58%;
     }
     50% {
-        transform: translate3d(-70px, -50px, 0) scale(1.15) rotate(-22deg);
-        border-radius: 44% 56% 60% 40% / 52% 46% 54% 48%;
+        transform: translate3d(-14px, -10px, 0) scale(1.04) rotate(-4deg);
+        border-radius: 48% 52% 52% 48% / 50% 48% 52% 50%;
     }
     100% {
-        transform: translate3d(-40px, 40px, 0) scale(0.92) rotate(16deg);
-        border-radius: 60% 40% 50% 50% / 48% 56% 44% 52%;
+        transform: translate3d(-8px, 10px, 0) scale(0.98) rotate(3deg);
+        border-radius: 54% 46% 48% 52% / 50% 52% 48% 50%;
     }
 }
 
@@ -691,12 +691,12 @@ body {
         border-radius: 50% 50% 42% 58% / 56% 44% 56% 44%;
     }
     50% {
-        transform: translate3d(50px, -60px, 0) scale(1.1) rotate(12deg);
-        border-radius: 44% 56% 58% 42% / 48% 52% 48% 52%;
+        transform: translate3d(10px, -12px, 0) scale(1.03) rotate(3deg);
+        border-radius: 48% 52% 50% 50% / 50% 50% 50% 50%;
     }
     100% {
-        transform: translate3d(-35px, -30px, 0) scale(0.96) rotate(-10deg);
-        border-radius: 54% 46% 46% 54% / 52% 46% 54% 48%;
+        transform: translate3d(-8px, -6px, 0) scale(0.98) rotate(-2deg);
+        border-radius: 52% 48% 48% 52% / 52% 48% 52% 48%;
     }
 }
 
@@ -705,22 +705,28 @@ body {
         transform: translate3d(0, 0, 0) scale(1);
     }
     50% {
-        transform: translate3d(40px, -45px, 0) scale(1.18);
+        transform: translate3d(8px, -8px, 0) scale(1.05);
     }
     100% {
-        transform: translate3d(-30px, 35px, 0) scale(0.94);
+        transform: translate3d(-6px, 8px, 0) scale(0.97);
     }
 }
 
-/* Voiles vectoriels soyeux avec ondulation lente */
+/* Voiles vectoriels soyeux avec ondulation lente et sereine */
 .fluid-silk-svg-ribbons {
     position: absolute;
-    inset: -10% -5%;
+    inset: -5%;
     width: 110%;
-    height: 120%;
+    height: 110%;
     pointer-events: none;
-    opacity: 0.65;
+    opacity: 0.45;
     mix-blend-mode: multiply;
+}
+
+@media (max-width: 768px) {
+    .fluid-silk-svg-ribbons {
+        opacity: 0.28;
+    }
 }
 
 .silk-ribbon {
@@ -729,68 +735,50 @@ body {
 }
 
 .silk-ribbon--1 {
-    animation: silk-wave-undulate-1 9s ease-in-out infinite alternate;
+    animation: silk-wave-undulate-1 32s ease-in-out infinite alternate;
 }
 
 .silk-ribbon--2 {
-    animation: silk-wave-undulate-2 11s ease-in-out infinite alternate;
+    animation: silk-wave-undulate-2 36s ease-in-out infinite alternate;
 }
 
 .silk-ribbon--3 {
-    animation: silk-wave-undulate-3 13s ease-in-out infinite alternate;
+    animation: silk-wave-undulate-3 40s ease-in-out infinite alternate;
 }
 
 @keyframes silk-wave-undulate-1 {
     0% {
-        transform: translate3d(0, 0, 0) scaleY(1) skewX(0deg);
-    }
-    25% {
-        transform: translate3d(120px, -90px, 0) scaleY(1.25) skewX(-7deg);
+        transform: translate3d(0, 0, 0) scaleY(1);
     }
     50% {
-        transform: translate3d(180px, 30px, 0) scaleY(0.82) skewX(6deg);
-    }
-    75% {
-        transform: translate3d(30px, 110px, 0) scaleY(1.22) skewX(-6deg);
+        transform: translate3d(12px, -8px, 0) scaleY(1.04);
     }
     100% {
-        transform: translate3d(-140px, 50px, 0) scaleY(0.8) skewX(7deg);
+        transform: translate3d(-8px, 6px, 0) scaleY(0.97);
     }
 }
 
 @keyframes silk-wave-undulate-2 {
     0% {
-        transform: translate3d(0, 0, 0) scaleY(1) skewX(0deg);
-    }
-    25% {
-        transform: translate3d(-130px, 100px, 0) scaleY(1.28) skewX(7deg);
+        transform: translate3d(0, 0, 0) scaleY(1);
     }
     50% {
-        transform: translate3d(-200px, -40px, 0) scaleY(0.8) skewX(-6deg);
-    }
-    75% {
-        transform: translate3d(-40px, -120px, 0) scaleY(1.2) skewX(6deg);
+        transform: translate3d(-10px, 8px, 0) scaleY(1.03);
     }
     100% {
-        transform: translate3d(150px, -70px, 0) scaleY(0.82) skewX(-7deg);
+        transform: translate3d(8px, -6px, 0) scaleY(0.98);
     }
 }
 
 @keyframes silk-wave-undulate-3 {
     0% {
-        transform: translate3d(0, 0, 0) scaleY(1) skewX(0deg);
-    }
-    25% {
-        transform: translate3d(110px, -130px, 0) scaleY(1.22) skewX(-6deg);
+        transform: translate3d(0, 0, 0) scaleY(1);
     }
     50% {
-        transform: translate3d(170px, 20px, 0) scaleY(0.8) skewX(7deg);
-    }
-    75% {
-        transform: translate3d(20px, 120px, 0) scaleY(1.26) skewX(-7deg);
+        transform: translate3d(8px, -10px, 0) scaleY(1.03);
     }
     100% {
-        transform: translate3d(-130px, 80px, 0) scaleY(0.82) skewX(6deg);
+        transform: translate3d(-10px, 6px, 0) scaleY(0.97);
     }
 }
 
@@ -4778,18 +4766,31 @@ input:focus, select:focus, textarea:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    perspective: 1400px;
-    -webkit-perspective: 1400px;
 }
 
 .intro-envelope-body {
     position: relative;
+    width: min(88vw, 420px);
+    aspect-ratio: 7 / 4.8;
+    min-height: 220px;
 }
 
 .intro-envelope-flap-container {
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
+    perspective: 1200px;
     will-change: transform;
+}
+
+.intro-envelope-flap-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.intro-envelope-flap-face--back {
+    transform: rotateX(180deg);
 }
 
 .intro-envelope-glow {
