@@ -619,6 +619,13 @@ body {
     will-change: transform, border-radius;
 }
 
+@media (max-width: 768px) {
+    .fluid-silk-blob {
+        filter: blur(36px);
+        will-change: auto;
+    }
+}
+
 .fluid-silk-blob--rose {
     top: 5%;
     left: -10%;
@@ -4766,13 +4773,18 @@ input:focus, select:focus, textarea:focus {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    max-width: 420px;
+    margin-inline: auto;
 }
 
 .intro-envelope-body {
     position: relative;
     width: min(88vw, 420px);
+    height: calc(min(88vw, 420px) * 0.6857);
     aspect-ratio: 7 / 4.8;
     min-height: 220px;
+    max-height: 38vh;
 }
 
 .intro-envelope-flap-container {
@@ -4798,7 +4810,7 @@ input:focus, select:focus, textarea:focus {
     inset: -18% -12%;
     z-index: 0;
     border-radius: 50%;
-    background: radial-gradient(ellipse 60% 50% at 50% 55%, rgba(237, 30, 121, 0.38), transparent 68%);
+    background: radial-gradient(ellipse 60% 50% at 50% 55%, rgba(212, 175, 55, 0.28), transparent 68%);
     filter: blur(22px);
     animation: aura-pulse 5.5s ease-in-out infinite;
 }

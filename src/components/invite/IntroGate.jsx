@@ -26,7 +26,7 @@ export default function IntroGate({ onOpen }) {
     if (opening) return;
     window.dispatchEvent(new Event("wedding-music-start"));
     setOpening(true);
-    setTimeout(() => setFlapBehind(true), 460);
+    setTimeout(() => setFlapBehind(true), 600);
     setTimeout(onOpen, 2200);
   };
 
@@ -35,6 +35,7 @@ export default function IntroGate({ onOpen }) {
       exit={{ opacity: 0, scale: 1.02 }}
       transition={{ duration: 0.85, ease: EASE }}
       className="intro-gate fixed inset-0 z-[80] flex flex-col items-center justify-between py-5 px-4 sm:py-7 sm:px-6 overflow-hidden bg-[#25040E]"
+      style={{ pointerEvents: opening ? "none" : "auto" }}
       data-testid="intro-gate"
     >
       <div className="pointer-events-none absolute inset-0 hero-atmosphere" aria-hidden="true" />
@@ -71,19 +72,20 @@ export default function IntroGate({ onOpen }) {
         </p>
       </motion.div>
 
-      {/* Envelope button with 3D flap and sliding letter */}
-      <motion.button
-        type="button"
+      {/* Interactive Envelope */}
+      <motion.div
+        role="button"
+        tabIndex={0}
         onClick={open}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") open(); }}
         data-testid="open-invitation-button"
         aria-label={m.intro.openAria}
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4, ease: EASE }}
+        transition={{ duration: 0.8, delay: 0.35, ease: EASE }}
         whileHover={opening ? undefined : { scale: 1.015 }}
         whileTap={opening ? undefined : { scale: 0.985 }}
-        disabled={opening}
-        className="intro-envelope-stage relative z-10 cursor-pointer border-0 bg-transparent p-0 disabled:cursor-default my-auto max-h-[44vh] shrink-0 select-none"
+        className="intro-envelope-stage relative z-10 cursor-pointer border-0 bg-transparent p-0 my-auto shrink-0 select-none outline-none focus-visible:ring-2 focus-visible:ring-wedding-gold-accent"
       >
         <div className="intro-envelope-glow pointer-events-none" aria-hidden="true" />
         <motion.div
@@ -98,84 +100,85 @@ export default function IntroGate({ onOpen }) {
         >
           {/* Envelope Back Plate */}
           <div
-            className="absolute inset-0 rounded-[0.45rem] shadow-[0_30px_70px_rgba(0,0,0,0.55),0_0_0_1px_rgba(212,175,55,0.22)]"
+            className="absolute inset-0 rounded-[0.45rem] shadow-[0_30px_70px_rgba(0,0,0,0.65),0_0_0_1px_rgba(212,175,55,0.35)]"
             style={{
               zIndex: 1,
-              background: "linear-gradient(145deg, var(--wine-accent) 0%, var(--wine) 55%, var(--wine-deep) 100%)",
+              background: "linear-gradient(145deg, #7E1538 0%, #5C0D26 50%, #3D0617 100%)",
             }}
           />
           <div
-            className="absolute inset-0 rounded-[0.45rem] bg-gradient-to-b from-black/35 via-transparent to-black/25 pointer-events-none"
+            className="absolute inset-0 rounded-[0.45rem] bg-gradient-to-b from-black/40 via-transparent to-black/25 pointer-events-none"
             style={{ zIndex: 2 }}
           />
 
           {/* The Letter Card inside: slides up out of the pocket */}
           <motion.div
-            className="absolute inset-x-3 sm:inset-x-4 top-2.5 sm:top-3 bottom-2.5 sm:bottom-3 rounded-[0.35rem] bg-wedding-on-dark shadow-[0_20px_50px_rgba(0,0,0,0.45)] pointer-events-none"
+            className="absolute inset-x-3.5 sm:inset-x-4 top-2.5 sm:top-3 bottom-2.5 sm:bottom-3 rounded-[0.35rem] bg-[#FFF9FB] shadow-[0_20px_50px_rgba(0,0,0,0.45)] pointer-events-none"
             style={{ zIndex: 10 }}
             initial={false}
             animate={opening ? { y: "-74%", scale: 1.02 } : { y: 0, scale: 1 }}
             transition={{ duration: 1.15, delay: 0.55, ease: EASE }}
             data-testid="intro-letter"
           >
-            <div className="absolute inset-1 sm:inset-1.5 rounded-sm border border-wedding-gold-accent/40 pointer-events-none" />
-            <div className="absolute inset-2 sm:inset-2.5 rounded-sm border border-wedding-rose/20 pointer-events-none" />
+            <div className="absolute inset-1 sm:inset-1.5 rounded-sm border border-[#D4AF37]/45 pointer-events-none" />
+            <div className="absolute inset-2 sm:inset-2.5 rounded-sm border border-[#A3235A]/20 pointer-events-none" />
             <div className="relative flex h-full flex-col items-center justify-center px-4 sm:px-6 text-center">
-              <p className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.38em] uppercase text-wedding-wine-accent/90">
+              <p className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.38em] uppercase text-[#A3235A] font-semibold">
                 {m.intro.weddingTag}
               </p>
               <ClassicRule className="my-1.5 sm:my-2.5 max-w-[8rem] sm:max-w-[9.5rem]" gem="♥" />
-              <p className="font-display text-lg sm:text-2xl tracking-[0.2em] font-semibold text-wedding-ink">
+              <p className="font-display text-lg sm:text-2xl tracking-[0.2em] font-semibold text-[#520B2A]">
                 {initials}
               </p>
-              <p className="mt-1 sm:mt-1.5 font-display text-xl sm:text-3xl font-medium italic leading-tight text-wedding-ink">
+              <p className="mt-1 sm:mt-1.5 font-display text-xl sm:text-3xl font-medium italic leading-tight text-[#520B2A]">
                 {coupleLabel}
               </p>
               <ClassicRule className="my-1.5 sm:my-2.5 max-w-[7rem] sm:max-w-[8.5rem]" />
-              <p className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.28em] uppercase text-wedding-wine-accent font-medium">
+              <p className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.28em] uppercase text-[#A3235A] font-medium">
                 {dateLabel}
               </p>
             </div>
           </motion.div>
 
-          {/* Front Pocket: covers the letter from sides and bottom */}
+          {/* Front Pocket: SVG perfectly covering sides and bottom */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{ zIndex: 20 }}
           >
-            {/* Left triangular fold */}
-            <div
-              className="absolute inset-0"
-              style={{
-                clipPath: "polygon(0 0, 50% 50%, 0 100%)",
-                background: "linear-gradient(135deg, var(--wine-accent) 0%, var(--wine) 60%, var(--wine-deep) 100%)",
-              }}
-            />
-            {/* Right triangular fold */}
-            <div
-              className="absolute inset-0"
-              style={{
-                clipPath: "polygon(100% 0, 50% 50%, 100% 100%)",
-                background: "linear-gradient(225deg, var(--wine-accent) 0%, var(--wine) 60%, var(--wine-deep) 100%)",
-              }}
-            />
-            {/* Bottom fold overlapping cleanly at center */}
-            <div
-              className="absolute inset-0"
-              style={{
-                clipPath: "polygon(0 100%, 50% 50%, 100% 100%)",
-                background: "linear-gradient(0deg, var(--wine-deep) 0%, var(--wine) 65%, var(--wine-accent) 100%)",
-                filter: "drop-shadow(0 -3px 8px rgba(0, 0, 0, 0.35))",
-              }}
-            />
-            {/* Subtle gold line on the bottom fold */}
-            <div
-              className="absolute inset-0 pointer-events-none opacity-25"
-              style={{
-                clipPath: "polygon(0 100%, 50% 50%, 100% 100%)",
-                boxShadow: "inset 0 1px 0 rgba(212, 175, 55, 0.6)",
-              }}
-            />
+            <svg
+              className="w-full h-full"
+              viewBox="0 0 400 270"
+              preserveAspectRatio="none"
+            >
+              <defs>
+                <linearGradient id="pocket-left-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#8E1840" />
+                  <stop offset="60%" stopColor="#680E2B" />
+                  <stop offset="100%" stopColor="#4A081E" />
+                </linearGradient>
+                <linearGradient id="pocket-right-grad" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#8E1840" />
+                  <stop offset="60%" stopColor="#680E2B" />
+                  <stop offset="100%" stopColor="#4A081E" />
+                </linearGradient>
+                <linearGradient id="pocket-bottom-grad" x1="50%" y1="100%" x2="50%" y2="0%">
+                  <stop offset="0%" stopColor="#3D0617" />
+                  <stop offset="65%" stopColor="#680E2B" />
+                  <stop offset="100%" stopColor="#8E1840" />
+                </linearGradient>
+                <filter id="bottom-fold-shadow" x="-10%" y="-30%" width="120%" height="160%">
+                  <feDropShadow dx="0" dy="-4" stdDeviation="5" floodColor="#000000" floodOpacity="0.4" />
+                </filter>
+              </defs>
+              {/* Left triangular fold */}
+              <polygon points="0,0 200,135 0,270" fill="url(#pocket-left-grad)" />
+              {/* Right triangular fold */}
+              <polygon points="400,0 200,135 400,270" fill="url(#pocket-right-grad)" />
+              {/* Bottom fold overlapping cleanly at center */}
+              <polygon points="0,270 200,135 400,270" fill="url(#pocket-bottom-grad)" filter="url(#bottom-fold-shadow)" />
+              {/* Gold foil seam lines */}
+              <polyline points="0,270 200,135 400,270" fill="none" stroke="rgba(212,175,55,0.4)" strokeWidth="1" />
+            </svg>
           </div>
 
           {/* Top Flap: in front when closed, flips open 180deg and rests behind the letter */}
@@ -193,46 +196,52 @@ export default function IntroGate({ onOpen }) {
             data-testid="intro-flap"
           >
             {/* Flap Outer Face (visible when closed / opening 0deg -> 90deg) */}
-            <div
+            <motion.div
               className="intro-envelope-flap-face"
+              initial={false}
+              animate={{ opacity: opening ? [1, 1, 0, 0] : 1 }}
+              transition={{ duration: 0.85, delay: 0.15, times: [0, 0.52, 0.58, 1] }}
               style={{
-                clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                background: "linear-gradient(180deg, var(--rose) 0%, var(--wine-accent) 55%, var(--wine-deep) 100%)",
-                boxShadow: "0 6px 16px rgba(0,0,0,0.35)",
+                filter: "drop-shadow(0 6px 12px rgba(0,0,0,0.4))",
               }}
             >
-              <div
-                className="absolute inset-0 pointer-events-none opacity-30"
-                style={{
-                  clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                  background: "linear-gradient(180deg, transparent 70%, rgba(212, 175, 55, 0.5) 100%)",
-                }}
-              />
-            </div>
+              <svg className="w-full h-full" viewBox="0 0 400 140" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="flap-outer-grad" x1="50%" y1="0%" x2="50%" y2="100%">
+                    <stop offset="0%" stopColor="#9B1B4A" />
+                    <stop offset="55%" stopColor="#7E1538" />
+                    <stop offset="100%" stopColor="#5C0D26" />
+                  </linearGradient>
+                </defs>
+                <polygon points="0,0 400,0 200,140" fill="url(#flap-outer-grad)" />
+                <polyline points="0,0 200,140 400,0" fill="none" stroke="rgba(212,175,55,0.5)" strokeWidth="1.5" />
+              </svg>
+            </motion.div>
 
             {/* Flap Lining Face (visible when open 180deg, pointing UP behind the letter) */}
-            <div
+            <motion.div
               className="intro-envelope-flap-face intro-envelope-flap-face--back pointer-events-none"
-              style={{
-                clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                background: "linear-gradient(0deg, var(--wine-deep) 0%, var(--wine) 45%, var(--wine-accent) 100%)",
-              }}
+              initial={false}
+              animate={{ opacity: opening ? [0, 0, 1, 1] : 0 }}
+              transition={{ duration: 0.85, delay: 0.15, times: [0, 0.52, 0.58, 1] }}
             >
-              <div
-                className="absolute inset-0 opacity-40"
-                style={{
-                  clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                  background: "radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.45) 0%, transparent 70%)",
-                }}
-              />
-              <div
-                className="absolute inset-0 opacity-60"
-                style={{
-                  clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                  boxShadow: "inset 0 -1.5px 0 rgba(212, 175, 55, 0.7)",
-                }}
-              />
-            </div>
+              <svg className="w-full h-full" viewBox="0 0 400 140" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="flap-inner-grad" x1="50%" y1="100%" x2="50%" y2="0%">
+                    <stop offset="0%" stopColor="#3D0617" />
+                    <stop offset="50%" stopColor="#5C0D26" />
+                    <stop offset="100%" stopColor="#7E1538" />
+                  </linearGradient>
+                  <radialGradient id="flap-inner-gold" cx="50%" cy="100%" r="70%">
+                    <stop offset="0%" stopColor="rgba(212, 175, 55, 0.35)" />
+                    <stop offset="100%" stopColor="transparent" />
+                  </radialGradient>
+                </defs>
+                <polygon points="0,0 400,0 200,140" fill="url(#flap-inner-grad)" />
+                <polygon points="0,0 400,0 200,140" fill="url(#flap-inner-gold)" />
+                <polyline points="0,0 200,140 400,0" fill="none" stroke="rgba(212,175,55,0.55)" strokeWidth="1.5" />
+              </svg>
+            </motion.div>
           </motion.div>
 
           {/* Wax Seal at the center junction */}
@@ -245,7 +254,7 @@ export default function IntroGate({ onOpen }) {
               transition={{ duration: 0.45, ease: EASE }}
               data-testid="intro-seal"
             >
-              <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border-2 border-wedding-gold-accent/80 bg-gradient-to-br from-wedding-rose-bright via-wedding-rose to-wedding-wine-deep shadow-[0_14px_36px_rgba(237,30,121,0.55),0_0_0_4px_rgba(212,175,55,0.25)]">
+              <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border-2 border-wedding-gold-accent bg-gradient-to-br from-[#B82352] via-[#8E1840] to-[#4A081E] shadow-[0_12px_32px_rgba(0,0,0,0.55),0_0_0_3px_rgba(212,175,55,0.25)]">
                 <span className="font-cinzel text-[11px] sm:text-xs font-semibold tracking-[0.16em] text-wedding-on-dark drop-shadow-sm">
                   {letterGroom}&{letterBride}
                 </span>
@@ -253,7 +262,7 @@ export default function IntroGate({ onOpen }) {
             </motion.div>
           </div>
         </motion.div>
-      </motion.button>
+      </motion.div>
 
       {/* Footer section: button and instructions */}
       <motion.div

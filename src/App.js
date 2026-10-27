@@ -190,8 +190,8 @@ function Invitation() {
           <ModernFluidMeshBackground />
           {!opened && <LangToggle floating />}
           <WeddingPetals active={opened} density={24} />
-          <AnimatePresence>
-            {!opened && <IntroGate onOpen={() => setOpened(true)} />}
+          <AnimatePresence mode="wait">
+            {!opened && <IntroGate key="intro-gate" onOpen={() => setOpened(true)} />}
           </AnimatePresence>
           {opened && <Nav />}
           {opened ? (
