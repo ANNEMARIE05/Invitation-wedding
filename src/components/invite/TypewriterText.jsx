@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { ROSE_PINK } from "./Flowers";
 
+const MOBILE_QUERY = "(max-width: 639px), (hover: none) and (pointer: coarse)";
+
 /**
  * Affiche le texte lettre par lettre (effet machine à écrire).
  */
@@ -13,11 +15,28 @@ export default function TypewriterText({
   showCursor = true,
   flowerAtStart = false,
   flowerAtEnd = false,
+  instantOnMobile = false,
 }) {
   const [visible, setVisible] = useState("");
   const [done, setDone] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(MOBILE_QUERY).matches,
+  );
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia(MOBILE_QUERY);
+    const updateMobileState = () => setIsMobile(mediaQuery.matches);
+    mediaQuery.addEventListener("change", updateMobileState);
+    return () => mediaQuery.removeEventListener("change", updateMobileState);
+  }, []);
+
+  useEffect(() => {
+    if (instantOnMobile && isMobile) {
+      setVisible(text);
+      setDone(true);
+      return undefined;
+    }
+
     if (!start || !text) {
       setVisible("");
       setDone(false);
@@ -46,7 +65,7 @@ export default function TypewriterText({
       clearTimeout(beginTimer);
       clearTimeout(typingTimer);
     };
-  }, [text, delay, speed, start]);
+  }, [text, delay, speed, start, instantOnMobile, isMobile]);
 
   const Flower = ({ placement }) => (
     <span

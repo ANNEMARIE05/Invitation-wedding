@@ -113,32 +113,34 @@ export default function Hero({ start = true }) {
           data-testid="hero-names"
         >
           <MaskedLine delay={0.85} start={start}>
-            <CoupleNameMotion preset="hero-groom" className="flex w-full justify-center">
+            <CoupleNameMotion preset="hero-groom" className="hero-couple-name flex w-full justify-center">
               <TypewriterText
                 text={groom}
                 start={start}
                 delay={200}
                 speed={72}
                 showCursor={false}
+                instantOnMobile
                 className="hero-name couple-name-shimmer couple-name-shimmer--a text-[clamp(2.25rem,10vw,2.85rem)] italic font-medium sm:text-7xl lg:text-8xl"
               />
             </CoupleNameMotion>
           </MaskedLine>
           <MaskedLine delay={1.05} start={start}>
-            <CoupleNameMotion preset="hero-amp" as="span" className="my-1 block">
+            <CoupleNameMotion preset="hero-amp" as="span" className="hero-couple-name my-1 block">
               <span className="hero-amp couple-name-amp couple-name-amp--hero inline-block text-2xl not-italic font-normal tracking-[0.2em] sm:text-4xl">
                 &
               </span>
             </CoupleNameMotion>
           </MaskedLine>
           <MaskedLine delay={1.25} start={start}>
-            <CoupleNameMotion preset="hero-bride" className="flex w-full justify-center">
+            <CoupleNameMotion preset="hero-bride" className="hero-couple-name flex w-full justify-center">
               <TypewriterText
                 text={bride}
                 start={start}
                 delay={200 + groom.length * 72 + 280}
                 speed={72}
                 showCursor={false}
+                instantOnMobile
                 className="hero-name couple-name-shimmer couple-name-shimmer--b text-[clamp(2.25rem,10vw,2.85rem)] italic font-medium sm:text-7xl lg:text-8xl"
               />
             </CoupleNameMotion>

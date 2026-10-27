@@ -68,7 +68,7 @@ export default function IntroGate({ onOpen }) {
         </p>
         <ClassicRule className="mt-2.5 sm:mt-3 max-w-[9rem] sm:max-w-[11rem]" tone="light" />
         <p className="mt-2.5 sm:mt-3 font-script text-2xl sm:text-4xl md:text-5xl text-[#FFF3D6] drop-shadow-[0_2px_14px_rgba(212,175,55,0.75)]">
-          <TypewriterText text={coupleLabel} start={!opening} delay={600} speed={55} flowerAtStart flowerAtEnd />
+          <TypewriterText text={coupleLabel} start={!opening} delay={600} speed={55} flowerAtStart flowerAtEnd instantOnMobile />
         </p>
       </motion.div>
 

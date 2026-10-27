@@ -1218,7 +1218,7 @@ body {
     background-size: 100% 1px;
 }
 
-@media (max-height: 780px) {
+@media (max-height: 780px) and (min-width: 640px) {
     .hero-monogram {
         margin-bottom: 0.5rem;
     }
@@ -3715,11 +3715,6 @@ body {
         animation-duration: 3.2s;
     }
 
-    .wedding-petal,
-    .wedding-spark {
-        animation-play-state: running !important;
-    }
-
     [data-testid="invite-card-section"] {
         padding-inline: clamp(1.15rem, 5.2vw, 1.75rem);
         overflow-x: clip;
@@ -4457,9 +4452,8 @@ body {
 }
 
 /* 
- * Remarque : prefers-reduced-motion n'annule plus les animations clés du mariage
- * afin que l'expérience visuelle (pétales, reflets, scintillements) reste active
- * sur smartphone même en mode économie de batterie.
+ * Les animations restent actives par défaut ; le mode réduit conserve ses règles
+ * d'accessibilité sans modifier l'apparence statique des composants.
  */
 @media (prefers-reduced-motion: reduce) {
     .luxe-card--lift:hover {
@@ -5241,5 +5235,57 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .hero-name.couple-name-shimmer {
         animation: none;
+    }
+}
+
+@media (max-width: 639px), ((hover: none) and (pointer: coarse)) {
+    .hero-atmosphere,
+    .hero-orb,
+    .fluid-silk-blob,
+    .silk-ribbon {
+        animation: none !important;
+    }
+
+    .hero-atmosphere {
+        background-size: 100% 100%;
+        filter: none;
+    }
+
+    .hero-orb {
+        filter: blur(24px);
+    }
+
+    .fluid-silk-blob {
+        filter: blur(28px);
+        will-change: auto;
+    }
+
+    .fluid-silk-mesh-root {
+        perspective: none;
+    }
+
+    .hero-lockup {
+        transform: none !important;
+        width: 100%;
+    }
+
+    .hero-couple-name,
+    .hero-scroll > div {
+        transform: none !important;
+    }
+
+    .hero-monogram-flower,
+    .hero-monogram-flower__image {
+        animation: none !important;
+    }
+
+    .wedding-petals,
+    .sparkle-field {
+        display: none !important;
+    }
+
+    .invite-main-nav {
+        background-color: rgba(247, 207, 223, 0.98);
+        backdrop-filter: none;
     }
 }
