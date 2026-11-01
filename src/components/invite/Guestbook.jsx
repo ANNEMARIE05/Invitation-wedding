@@ -20,7 +20,7 @@ function isPlaceholderGuestbookEntry(row) {
 
 function GuestbookEmptyState({ text, testId = "guestbook-empty" }) {
   return (
-    <LuxeCard animate className="guestbook-empty-card px-6 py-9 text-center sm:px-12 sm:py-11">
+    <LuxeCard animate className="guestbook-empty-card px-6 pt-6 pb-5 text-center sm:px-10 sm:pt-7 sm:pb-6">
       <div className="guestbook-empty-card__icon" aria-hidden="true">
         <Feather size={40} strokeWidth={1.35} className="guestbook-empty-card__feather" />
       </div>
@@ -129,7 +129,7 @@ export default function Guestbook() {
       <div className="relative z-10 mx-auto max-w-4xl">
         <Chapter index="VIII" eyebrow={m.guestbook.chapter} title={m.guestbook.title} script={m.guestbook.script} />
 
-        <LuxeCard animate className="guestbook-form-card mx-auto max-w-3xl overflow-hidden px-5 py-6 sm:px-8 sm:py-8">
+        <LuxeCard animate className="guestbook-form-card mx-auto w-full overflow-hidden px-5 py-6 sm:px-8 sm:py-8">
           <form onSubmit={submit} data-testid="guestbook-form">
           <p className="guestbook-form-lead text-center">{m.guestbook.formLead}</p>
           <ClassicRule className="mx-auto mt-3 mb-5 max-w-[8rem]" gem="♥" />

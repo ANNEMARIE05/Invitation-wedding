@@ -80,7 +80,7 @@ export default function PhotosAdmin() {
                     </div>
                   )}
                   <span
-                    className={`absolute top-3 right-3 inline-flex items-center gap-1 rounded-full font-cinzel text-[9px] tracking-[0.15em] uppercase px-3 py-1 ${
+                    className={`absolute top-3 right-3 inline-flex items-center gap-1 rounded-[8px] font-cinzel text-[9px] tracking-[0.15em] uppercase px-3 py-1 ${
                       customized
                         ? "bg-wedding-gold-accent text-wedding-ink"
                         : "bg-wedding-on-dark/15 text-wedding-on-dark ring-1 ring-wedding-on-dark/25"
@@ -111,7 +111,7 @@ export default function PhotosAdmin() {
                     data-testid={`photo-upload-button-${s.key}`}
                     onClick={() => inputs.current[s.key]?.click()}
                     disabled={busy === s.key}
-                    className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-full bg-wedding-gold-accent text-wedding-ink font-cinzel text-[10px] tracking-[0.2em] uppercase px-5 py-3 hover:bg-[#B89428] transition-all disabled:opacity-50"
+                    className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-[8px] bg-wedding-gold-accent text-wedding-ink font-cinzel text-[10px] tracking-[0.2em] uppercase px-5 py-3 hover:bg-[#B89428] transition-all disabled:opacity-50"
                   >
                     <Upload size={14} /> {busy === s.key ? "Envoi…" : customized ? "Remplacer" : "Choisir une photo"}
                   </button>

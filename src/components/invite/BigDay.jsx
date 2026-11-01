@@ -174,7 +174,7 @@ export default function BigDay() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={REVEAL_VIEWPORT}
               transition={{ duration: 0.9, ease: EASE }}
-              className="bigday-card relative overflow-hidden rounded-sm bg-wedding-on-dark text-wedding-ink shadow-[0_24px_70px_rgba(0,0,0,0.35)] px-3 py-7 sm:px-11 sm:py-12"
+              className="bigday-card relative overflow-hidden rounded-none bg-wedding-on-dark text-wedding-ink shadow-[0_28px_60px_-14px_rgba(232,61,137,0.48),0_16px_36px_rgba(42,5,11,0.38)] px-3 py-7 sm:px-11 sm:py-12"
               data-testid="calendar-card"
             >
               <span className="bigday-card-corner bigday-card-corner--tl" aria-hidden="true" />

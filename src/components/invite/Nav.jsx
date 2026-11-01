@@ -74,7 +74,7 @@ export default function Nav() {
             aria-label={mobileNavOpen ? m.nav.closeMenu : m.nav.openMenu}
             aria-expanded={mobileNavOpen}
             aria-controls="invitation-mobile-nav"
-            className="nav-menu-toggle inline-flex h-10 w-10 items-center justify-center rounded-full border border-wedding-rose-light/70 text-wedding-wine-deep transition-colors hover:bg-wedding-ivory xl:hidden"
+            className="nav-menu-toggle inline-flex h-10 w-10 items-center justify-center rounded-[8px] border border-wedding-rose-light/70 text-wedding-wine-deep shadow-[0_8px_18px_-8px_rgba(232,61,137,0.35)] transition-colors hover:bg-wedding-ivory xl:hidden"
           >
             {mobileNavOpen ? <X size={18} aria-hidden /> : <Menu size={18} aria-hidden />}
           </button>
@@ -99,7 +99,7 @@ export default function Nav() {
                 data-testid={`mobile-nav-link-${link.href.slice(1)}`}
                 onClick={() => goTo(link.href)}
                 aria-current={activeHref === link.href ? "true" : undefined}
-                className={`w-full rounded-lg px-4 py-3 text-left font-cinzel text-xs font-semibold tracking-[0.12em] uppercase transition-colors ${
+                className={`w-full rounded-[8px] px-4 py-3 text-left font-cinzel text-xs font-semibold tracking-[0.12em] uppercase transition-colors ${
                   activeHref === link.href
                     ? "bg-wedding-ivory text-wedding-wine-deep"
                     : "text-wedding-wine hover:bg-wedding-ivory"

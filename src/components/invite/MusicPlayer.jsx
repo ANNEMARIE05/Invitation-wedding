@@ -58,13 +58,13 @@ function EqBars({ playing, className = "" }) {
 }
 
 const shell =
-  "border border-wedding-gold-accent/40 bg-wedding-wine-deep/95 shadow-[0_12px_40px_rgba(42,5,11,0.4),0_0_16px_rgba(212,175,55,0.18)] backdrop-blur-md";
+  "border border-wedding-rose/30 bg-wedding-wine-deep/95 shadow-[0_16px_36px_-10px_rgba(232,61,137,0.5),0_8px_20px_rgba(42,5,11,0.35)] backdrop-blur-md";
 
 const iconBtn =
-  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-wedding-gold-soft hover:text-white hover:bg-white/10 active:scale-90 disabled:opacity-40 transition-all duration-300";
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] text-wedding-gold-soft hover:text-white hover:bg-white/10 active:scale-90 disabled:opacity-40 transition-all duration-300";
 
 const playBtn =
-  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wedding-gold-accent to-[#B89428] text-[#1A040B] shadow-[0_3px_12px_rgba(212,175,55,0.35)] transition-all duration-300 hover:scale-110 hover:shadow-[0_5px_18px_rgba(212,175,55,0.5)] active:scale-95 disabled:opacity-40";
+  "flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-gradient-to-br from-wedding-gold-accent to-[#B89428] text-[#1A040B] shadow-[0_8px_18px_-6px_rgba(232,61,137,0.45)] transition-all duration-300 hover:scale-110 hover:shadow-[0_12px_22px_-6px_rgba(232,61,137,0.55)] active:scale-95 disabled:opacity-40";
 
 export default function MusicPlayer({ opened }) {
   const { m } = useI18n();
@@ -199,7 +199,7 @@ export default function MusicPlayer({ opened }) {
             transition={{ duration: 0.35 }}
             onClick={() => setUi("compact")}
             aria-label={m.music.show}
-            className={`fixed bottom-5 left-5 z-50 flex h-11 w-11 items-center justify-center rounded-full ${shell}`}
+            className={`fixed bottom-5 left-5 z-50 flex h-11 w-11 items-center justify-center rounded-[8px] ${shell}`}
             data-testid="music-player"
           >
             <Vinyl size="sm" playing={playing} />
@@ -219,7 +219,7 @@ export default function MusicPlayer({ opened }) {
             exit={{ opacity: 0, y: 16 }}
             transition={{ duration: 0.35 }}
             aria-hidden={!opened}
-            className={`fixed bottom-5 left-5 z-50 flex items-center gap-1 rounded-full px-1.5 py-1 ${shell} ${inactive}`}
+            className={`fixed bottom-5 left-5 z-50 flex items-center gap-1 rounded-[8px] px-1.5 py-1 ${shell} ${inactive}`}
             data-testid="music-player"
           >
             <Vinyl size="sm" playing={playing} />

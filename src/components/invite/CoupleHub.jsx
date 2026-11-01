@@ -104,11 +104,11 @@ export default function CoupleHub() {
             <Link
               to={to}
               data-testid={testId}
-              className="couple-hub-card group relative flex h-full flex-col overflow-hidden rounded-xl border border-wedding-on-dark/10 bg-wedding-on-dark/[0.05] p-4 shadow-[0_14px_36px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-wedding-gold-accent/35 hover:bg-wedding-on-dark/[0.08] hover:shadow-[0_28px_60px_rgba(212,175,55,0.12)] sm:rounded-2xl sm:p-6 sm:shadow-[0_20px_50px_rgba(0,0,0,0.25)]"
+              className="couple-hub-card group relative flex h-full flex-col overflow-hidden rounded-[12px] border border-wedding-rose/25 bg-wedding-on-dark/[0.05] p-4 shadow-[0_18px_40px_-14px_rgba(232,61,137,0.4)] backdrop-blur-sm transition-all duration-500 hover:border-wedding-rose/40 hover:bg-wedding-on-dark/[0.08] hover:shadow-[0_28px_56px_-12px_rgba(232,61,137,0.5)] sm:p-6"
             >
               <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${accent} opacity-0 transition-opacity duration-500 group-hover:opacity-100`} aria-hidden />
               <div className="relative flex items-start justify-between gap-2 sm:gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-wedding-gold-accent/30 bg-wedding-wine-deep/60 text-wedding-gold-accent transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11 sm:rounded-xl">
+                <span className="flex h-9 w-9 items-center justify-center rounded-[8px] border border-wedding-rose/30 bg-wedding-wine-deep/60 text-wedding-gold-accent shadow-[0_8px_18px_-8px_rgba(232,61,137,0.45)] transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11">
                   <Icon className="h-[17px] w-[17px] sm:h-5 sm:w-5" strokeWidth={1.4} aria-hidden />
                 </span>
                 <ChevronRight
@@ -141,7 +141,7 @@ export default function CoupleHub() {
           type="button"
           data-testid="couple-logout"
           onClick={signOut}
-          className="inline-flex items-center gap-2 rounded-full border border-wedding-on-dark/15 px-5 py-2.5 font-cinzel text-[10px] tracking-[0.22em] uppercase text-[#C48B92] transition-all hover:border-[#C48B92]/40 hover:text-wedding-on-dark"
+          className="inline-flex items-center gap-2 rounded-[8px] border border-wedding-rose/30 px-5 py-2.5 font-cinzel text-[10px] tracking-[0.22em] uppercase text-[#C48B92] shadow-[0_10px_24px_-10px_rgba(232,61,137,0.4)] transition-all hover:border-wedding-rose/50 hover:text-wedding-on-dark"
         >
           <LogOut size={14} strokeWidth={1.5} aria-hidden />
           {t.logout}

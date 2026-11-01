@@ -4,7 +4,6 @@ import { ArrowRight } from "lucide-react";
 import { EASE } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
-import WeddingPetals from "@/components/invite/WeddingPetals";
 import SparkleField from "@/components/invite/SparkleField";
 import ClassicRule from "@/components/invite/ClassicRule";
 import TypewriterText from "@/components/invite/TypewriterText";
@@ -45,7 +44,6 @@ export default function IntroGate({ onOpen }) {
       ))}
       <div className="pointer-events-none absolute inset-0 hero-veil" aria-hidden="true" />
       <div className="grain-overlay opacity-[0.04]" aria-hidden="true" />
-      <WeddingPetals active={!opening} density={18} variant="hero" />
       <SparkleField count={14} className="z-[2] opacity-80" />
       <div className="intro-gate-vignette pointer-events-none absolute inset-0 z-[3]" aria-hidden="true" />
 
@@ -100,28 +98,28 @@ export default function IntroGate({ onOpen }) {
         >
           {/* Envelope Back Plate */}
           <div
-            className="absolute inset-0 rounded-[0.45rem] shadow-[0_30px_70px_rgba(0,0,0,0.65),0_0_0_1px_rgba(212,175,55,0.35)]"
+            className="absolute inset-0 rounded-none shadow-[0_30px_70px_rgba(0,0,0,0.65),0_0_0_1px_rgba(212,175,55,0.35)]"
             style={{
               zIndex: 1,
               background: "linear-gradient(145deg, #7E1538 0%, #5C0D26 50%, #3D0617 100%)",
             }}
           />
           <div
-            className="absolute inset-0 rounded-[0.45rem] bg-gradient-to-b from-black/40 via-transparent to-black/25 pointer-events-none"
+            className="absolute inset-0 rounded-none bg-gradient-to-b from-black/40 via-transparent to-black/25 pointer-events-none"
             style={{ zIndex: 2 }}
           />
 
           {/* The Letter Card inside: slides up out of the pocket */}
           <motion.div
-            className="absolute inset-x-3.5 sm:inset-x-4 top-2.5 sm:top-3 bottom-2.5 sm:bottom-3 rounded-[0.35rem] bg-[#FFF9FB] shadow-[0_20px_50px_rgba(0,0,0,0.45)] pointer-events-none"
+            className="absolute inset-x-3.5 sm:inset-x-4 top-2.5 sm:top-3 bottom-2.5 sm:bottom-3 rounded-none bg-[#FFF9FB] shadow-[0_20px_50px_rgba(0,0,0,0.45)] pointer-events-none"
             style={{ zIndex: 10 }}
             initial={false}
             animate={opening ? { y: "-74%", scale: 1.02 } : { y: 0, scale: 1 }}
             transition={{ duration: 1.15, delay: 0.55, ease: EASE }}
             data-testid="intro-letter"
           >
-            <div className="absolute inset-1 sm:inset-1.5 rounded-sm border border-[#D4AF37]/45 pointer-events-none" />
-            <div className="absolute inset-2 sm:inset-2.5 rounded-sm border border-[#A3235A]/20 pointer-events-none" />
+            <div className="absolute inset-1 sm:inset-1.5 rounded-none border border-[#D4AF37]/45 pointer-events-none" />
+            <div className="absolute inset-2 sm:inset-2.5 rounded-none border border-[#A3235A]/20 pointer-events-none" />
             <div className="relative flex h-full flex-col items-center justify-center px-4 sm:px-6 text-center">
               <p className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.38em] uppercase text-[#A3235A] font-semibold">
                 {m.intro.weddingTag}

@@ -66,7 +66,7 @@ export default function Venues() {
   };
 
   return (
-    <section id="lieux" className="py-16 px-5 sm:px-8 sm:py-24 md:py-36 lg:px-16" data-testid="venues-section">
+    <section id="lieux" className="py-16 px-2.5 sm:px-8 sm:py-24 md:py-36 lg:px-16" data-testid="venues-section">
       <div className="max-w-4xl mx-auto md:max-w-5xl lg:max-w-6xl">
         <Chapter index="IV" eyebrow={vCopy.chapter} title={vCopy.title} script={vCopy.script} />
 
@@ -103,7 +103,7 @@ export default function Venues() {
                     as="article"
                     lift
                     animate={false}
-                    className="venues-stop-card overflow-hidden !rounded-[0.75rem]"
+                    className="venues-stop-card overflow-hidden !rounded-[12px]"
                     data-testid={`venue-card-${venue.id}`}
                   >
                     <div className="flex flex-col sm:flex-row">
@@ -131,7 +131,7 @@ export default function Venues() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-wedding-wine-deep/55 via-wedding-wine/15 to-transparent sm:bg-gradient-to-r sm:from-wedding-wine-deep/35 sm:via-transparent sm:to-transparent" />
                       </div>
-                      <div className="flex min-w-0 flex-1 flex-col items-start p-5 text-left sm:p-7">
+                      <div className="flex min-w-0 flex-1 flex-col items-start px-3.5 py-4 text-left sm:p-7">
                         <p className="font-cinzel text-[11px] font-bold tracking-[0.24em] uppercase text-wedding-wine-accent sm:text-xs sm:tracking-[0.28em]">
                           {venue.eyebrow}
                         </p>
@@ -177,7 +177,7 @@ export default function Venues() {
             <div className="zoom-stream-card__shine pointer-events-none absolute inset-0 z-[2]" aria-hidden="true" />
             <div className="zoom-stream-card__ambient pointer-events-none absolute inset-0 z-[1]" aria-hidden="true" />
             <motion.div
-              className="relative z-[3] flex flex-col items-center gap-5 px-5 py-5 sm:items-stretch sm:px-8 sm:py-6 lg:flex-row lg:items-center lg:gap-8 lg:px-10"
+              className="relative z-[3] flex flex-col items-center gap-5 px-3.5 py-5 sm:items-stretch sm:px-8 sm:py-6 lg:flex-row lg:items-center lg:gap-8 lg:px-10"
               variants={zoomStagger}
               initial="hidden"
               whileInView="show"

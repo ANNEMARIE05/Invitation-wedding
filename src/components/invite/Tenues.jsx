@@ -63,12 +63,12 @@ export default function Tenues() {
               whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
               viewport={{ once: true, amount: 0.6 }}
               transition={{ duration: 0.65, delay: 0.12 + index * 0.08, ease: EASE }}
-              className="relative flex h-[3.25rem] w-[3.25rem] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#F7ECD0] via-wedding-gold to-[#8A6424] p-[3px] shadow-[0_6px_18px_rgba(201,169,98,0.28)] sm:h-14 sm:w-14"
+              className="relative flex h-[3.25rem] w-[3.25rem] shrink-0 items-center justify-center rounded-[8px] bg-gradient-to-br from-[#F7ECD0] via-wedding-gold to-[#8A6424] p-[3px] shadow-[0_10px_22px_-8px_rgba(232,61,137,0.4)] sm:h-14 sm:w-14"
               title={m.tenues.colorLabels[color.id] || color.label}
               data-testid={`color-${color.id}`}
             >
               <span
-                className="h-full w-full rounded-full ring-2 ring-white/85 ring-offset-0 shadow-[inset_0_1px_2px_rgba(255,255,255,0.45)]"
+                className="h-full w-full rounded-[12px] ring-2 ring-white/85 ring-offset-0 shadow-[inset_0_1px_2px_rgba(255,255,255,0.45)]"
                 style={swatchStyle(color)}
                 aria-hidden="true"
               />

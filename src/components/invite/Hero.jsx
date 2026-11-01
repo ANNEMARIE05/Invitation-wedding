@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Eye } from "lucide-react";
 import { EASE, scrollToId } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
@@ -156,8 +156,9 @@ export default function Hero({ start = true }) {
           <button
             type="button"
             onClick={() => scrollToId("#faire-part")}
-            className="hero-outline-btn rounded-full border border-wedding-rose-light/35 px-5 py-2.5 font-cinzel text-[9px] font-semibold uppercase tracking-[0.16em] text-wedding-rose-light transition-colors hover:border-wedding-rose/60 hover:text-wedding-on-dark sm:px-6 sm:py-3 sm:text-[10px] sm:tracking-[0.22em]"
+            className="hero-outline-btn font-cinzel font-semibold uppercase"
           >
+            <Eye size={14} strokeWidth={1.6} aria-hidden="true" />
             {m.hero.viewInvite}
           </button>
         </motion.div>

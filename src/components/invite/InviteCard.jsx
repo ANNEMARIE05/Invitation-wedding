@@ -15,7 +15,7 @@ import SparkleField from "./SparkleField";
 import LuxeCard from "./LuxeCard";
 
 /** Faire-part affiché sur le site (visuel complet, sans personnalisation). */
-const SHOWCASE_CARD_BG = `${process.env.PUBLIC_URL || ""}/images/carte-invitation-showcase.jpg?v=20261023-showcase-v2`;
+const SHOWCASE_CARD_BG = `${process.env.PUBLIC_URL || ""}/images/carte-invitation-showcase.jpg?v=20261101-floral`;
 
 function ShowcaseCardArt({ className = "faire-part-bg" }) {
   return (
@@ -37,7 +37,7 @@ export function FairePart({ testId = "invite-card" }) {
   const ariaLabel = `${m.inviteSection.title} — ${settings.groom} & ${settings.bride}, ${settings.dateLabel}`;
 
   const articleCls =
-    "invite-card-article relative mx-auto w-full max-w-[min(100%,17.5rem)] overflow-visible [container-type:inline-size] sm:max-w-[24rem] md:max-w-[26rem]";
+    "invite-card-article relative mx-auto w-full max-w-full overflow-visible [container-type:inline-size] sm:max-w-[24rem] md:max-w-[26rem]";
 
   return (
     <article data-testid={testId} className={articleCls} aria-label={ariaLabel}>
@@ -178,7 +178,7 @@ export default function InviteCard() {
   const [showcaseOpen, setShowcaseOpen] = useState(false);
   const [presented, setPresented] = useState(false);
   return (
-    <section id="faire-part" className="relative overflow-x-visible overflow-y-visible px-[clamp(1.15rem,5.2vw,1.75rem)] py-16 sm:px-10 md:py-24" data-testid="invite-card-section">
+    <section id="faire-part" className="relative overflow-x-visible overflow-y-visible px-4 py-16 sm:px-10 md:py-24" data-testid="invite-card-section">
       <SparkleField count={14} className="opacity-70" />
       <motion.div
         initial={{ opacity: 0, y: 40 }}
@@ -196,7 +196,7 @@ export default function InviteCard() {
         <ChapterRule />
       </motion.div>
 
-      <div className="invite-card-showcase relative z-[1] mx-auto w-full max-w-[min(100%,17.5rem)] overflow-visible sm:max-w-[24rem] md:max-w-[26rem]">
+      <div className="invite-card-showcase relative z-[1] mx-auto w-full max-w-full overflow-visible sm:max-w-[24rem] md:max-w-[26rem]">
         <FairePart />
       </div>
 

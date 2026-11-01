@@ -19,8 +19,8 @@ export default function IntroLetterCard({
 
   const inner = (
     <>
-      <div className="absolute inset-1.5 rounded-sm border border-wedding-gold-accent/35 pointer-events-none" />
-      <div className="absolute inset-2.5 rounded-sm border border-wedding-rose/18 pointer-events-none" />
+      <div className="absolute inset-1.5 rounded-none border border-wedding-gold-accent/35 pointer-events-none" />
+      <div className="absolute inset-2.5 rounded-none border border-wedding-rose/18 pointer-events-none" />
       <div className="relative flex h-full flex-col items-center justify-center px-6 text-center sm:px-8">
         <p className="font-cinzel text-[10px] tracking-[0.38em] uppercase text-wedding-wine-accent/85 sm:text-xs">
           {m.intro.weddingTag}
@@ -43,7 +43,7 @@ export default function IntroLetterCard({
   );
 
   const shellCls = [
-    "intro-letter-card relative overflow-hidden rounded-sm bg-wedding-on-dark",
+    "intro-letter-card relative overflow-hidden rounded-none bg-wedding-on-dark",
     floating
       ? "shadow-[0_32px_90px_rgba(0,0,0,0.5),0_0_0_1px_rgba(212,175,55,0.12)]"
       : "shadow-[0_24px_70px_rgba(0,0,0,0.45)]",

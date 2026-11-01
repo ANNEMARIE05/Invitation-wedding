@@ -222,14 +222,14 @@ export default function InfosAdmin() {
           <Link
             to="/reponses"
             data-testid="infos-link-reponses"
-            className="inline-flex items-center gap-2 rounded-full border hairline-gold px-5 py-2 font-cinzel text-[10px] tracking-[0.2em] uppercase text-[#C48B92] hover:text-wedding-gold-accent transition-colors"
+            className="inline-flex items-center gap-2 rounded-[8px] border hairline-gold px-5 py-2 font-cinzel text-[10px] tracking-[0.2em] uppercase text-[#C48B92] hover:text-wedding-gold-accent transition-colors"
           >
             <Users size={13} /> Les réponses
           </Link>
           <Link
             to="/photos"
             data-testid="infos-link-photos"
-            className="inline-flex items-center gap-2 rounded-full border hairline-gold px-5 py-2 font-cinzel text-[10px] tracking-[0.2em] uppercase text-[#C48B92] hover:text-wedding-gold-accent transition-colors"
+            className="inline-flex items-center gap-2 rounded-[8px] border hairline-gold px-5 py-2 font-cinzel text-[10px] tracking-[0.2em] uppercase text-[#C48B92] hover:text-wedding-gold-accent transition-colors"
           >
             <Camera size={13} /> Vos photos
           </Link>
@@ -391,7 +391,7 @@ export default function InfosAdmin() {
               type="submit"
               disabled={saving}
               data-testid="infos-save-button"
-              className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-wedding-gold-accent text-wedding-ink font-cinzel text-xs tracking-[0.25em] uppercase px-7 py-4 hover:bg-[#B89428] hover:shadow-[0_10px_30px_rgba(212,175,55,0.35)] transition-all duration-300 disabled:opacity-60"
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-[8px] bg-wedding-gold-accent text-wedding-ink font-cinzel text-xs tracking-[0.25em] uppercase px-7 py-4 hover:bg-[#B89428] hover:shadow-[0_10px_30px_rgba(212,175,55,0.35)] transition-all duration-300 disabled:opacity-60"
             >
               <Save size={15} /> {saving ? "Enregistrement…" : "Enregistrer"}
             </button>
@@ -400,7 +400,7 @@ export default function InfosAdmin() {
               disabled={saving}
               data-testid="infos-reset-defaults-button"
               onClick={resetAllToDefaults}
-              className="inline-flex items-center justify-center gap-2 rounded-full border hairline-gold px-6 py-4 font-cinzel text-[10px] tracking-[0.18em] uppercase text-[#C48B92] transition-colors hover:text-wedding-gold-accent disabled:opacity-60 sm:shrink-0"
+              className="inline-flex items-center justify-center gap-2 rounded-[8px] border hairline-gold px-6 py-4 font-cinzel text-[10px] tracking-[0.18em] uppercase text-[#C48B92] transition-colors hover:text-wedding-gold-accent disabled:opacity-60 sm:shrink-0"
             >
               Remettre à jour tout
             </button>

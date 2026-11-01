@@ -79,7 +79,7 @@ export default function CoupleAuthShell({
           <div className="flex items-center gap-3">
             <span className="hidden h-px w-10 bg-gradient-to-r from-transparent to-wedding-gold-accent/50 sm:block" />
             <span
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-wedding-gold-accent/40 bg-wedding-on-dark/5 font-cinzel text-[9px] tracking-[0.12em] text-wedding-gold-accent shadow-[0_0_24px_rgba(212,175,55,0.12)]"
+              className="flex h-10 w-10 items-center justify-center rounded-[8px] border border-wedding-rose/30 bg-wedding-on-dark/5 font-cinzel text-[9px] tracking-[0.12em] text-wedding-gold-accent shadow-[0_10px_24px_-8px_rgba(232,61,137,0.4)]"
               aria-hidden
             >
               {initials.replace(/\s/g, "")}

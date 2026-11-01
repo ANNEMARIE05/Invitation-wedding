@@ -26,12 +26,12 @@ export default function Footer() {
           className="relative mx-auto mb-10 w-fit sm:mb-12"
           data-testid="footer-cadre"
         >
-          <div className="relative rounded-sm bg-wedding-on-dark p-2.5 shadow-[0_25px_60px_rgba(0,0,0,0.45)]">
-            <div className="pointer-events-none absolute inset-1.5 z-10 rounded-sm border border-[#C0C0C0]/50" />
+          <div className="relative overflow-hidden rounded-none bg-wedding-on-dark p-2.5 shadow-[0_22px_48px_-14px_rgba(232,61,137,0.45),0_12px_28px_rgba(42,5,11,0.35)]">
+            <div className="pointer-events-none absolute inset-1.5 z-10 rounded-none border border-[#C0C0C0]/50" />
             <img
               src={footerPhoto}
               alt={m.footer.photoAlt}
-              className="footer-couple-sketch aspect-square w-52 bg-wedding-on-dark sm:w-64"
+              className="footer-couple-sketch aspect-[3/4] w-52 bg-wedding-on-dark sm:w-64"
             />
           </div>
           <p className="invite-on-wine-caption mt-3 font-script text-2xl">{m.footer.love}</p>

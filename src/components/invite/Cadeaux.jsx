@@ -98,15 +98,15 @@ export default function Cadeaux() {
                     key={account.id}
                     whileHover={{ y: -3 }}
                     transition={{ duration: 0.25, ease: EASE }}
-                    className="relative overflow-hidden rounded-[1.35rem] border border-wedding-wine/10 bg-white/55 p-3.5 text-left shadow-[0_8px_22px_rgba(106,16,55,0.06)] sm:p-4"
+                    className="relative overflow-hidden rounded-[12px] border border-wedding-rose/20 bg-white/55 p-3.5 text-left shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_18px_40px_-16px_rgba(163,35,90,0.34),0_8px_20px_-10px_rgba(232,61,137,0.22)] sm:p-4"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-[0_4px_12px_rgba(42,5,11,0.06)] ring-1 ring-wedding-rose/10">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[12px] bg-white shadow-[0_8px_18px_-8px_rgba(232,61,137,0.35)] ring-1 ring-wedding-rose/15">
                         {account.logoUrl ? (
                           <img
                             src={account.logoUrl}
                             alt={`Logo ${account.name}`}
-                            className={account.id === "wave" ? "h-full w-full rounded-2xl object-cover" : "h-8 w-9 object-contain"}
+                            className={account.id === "wave" ? "h-full w-full rounded-[12px] object-cover" : "h-8 w-9 object-contain"}
                           />
                         ) : (
                           <span className="text-2xl leading-none" aria-hidden="true">
@@ -116,7 +116,7 @@ export default function Cadeaux() {
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <span className="inline-flex items-center rounded-full bg-wedding-rose/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-wedding-wine">
+                        <span className="inline-flex items-center rounded-[8px] bg-wedding-rose/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-wedding-wine">
                           {account.name}
                         </span>
                         <p className="mt-0.5 truncate font-display text-lg font-bold tracking-[0.06em] text-wedding-wine-deep sm:text-xl">
@@ -158,7 +158,7 @@ export default function Cadeaux() {
             <div className="mx-auto mt-8 max-w-xl">
               <div className="flex items-center justify-center gap-3" aria-hidden="true">
                 <span className="h-px flex-1 bg-gradient-to-r from-transparent to-wedding-gold-accent/50" />
-                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-wedding-gold-accent/50 bg-white/80 text-wedding-wine shadow-[0_4px_14px_rgba(212,175,55,0.18)]">
+                <span className="flex h-9 w-9 items-center justify-center rounded-[8px] border border-wedding-rose/25 bg-white/80 text-wedding-wine shadow-[0_8px_18px_-8px_rgba(232,61,137,0.35)]">
                   <Gift size={15} strokeWidth={1.6} />
                 </span>
                 <span className="h-px flex-1 bg-gradient-to-l from-transparent to-wedding-gold-accent/50" />
