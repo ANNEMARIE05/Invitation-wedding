@@ -33,7 +33,11 @@ import BackToTop from "@/components/invite/BackToTop";
 import RsvpDashboard from "@/components/invite/RsvpDashboard";
 import PhotosAdmin from "@/components/invite/PhotosAdmin";
 import InfosAdmin from "@/components/invite/InfosAdmin";
+import InvitesAdmin from "@/components/invite/InvitesAdmin";
 import CoupleSpace from "@/components/invite/CoupleSpace";
+import { InviteProvider, useInvite } from "@/lib/InviteContext";
+import { parseInviteTokenFromLocation } from "@/lib/invite-link";
+import { scrollToId } from "@/lib/invite-data";
 import RequireCoupleAuth from "@/components/invite/RequireCoupleAuth";
 import { SETTINGS_CHANGE_EVENT } from "@/lib/invite-defaults";
 import { useStoreSync } from "@/lib/useStoreSync";
@@ -114,6 +118,10 @@ function Invitation() {
   const [opened, setOpened] = useState(false);
   const [photos, setPhotos] = useState({});
   const [settings, setSettings] = useState(null);
+  const { token: inviteToken, loading: inviteLoading } = useInvite();
+  const inviteInUrl =
+    typeof window !== "undefined" && Boolean(parseInviteTokenFromLocation(window.location.search));
+  const showRsvp = Boolean(inviteToken) || (inviteLoading && inviteInUrl);
 
   const loadPhotos = () =>
     getPhotos()
@@ -181,6 +189,12 @@ function Invitation() {
     window.__lenis?.stop();
   }, [opened]);
 
+  useEffect(() => {
+    if (!opened || !inviteToken || !inviteInUrl) return undefined;
+    const t = window.setTimeout(() => scrollToId("#rsvp"), 700);
+    return () => window.clearTimeout(t);
+  }, [opened, inviteToken, inviteInUrl]);
+
   return (
     <SettingsContext.Provider value={settings}>
       <PhotosContext.Provider value={photos}>
@@ -208,9 +222,15 @@ function Invitation() {
                 <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
                 <Venues />
                 <Tenues />
-                <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
-                <Rsvp />
-                <TornDivider top="var(--wine-deep)" bottom="var(--ivory-deep)" />
+                {showRsvp ? (
+                  <>
+                    <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
+                    <Rsvp />
+                    <TornDivider top="var(--wine-deep)" bottom="var(--ivory-deep)" />
+                  </>
+                ) : (
+                  <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
+                )}
                 <Cadeaux />
                 <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
                 <Guestbook />
@@ -233,6 +253,7 @@ export default function App() {
       <BrowserRouter>
         <LocaleProvider>
           <ThemeApplier />
+          <InviteProvider>
           <SharedSettings>
             <Routes>
               <Route path="/" element={<Invitation />} />
@@ -262,8 +283,17 @@ export default function App() {
                   </RequireCoupleAuth>
                 }
               />
+              <Route
+                path="/liens-invitation"
+                element={
+                  <RequireCoupleAuth>
+                    <InvitesAdmin />
+                  </RequireCoupleAuth>
+                }
+              />
             </Routes>
           </SharedSettings>
+          </InviteProvider>
           <Toaster position="bottom-center" richColors />
         </LocaleProvider>
       </BrowserRouter>

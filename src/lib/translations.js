@@ -187,7 +187,7 @@ export const messages = {
       paletteTitle: "Code couleur",
       paletteText:
         "Vous pouvez choisir l’une des couleurs suivantes pour votre tenue : rouge bordeaux, rouge, rose clair ou rose fuchsia.",
-      paletteRibbonCaption: "Les tons qui marquent la session",
+      paletteRibbonCaption: "Les tons du mariage",
       inspirationAlt:
         "Collage d’invités en tenues variées — robes, costumes, polos — dans les couleurs framboise, bordeaux, rose et crème",
       colorLabels: {
@@ -213,7 +213,7 @@ export const messages = {
       },
       dress: [
         { title: "Liberté de style", text: "Robe longue, costume, combinaison, polo, imprimé floral ou smart casual : tout est possible, tant que c’est soigné." },
-        { title: "Couleurs de la session", text: "Framboise, rouge, rose poudré, crème ou beige en fil rouge. Vert olive, marine ou noir en complément ; une touche d’argent reste la bienvenue." },
+        { title: "Couleurs invitées", text: "Framboise, rouge, rose poudré, crème ou beige en fil rouge. Vert olive, marine ou noir en complément ; une touche d’argent reste la bienvenue." },
       ],
     },
     rsvp: {
@@ -288,6 +288,18 @@ export const messages = {
       waCardSelfChat:
         "Voici ma carte d'invitation personnalisée ✦ Joignez l'image « ma-carte-invitation.png » que le site vient de télécharger.",
       whatsappCard: "Recevoir ma carte sur WhatsApp",
+      invitePartyHint: (n) =>
+        `Votre lien personnel autorise ${n} personne${n > 1 ? "s" : ""} au total (vous inclus).`,
+      inviteUsed:
+        "Ce lien d’invitation a déjà été utilisé pour une inscription et ne peut pas servir à une autre personne.",
+      inviteUsedLookupHint:
+        "Si c’est votre lien, retrouvez votre réponse avec votre numéro de téléphone ci-dessous.",
+      inviteWrongGuest: "Ce numéro ne correspond pas à l’invité de ce lien.",
+      inviteInvalid: "Lien d’invitation invalide — demandez un nouveau lien aux mariés.",
+      inviteLinkRequired:
+        "La confirmation se fait uniquement via le lien personnel que les mariés vous ont envoyé.",
+      invitePartyLimit: (n) =>
+        `Ce lien autorise au maximum ${n} personne${n > 1 ? "s" : ""} — réduisez le nombre d’accompagnants.`,
     },
     gifts: {
       chapter: "Présents & Bénédictions",
@@ -305,6 +317,9 @@ export const messages = {
       copyError: "Impossible de copier le numéro.",
       openWave: "Ouvrir l'application Wave",
       openWaveShort: "Ouvrir",
+      openWaveCopied:
+        "Numéro copié — dans Wave, choisissez « Transfert » et collez le numéro des mariés.",
+      openWavePayment: "Ouverture de Wave pour votre cadeau…",
       orangeAction: "Composer #144#",
       orangeActionShort: "#144#",
       waveHint: "Envoyez votre cadeau directement aux mariés.",
@@ -377,6 +392,11 @@ export const messages = {
             title: "Informations",
             desc: "Couple, lieux, cartes et lien Zoom — comme sur l’accueil.",
             badge: "Textes & liens",
+          },
+          invites: {
+            title: "Liens invités",
+            desc: "Générez un lien et indiquez combien de personnes il autorise — puis envoyez-le.",
+            badge: "Partage sécurisé",
           },
         },
       },
@@ -571,8 +591,8 @@ export const messages = {
       script: "berry, red & silver",
       paletteTitle: "Dress code colours",
       paletteText:
-        "Suit, dress, jumpsuit, polo or floral print — wear what makes you feel elegant. What matters is picking the session colours — berry, red, blush, cream or beige — with an optional touch of silver so we look united on the day.",
-      paletteRibbonCaption: "The shades that mark the session",
+        "Suit, dress, jumpsuit, polo or floral print — wear what makes you feel elegant. What matters is picking the wedding colours — berry, red, blush, cream or beige — with an optional touch of silver so we look united on the day.",
+      paletteRibbonCaption: "The shades of the day",
       inspirationAlt:
         "Collage of guests in varied outfits — dresses, suits, polos — in berry, burgundy, blush and cream tones",
       colorLabels: {
@@ -598,7 +618,7 @@ export const messages = {
       },
       dress: [
         { title: "Your style", text: "Long dress, suit, jumpsuit, polo, floral print or smart casual — all welcome, as long as it’s polished." },
-        { title: "Session colours", text: "Berry, red, blush, cream or beige as your thread. Olive, navy or black work too; a touch of silver is welcome." },
+        { title: "Guest colours", text: "Berry, red, blush, cream or beige as your thread. Olive, navy or black work too; a touch of silver is welcome." },
       ],
     },
     rsvp: {
@@ -673,6 +693,18 @@ export const messages = {
       waCardSelfChat:
         "Here is my personalised invitation card ✦ Attach the « ma-carte-invitation.png » image the site just downloaded.",
       whatsappCard: "Get my card on WhatsApp",
+      invitePartyHint: (n) =>
+        `Your personal link allows ${n} guest${n > 1 ? "s" : ""} in total (including you).`,
+      inviteUsed:
+        "This invitation link has already been used and cannot be used by someone else.",
+      inviteUsedLookupHint:
+        "If this is your link, find your reply with your phone number below.",
+      inviteWrongGuest: "This number does not match the guest for this link.",
+      inviteInvalid: "Invalid invitation link — please ask the couple for a new one.",
+      inviteLinkRequired:
+        "RSVP is only available through the personal link the couple sent you.",
+      invitePartyLimit: (n) =>
+        `This link allows at most ${n} guest${n > 1 ? "s" : ""} — reduce plus-ones.`,
     },
     gifts: {
       chapter: "Gifts & Blessings",
@@ -690,6 +722,9 @@ export const messages = {
       copyError: "Unable to copy number.",
       openWave: "Open Wave app",
       openWaveShort: "Open",
+      openWaveCopied:
+        "Number copied — in Wave, choose “Send” and paste the couple’s number.",
+      openWavePayment: "Opening Wave for your gift…",
       orangeAction: "Dial #144#",
       orangeActionShort: "#144#",
       waveHint: "Send your gift directly to the couple.",
@@ -762,6 +797,11 @@ export const messages = {
             title: "Details",
             desc: "Names, date, and main venue — as guests see them.",
             badge: "Live copy",
+          },
+          invites: {
+            title: "Guest links",
+            desc: "Generate a link and set how many guests it allows — then share it.",
+            badge: "Secure sharing",
           },
         },
       },

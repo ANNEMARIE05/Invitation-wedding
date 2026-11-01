@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Copy, Check, Gift, PhoneCall } from "lucide-react";
 import { toast } from "sonner";
 import { EASE, MOBILE_MONEY_ACCOUNTS } from "@/lib/invite-data";
+import { openWaveApp } from "@/lib/wave-open";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import Chapter from "./Chapter";
@@ -17,6 +18,28 @@ export default function Cadeaux() {
   const [copiedId, setCopiedId] = useState(null);
   const accounts = MOBILE_MONEY_ACCOUNTS.filter(({ id }) => id === "wave" || id === "orange");
   const beneficiaryName = coupleLabel || m.gifts.beneficiaryName || "Stéphane & Marie";
+
+  const openWave = async (account) => {
+    try {
+      const hasPaymentLink = Boolean(account.paymentLink?.trim());
+      const { copied } = await openWaveApp({
+        paymentLink: account.paymentLink,
+        rawNumber: account.rawNumber,
+        e164: account.e164,
+        copyBeforeOpen: !hasPaymentLink,
+      });
+      if (hasPaymentLink) {
+        toast.success(m.gifts.openWavePayment, { duration: 3500 });
+      } else if (copied) {
+        toast.success(m.gifts.openWaveCopied, {
+          description: `${account.number} — ${beneficiaryName}`,
+          duration: 5000,
+        });
+      }
+    } catch {
+      toast.error(m.gifts.copyError);
+    }
+  };
 
   const copyNumber = async (account) => {
     try {
@@ -137,17 +160,29 @@ export default function Cadeaux() {
                         <span>{isCopied ? m.gifts.copiedShort : m.gifts.copyShort}</span>
                       </motion.button>
 
-                      <a
-                        href={account.actionUrl}
-                        target={isOrange ? undefined : "_blank"}
-                        rel={isOrange ? undefined : "noopener noreferrer"}
-                        title={isOrange ? m.gifts.orangeAction : m.gifts.openWave}
-                        aria-label={isOrange ? m.gifts.orangeAction : m.gifts.openWave}
-                        className="inline-flex items-center justify-center gap-1.5 rounded-full bg-white/80 px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-wedding-wine ring-1 ring-wedding-wine/15 transition-all duration-300 hover:bg-white"
-                      >
-                        <span>{isOrange ? m.gifts.orangeActionShort : m.gifts.openWaveShort}</span>
-                        {isOrange ? <PhoneCall size={12} className="shrink-0" /> : <ArrowUpRight size={12} className="shrink-0" />}
-                      </a>
+                      {isOrange ? (
+                        <a
+                          href={account.actionUrl}
+                          title={m.gifts.orangeAction}
+                          aria-label={m.gifts.orangeAction}
+                          className="inline-flex items-center justify-center gap-1.5 rounded-full bg-white/80 px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-wedding-wine ring-1 ring-wedding-wine/15 transition-all duration-300 hover:bg-white"
+                        >
+                          <span>{m.gifts.orangeActionShort}</span>
+                          <PhoneCall size={12} className="shrink-0" />
+                        </a>
+                      ) : (
+                        <motion.button
+                          type="button"
+                          onClick={() => openWave(account)}
+                          whileTap={{ scale: 0.96 }}
+                          title={m.gifts.openWave}
+                          aria-label={m.gifts.openWave}
+                          className="inline-flex items-center justify-center gap-1.5 rounded-full bg-white/80 px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.08em] text-wedding-wine ring-1 ring-wedding-wine/15 transition-all duration-300 hover:bg-white"
+                        >
+                          <span>{m.gifts.openWaveShort}</span>
+                          <ArrowUpRight size={12} className="shrink-0" />
+                        </motion.button>
+                      )}
                     </div>
                   </motion.article>
                 );

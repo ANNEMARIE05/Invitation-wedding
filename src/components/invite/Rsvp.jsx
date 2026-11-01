@@ -6,6 +6,7 @@ import { ApiError, createRsvp, findRsvpByPhone } from "@/lib/api";
 import { EASE, WHATSAPP_NUMBER } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
+import { useInvite } from "@/lib/InviteContext";
 import Chapter from "./Chapter";
 import InviteCardModal from "./InviteCardModal";
 
@@ -116,6 +117,17 @@ function RsvpPhoneLookup({ m, lookupPhone, setLookupPhone, lookup, lookupBusy })
 export default function Rsvp() {
   const { deadlineLabel, zoom } = useSettings();
   const { m } = useI18n();
+  const {
+    token: inviteToken,
+    info: inviteInfo,
+    inviteBlocked,
+    inviteInvalid,
+    canRegister,
+    maxAccompagnants,
+    partySize: invitePartySize,
+    setOwnerRsvpId,
+    reload: reloadInvite,
+  } = useInvite() || {};
   const [form, setForm] = useState(initial);
   const [sent, setSent] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -152,8 +164,20 @@ export default function Rsvp() {
       if (saved?.telephone) {
         setLookupPhone(String(saved.telephone));
       }
+      if (saved?.id) setOwnerRsvpId?.(saved.id);
     } catch {}
-  }, []);
+  }, [setOwnerRsvpId]);
+
+  const accompagnantOptions = maxAccompagnants != null
+    ? Array.from({ length: maxAccompagnants + 1 }, (_, n) => n)
+    : [0, 1, 2, 3, 4];
+
+  useEffect(() => {
+    if (maxAccompagnants == null) return;
+    if (Number(form.accompagnants) > maxAccompagnants) {
+      setForm((prev) => ({ ...prev, accompagnants: maxAccompagnants }));
+    }
+  }, [maxAccompagnants, form.accompagnants]);
 
   const lookup = async (e) => {
     e?.preventDefault?.();
@@ -191,10 +215,16 @@ export default function Rsvp() {
         return;
       }
 
+      if (inviteToken && inviteInfo?.used && inviteInfo.rsvp_id && rsvpData.id !== inviteInfo.rsvp_id) {
+        toast.error(m.rsvp.inviteWrongGuest);
+        return;
+      }
+
       setEditLocked(isLocked);
       setForm(rsvpToForm(rsvpData, m.rsvp.regimes));
       setSent(rsvpData);
       setIsUpdate(true);
+      setOwnerRsvpId?.(rsvpData.id || null);
       try {
         localStorage.setItem("wedding_guest_rsvp", JSON.stringify(rsvpData));
       } catch {}
@@ -215,6 +245,18 @@ export default function Rsvp() {
 
   const submit = async (e) => {
     e.preventDefault();
+    if (!inviteToken) {
+      toast.error(m.rsvp.inviteLinkRequired);
+      return;
+    }
+    if (inviteToken && inviteBlocked && !isUpdate) {
+      toast.error(m.rsvp.inviteUsed);
+      return;
+    }
+    if (inviteToken && !canRegister && !isUpdate) {
+      toast.error(m.rsvp.inviteUsed);
+      return;
+    }
     if (editLocked && isUpdate) {
       toast.error(m.rsvp.toastLocked);
       return;
@@ -228,9 +270,14 @@ export default function Rsvp() {
         chanson: form.present ? form.chanson : "",
       };
       delete payload.regimeIdx;
-      const data = await createRsvp(payload, { update: isUpdate });
+      const data = await createRsvp(payload, {
+        update: isUpdate,
+        inviteToken: inviteToken || null,
+      });
       setSent(data);
       setIsUpdate(true);
+      setOwnerRsvpId?.(data?.id || null);
+      reloadInvite?.();
       setEditLocked(false);
       setAutoShareCard(false);
       setCardModalOpen(Boolean(data?.present && (data.mode || "presentiel") === "presentiel"));
@@ -249,6 +296,22 @@ export default function Rsvp() {
           setForm(rsvpToForm(err.payload.existing, m.rsvp.regimes));
           setIsUpdate(true);
           toast.message(m.rsvp.toastExists);
+          return;
+        }
+        if (err.code === "invite_used") {
+          toast.error(m.rsvp.inviteUsed);
+          return;
+        }
+        if (err.code === "invite_required") {
+          toast.error(m.rsvp.inviteLinkRequired);
+          return;
+        }
+        if (err.code === "invite_invalid") {
+          toast.error(m.rsvp.inviteInvalid);
+          return;
+        }
+        if (err.code === "invite_party_size") {
+          toast.error(m.rsvp.invitePartyLimit(err.payload?.max_party_size || invitePartySize));
           return;
         }
       }
@@ -273,6 +336,10 @@ export default function Rsvp() {
   };
 
   const confirmed = sent;
+
+  if (!inviteToken) {
+    return null;
+  }
 
   return (
     <section
@@ -408,7 +475,24 @@ export default function Rsvp() {
               transition={{ duration: 0.9, ease: EASE }}
             >
               <ReplyCard>
+                {inviteToken && inviteInfo && !inviteInfo.used && invitePartySize ? (
+                  <p className="mb-6 text-center text-sm text-wedding-ink/85" data-testid="rsvp-invite-hint">
+                    {m.rsvp.invitePartyHint(invitePartySize)}
+                  </p>
+                ) : null}
+                {inviteBlocked ? (
+                  <div
+                    className="mb-6 rounded-xl border border-wedding-wine/15 bg-wedding-ivory/80 px-4 py-4 text-center text-sm text-wedding-ink"
+                    data-testid="rsvp-invite-blocked"
+                  >
+                    <p>{inviteInvalid ? m.rsvp.inviteInvalid : m.rsvp.inviteUsed}</p>
+                    {!inviteInvalid ? (
+                      <p className="mt-2 text-xs text-wedding-ink/75">{m.rsvp.inviteUsedLookupHint}</p>
+                    ) : null}
+                  </div>
+                ) : null}
                 <form onSubmit={submit} className="rsvp-reply-form" data-testid="rsvp-form">
+                  <fieldset disabled={inviteBlocked && !isUpdate} className="min-w-0 border-0 p-0">
                   <RsvpSection title={m.rsvp.sectionIdentity}>
                     <RsvpField label={m.rsvp.name} htmlFor="rsvp-nom">
                       <input
@@ -498,7 +582,7 @@ export default function Rsvp() {
                             onChange={set("accompagnants")}
                             className="rsvp-line rsvp-line--select"
                           >
-                            {[0, 1, 2, 3, 4].map((n) => (
+                            {accompagnantOptions.map((n) => (
                               <option key={n} value={n}>
                                 {n === 0 ? m.rsvp.alone : m.rsvp.plusGuests(n)}
                               </option>
@@ -520,6 +604,7 @@ export default function Rsvp() {
                       {loading ? m.rsvp.submitting : isUpdate ? m.rsvp.submitUpdate : m.rsvp.submit}
                     </button>
                   </div>
+                  </fieldset>
                 </form>
 
                 <RsvpPhoneLookup

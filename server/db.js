@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
@@ -56,6 +57,18 @@ CREATE TABLE IF NOT EXISTS admin_sessions (
   token TEXT PRIMARY KEY,
   expires_at BIGINT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS invite_links (
+  id TEXT PRIMARY KEY,
+  token TEXT NOT NULL UNIQUE,
+  label TEXT NOT NULL DEFAULT '',
+  party_size INTEGER NOT NULL CHECK (party_size >= 1 AND party_size <= 10),
+  rsvp_id TEXT,
+  created_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_invite_links_token ON invite_links (token);
+CREATE INDEX IF NOT EXISTS idx_invite_links_rsvp ON invite_links (rsvp_id);
 `;
 
 async function openDatabase() {
@@ -232,7 +245,194 @@ async function findRsvpByPhone(db, telephone) {
   return null;
 }
 
-async function upsertRsvp(db, payload, { allowUpdate }) {
+function createInviteTokenValue() {
+  return crypto.randomBytes(16).toString("base64url");
+}
+
+function rowToInviteLink(row, rsvpNom = null) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    token: row.token,
+    label: row.label || "",
+    party_size: Number(row.party_size) || 1,
+    rsvp_id: row.rsvp_id || null,
+    created_at:
+      typeof row.created_at === "object" && row.created_at?.toISOString
+        ? row.created_at.toISOString()
+        : String(row.created_at),
+    registered_nom: rsvpNom || null,
+  };
+}
+
+async function getInviteLinkByToken(db, token) {
+  const t = String(token || "").trim();
+  if (!t) return null;
+  if (db.isPg) {
+    const res = await db.pool.query(
+      `SELECT il.*, r.nom AS rsvp_nom
+       FROM invite_links il
+       LEFT JOIN rsvps r ON r.id = il.rsvp_id
+       WHERE il.token = $1`,
+      [t],
+    );
+    const row = res.rows[0];
+    return row ? rowToInviteLink(row, row.rsvp_nom || null) : null;
+  }
+  const row = db.sqlite
+    .prepare(
+      `SELECT il.*, r.nom AS rsvp_nom
+       FROM invite_links il
+       LEFT JOIN rsvps r ON r.id = il.rsvp_id
+       WHERE il.token = ?`,
+    )
+    .get(t);
+  return row ? rowToInviteLink(row, row.rsvp_nom || null) : null;
+}
+
+async function listInviteLinks(db) {
+  if (db.isPg) {
+    const res = await db.pool.query(
+      `SELECT il.*, r.nom AS rsvp_nom
+       FROM invite_links il
+       LEFT JOIN rsvps r ON r.id = il.rsvp_id
+       ORDER BY il.created_at DESC`,
+    );
+    return res.rows.map((row) => rowToInviteLink(row, row.rsvp_nom || null));
+  }
+  const rows = db.sqlite
+    .prepare(
+      `SELECT il.*, r.nom AS rsvp_nom
+       FROM invite_links il
+       LEFT JOIN rsvps r ON r.id = il.rsvp_id
+       ORDER BY datetime(il.created_at) DESC`,
+    )
+    .all();
+  return rows.map((row) => rowToInviteLink(row, row.rsvp_nom || null));
+}
+
+async function createInviteLink(db, { label = "", party_size }) {
+  const size = Math.min(10, Math.max(1, Number(party_size) || 1));
+  const id = `inv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  let token = createInviteTokenValue();
+  const created_at = new Date().toISOString();
+  const safeLabel = String(label || "").trim().slice(0, 120);
+
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    try {
+      if (db.isPg) {
+        await db.pool.query(
+          `INSERT INTO invite_links (id, token, label, party_size, rsvp_id, created_at)
+           VALUES ($1, $2, $3, $4, NULL, $5)`,
+          [id, token, safeLabel, size, created_at],
+        );
+      } else {
+        db.sqlite
+          .prepare(
+            `INSERT INTO invite_links (id, token, label, party_size, rsvp_id, created_at)
+             VALUES (?, ?, ?, ?, NULL, ?)`,
+          )
+          .run(id, token, safeLabel, size, created_at);
+      }
+      return getInviteLinkByToken(db, token);
+    } catch (e) {
+      if (String(e.message || "").includes("UNIQUE") || e.code === "23505") {
+        token = createInviteTokenValue();
+        continue;
+      }
+      throw e;
+    }
+  }
+  const err = new Error("invite_create_failed");
+  err.code = "invite_create_failed";
+  throw err;
+}
+
+async function deleteInviteLink(db, id) {
+  if (db.isPg) {
+    const res = await db.pool.query(
+      "DELETE FROM invite_links WHERE id = $1 AND rsvp_id IS NULL RETURNING id",
+      [id],
+    );
+    if (!res.rows[0]) {
+      const err = new Error("invite_not_deletable");
+      err.code = "invite_not_deletable";
+      throw err;
+    }
+    return { ok: true };
+  }
+  const info = db.sqlite.prepare("DELETE FROM invite_links WHERE id = ? AND rsvp_id IS NULL").run(id);
+  if (!info.changes) {
+    const err = new Error("invite_not_deletable");
+    err.code = "invite_not_deletable";
+    throw err;
+  }
+  return { ok: true };
+}
+
+async function bindInviteLinkToRsvp(db, inviteToken, rsvpId) {
+  const t = String(inviteToken || "").trim();
+  if (!t || !rsvpId) return;
+  if (db.isPg) {
+    await db.pool.query(
+      `UPDATE invite_links SET rsvp_id = $1 WHERE token = $2 AND (rsvp_id IS NULL OR rsvp_id = $1)`,
+      [rsvpId, t],
+    );
+    return;
+  }
+  db.sqlite
+    .prepare(`UPDATE invite_links SET rsvp_id = ? WHERE token = ? AND (rsvp_id IS NULL OR rsvp_id = ?)`)
+    .run(rsvpId, t, rsvpId);
+}
+
+/**
+ * Vérifie le jeton d’invitation avant création / mise à jour RSVP.
+ * @returns {Promise<{ party_size: number } | null>}
+ */
+async function assertInviteTokenForRsvp(db, inviteToken, payload, { allowUpdate, existing }) {
+  const token = String(inviteToken || "").trim();
+  if (!token) {
+    const err = new Error("invite_required");
+    err.code = "invite_required";
+    throw err;
+  }
+
+  const invite = await getInviteLinkByToken(db, token);
+  if (!invite) {
+    const err = new Error("invite_invalid");
+    err.code = "invite_invalid";
+    throw err;
+  }
+
+  const maxAcc = Math.max(0, invite.party_size - 1);
+  const acc = Number(payload.accompagnants) || 0;
+  if (acc > maxAcc) {
+    const err = new Error("invite_party_size");
+    err.code = "invite_party_size";
+    err.max_party_size = invite.party_size;
+    throw err;
+  }
+
+  if (invite.rsvp_id) {
+    if (existing && existing.id === invite.rsvp_id) {
+      return { party_size: invite.party_size };
+    }
+    const err = new Error("invite_used");
+    err.code = "invite_used";
+    throw err;
+  }
+
+  if (existing && !allowUpdate) {
+    const err = new Error("rsvp_exists");
+    err.code = "rsvp_exists";
+    err.existing = existing;
+    throw err;
+  }
+
+  return { party_size: invite.party_size };
+}
+
+async function upsertRsvp(db, payload, { allowUpdate, inviteToken }) {
   const key = normalizePhone(payload.telephone);
   if (!key) {
     const err = new Error("invalid_phone");
@@ -240,6 +440,7 @@ async function upsertRsvp(db, payload, { allowUpdate }) {
     throw err;
   }
   const existing = await findRsvpByPhone(db, payload.telephone);
+  await assertInviteTokenForRsvp(db, inviteToken, payload, { allowUpdate, existing });
   const locked = await isRsvpEditLocked(db);
 
   if (existing) {
@@ -297,7 +498,11 @@ async function upsertRsvp(db, payload, { allowUpdate }) {
         existing.id,
       );
     }
-    return findRsvpByPhone(db, payload.telephone);
+    const updated = await findRsvpByPhone(db, payload.telephone);
+    if (inviteToken && updated?.id) {
+      await bindInviteLinkToRsvp(db, inviteToken, updated.id);
+    }
+    return updated;
   }
 
   const id = `rsvp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -342,7 +547,11 @@ async function upsertRsvp(db, payload, { allowUpdate }) {
       created_at,
     );
   }
-  return findRsvpByPhone(db, payload.telephone);
+  const created = await findRsvpByPhone(db, payload.telephone);
+  if (inviteToken && created?.id) {
+    await bindInviteLinkToRsvp(db, inviteToken, created.id);
+  }
+  return created;
 }
 
 function mapGuestbookRow(row) {
@@ -437,4 +646,8 @@ module.exports = {
   addGuestbook,
   getPhotoMap,
   setPhotoSlot,
+  listInviteLinks,
+  createInviteLink,
+  deleteInviteLink,
+  getInviteLinkByToken,
 };

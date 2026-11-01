@@ -71,8 +71,8 @@
     "dev": "concurrently -n api,web -c magenta,cyan \"npm run server\" \"npm run start:web\"",
     "start": "npm run dev",
     "start:web": "craco start",
-    "server": "node server/index.js",
-    "start:api": "node server/index.js",
+    "server": "node --watch server/index.js",
+    "start:api": "node --watch server/index.js",
     "build": "craco build",
     "test": "craco test",
     "refresh": "npm install && npm run build"

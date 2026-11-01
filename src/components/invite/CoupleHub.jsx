@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BarChart3, Camera, LogOut, Settings2, ChevronRight, Heart } from "lucide-react";
+import { BarChart3, Camera, LogOut, Settings2, ChevronRight, Heart, Link2 } from "lucide-react";
 import { EASE } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { getRsvps } from "@/lib/api";
 import { useStoreSync } from "@/lib/useStoreSync";
 import { useCoupleAuth } from "@/lib/useCoupleAuth";
-import LangToggle from "@/components/invite/LangToggle";
-import CoupleAuthShell from "./CoupleAuthShell";
+import ClassicRule from "@/components/invite/ClassicRule";
+import CoupleBackofficeLayout from "@/components/invite/CoupleBackofficeLayout";
 
 const CARD_EASE = EASE;
-const stagger = 0.1;
+const stagger = 0.08;
 
 export default function CoupleHub() {
   const { m } = useI18n();
@@ -47,11 +47,18 @@ export default function CoupleHub() {
       icon: BarChart3,
       title: t.cards.rsvp.title,
       desc: t.cards.rsvp.desc,
-      accent: "from-wedding-gold-accent/25 to-transparent",
       badge:
         stats.total !== null
           ? t.cards.rsvp.badge(stats.presents, stats.total)
           : t.cards.rsvp.loading,
+    },
+    {
+      to: "/liens-invitation",
+      testId: "hub-card-invites",
+      icon: Link2,
+      title: t.cards.invites.title,
+      desc: t.cards.invites.desc,
+      badge: t.cards.invites.badge,
     },
     {
       to: "/photos",
@@ -59,7 +66,6 @@ export default function CoupleHub() {
       icon: Camera,
       title: t.cards.photos.title,
       desc: t.cards.photos.desc,
-      accent: "from-wedding-rose/20 to-transparent",
       badge: t.cards.photos.badge,
     },
     {
@@ -68,85 +74,71 @@ export default function CoupleHub() {
       icon: Settings2,
       title: t.cards.infos.title,
       desc: t.cards.infos.desc,
-      accent: "from-[#C0C0C0]/15 to-transparent",
       badge: t.cards.infos.badge,
     },
   ];
 
   return (
-    <CoupleAuthShell backLabel={t.backInvitation} backTo="/">
-      <LangToggle floating />
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.75, ease: CARD_EASE }}
-        className="text-center"
-        data-testid="couple-hub"
-      >
-        <p className="font-cinzel text-[9px] tracking-[0.35em] uppercase text-[#C48B92] sm:text-[10px] sm:tracking-[0.4em]">
-          {t.eyebrow}
-        </p>
-        <h1 className="mt-2 font-display text-[1.75rem] font-medium italic leading-tight text-wedding-on-dark sm:mt-3 sm:text-4xl sm:leading-normal md:text-5xl">
-          {t.title}
-        </h1>
-        <p className="mt-1.5 font-script text-2xl text-wedding-gold-accent sm:mt-2 sm:text-3xl">{t.subtitle}</p>
-        <p className="mx-auto mt-4 max-w-lg text-xs leading-relaxed text-[#C48B92]/90 sm:mt-5 sm:text-sm">{t.intro}</p>
-      </motion.div>
-
-      <ul className="mt-8 grid gap-3 sm:mt-12 sm:grid-cols-3 sm:gap-5">
-        {cards.map(({ to, testId, icon: Icon, title, desc, accent, badge }, i) => (
+    <CoupleBackofficeLayout
+      backLabel={t.backInvitation}
+      backTo="/"
+      panel={{
+        testId: "couple-hub",
+        eyebrow: t.eyebrow,
+        title: t.title,
+        subtitle: t.subtitle,
+        intro: t.intro,
+      }}
+    >
+      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
+        {cards.map(({ to, testId, icon: Icon, title, desc, badge }, i) => (
           <motion.li
             key={to}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15 + i * stagger, ease: CARD_EASE }}
+            transition={{ duration: 0.65, delay: 0.12 + i * stagger, ease: CARD_EASE }}
+            className="min-h-0"
           >
             <Link
               to={to}
               data-testid={testId}
-              className="couple-hub-card group relative flex h-full flex-col overflow-hidden rounded-[12px] border border-wedding-rose/25 bg-wedding-on-dark/[0.05] p-4 shadow-[0_18px_40px_-14px_rgba(232,61,137,0.4)] backdrop-blur-sm transition-all duration-500 hover:border-wedding-rose/40 hover:bg-wedding-on-dark/[0.08] hover:shadow-[0_28px_56px_-12px_rgba(232,61,137,0.5)] sm:p-6"
+              className="couple-hub-tile luxe-card luxe-card--light luxe-card--no-inset group flex h-full flex-col"
             >
-              <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${accent} opacity-0 transition-opacity duration-500 group-hover:opacity-100`} aria-hidden />
-              <div className="relative flex items-start justify-between gap-2 sm:gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-[8px] border border-wedding-rose/30 bg-wedding-wine-deep/60 text-wedding-gold-accent shadow-[0_8px_18px_-8px_rgba(232,61,137,0.45)] transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11">
-                  <Icon className="h-[17px] w-[17px] sm:h-5 sm:w-5" strokeWidth={1.4} aria-hidden />
+              <div className="flex items-start justify-between gap-2">
+                <span className="couple-hub-tile__icon" aria-hidden>
+                  <Icon className="h-[18px] w-[18px] sm:h-5 sm:w-5" strokeWidth={1.45} />
                 </span>
                 <ChevronRight
-                  size={16}
-                  className="mt-0.5 shrink-0 text-[#C48B92]/50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-wedding-gold-accent sm:mt-1 sm:h-[18px] sm:w-[18px]"
+                  size={17}
+                  className="couple-hub-tile__chevron shrink-0 opacity-50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100"
+                  strokeWidth={1.5}
                   aria-hidden
                 />
               </div>
-              <h2 className="relative mt-3 font-display text-xl text-wedding-on-dark sm:mt-5 sm:text-2xl">{title}</h2>
-              <p className="relative mt-1.5 flex-1 text-xs leading-relaxed text-[#C48B92]/85 sm:mt-2 sm:text-sm">{desc}</p>
-              <p className="relative mt-2.5 font-cinzel text-[8px] tracking-[0.18em] uppercase text-wedding-gold-accent/80 sm:mt-4 sm:text-[9px] sm:tracking-[0.2em]">
-                {badge}
-              </p>
+              <h2 className="couple-hub-tile__title mt-4 font-display text-xl sm:mt-5 sm:text-[1.35rem]">{title}</h2>
+              <p className="couple-hub-tile__desc mt-2 flex-1 text-sm leading-relaxed">{desc}</p>
+              <p className="couple-hub-tile__badge mt-4">{badge}</p>
             </Link>
           </motion.li>
         ))}
       </ul>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.55, duration: 0.6 }}
-        className="mt-8 flex flex-col items-center gap-3 sm:mt-12 sm:gap-4"
-      >
-        <div className="flex items-center gap-2 text-[#C48B92]/60">
-          <Heart size={14} className="text-wedding-rose/70" fill="currentColor" aria-hidden />
-          <span className="font-cinzel text-[9px] tracking-[0.25em] uppercase">{t.wish}</span>
-        </div>
+      <ClassicRule className="mx-auto mt-9 max-w-xs sm:mt-11" gem="♥" />
+      <footer className="mt-6 flex flex-col items-center gap-4 sm:mt-7">
+        <p className="couple-hub-wish flex items-center gap-2">
+          <Heart size={13} className="text-wedding-wine-accent" fill="currentColor" aria-hidden />
+          <span>{t.wish}</span>
+        </p>
         <button
           type="button"
           data-testid="couple-logout"
           onClick={signOut}
-          className="inline-flex items-center gap-2 rounded-[8px] border border-wedding-rose/30 px-5 py-2.5 font-cinzel text-[10px] tracking-[0.22em] uppercase text-[#C48B92] shadow-[0_10px_24px_-10px_rgba(232,61,137,0.4)] transition-all hover:border-wedding-rose/50 hover:text-wedding-on-dark"
+          className="btn-couple-classic couple-hub-logout inline-flex w-full max-w-xs items-center justify-center gap-2 sm:w-auto sm:min-w-[14rem]"
         >
           <LogOut size={14} strokeWidth={1.5} aria-hidden />
           {t.logout}
         </button>
-      </motion.div>
-    </CoupleAuthShell>
+      </footer>
+    </CoupleBackofficeLayout>
   );
 }

@@ -42,3 +42,15 @@ CREATE TABLE IF NOT EXISTS admin_sessions (
   token TEXT PRIMARY KEY,
   expires_at BIGINT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS invite_links (
+  id TEXT PRIMARY KEY,
+  token TEXT NOT NULL UNIQUE,
+  label TEXT NOT NULL DEFAULT '',
+  party_size INTEGER NOT NULL CHECK (party_size >= 1 AND party_size <= 10),
+  rsvp_id TEXT,
+  created_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_invite_links_token ON invite_links (token);
+CREATE INDEX IF NOT EXISTS idx_invite_links_rsvp ON invite_links (rsvp_id);

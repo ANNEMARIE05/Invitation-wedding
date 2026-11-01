@@ -18,6 +18,10 @@ const {
   addGuestbook,
   getPhotoMap,
   setPhotoSlot,
+  listInviteLinks,
+  createInviteLink,
+  deleteInviteLink,
+  getInviteLinkByToken,
 } = require("./db");
 const {
   getExpectedPassword,
@@ -154,6 +158,7 @@ async function main() {
     }
     try {
       const allowUpdate = Boolean(body.update);
+      const inviteToken = String(body.invite_token || "").trim() || null;
       const entry = await upsertRsvp(
         db,
         {
@@ -166,7 +171,7 @@ async function main() {
           chanson: body.chanson || "",
           message: body.message || "",
         },
-        { allowUpdate },
+        { allowUpdate, inviteToken },
       );
       res.json(entry);
     } catch (e) {
@@ -180,6 +185,78 @@ async function main() {
       }
       if (e.code === "invalid_phone") {
         res.status(400).json({ error: "invalid_phone" });
+        return;
+      }
+      if (e.code === "invite_required") {
+        res.status(403).json({ error: "invite_required" });
+        return;
+      }
+      if (e.code === "invite_invalid") {
+        res.status(404).json({ error: "invite_invalid" });
+        return;
+      }
+      if (e.code === "invite_used") {
+        res.status(403).json({ error: "invite_used" });
+        return;
+      }
+      if (e.code === "invite_party_size") {
+        res.status(400).json({ error: "invite_party_size", max_party_size: e.max_party_size });
+        return;
+      }
+      next(e);
+    }
+  });
+
+  app.get("/api/invite/:token", async (req, res, next) => {
+    try {
+      const invite = await getInviteLinkByToken(db, req.params.token);
+      if (!invite) {
+        res.status(404).json({ error: "invite_invalid" });
+        return;
+      }
+      res.json({
+        party_size: invite.party_size,
+        label: invite.label || "",
+        used: Boolean(invite.rsvp_id),
+        rsvp_id: invite.rsvp_id || null,
+      });
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  app.get("/api/invites", requireAdmin(db), async (_req, res, next) => {
+    try {
+      res.json(await listInviteLinks(db));
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  app.post("/api/invites", requireAdmin(db), async (req, res, next) => {
+    try {
+      const party_size = Number(req.body?.party_size);
+      if (!Number.isFinite(party_size) || party_size < 1 || party_size > 10) {
+        res.status(400).json({ error: "invalid_party_size" });
+        return;
+      }
+      const created = await createInviteLink(db, {
+        label: req.body?.label,
+        party_size,
+      });
+      res.status(201).json(created);
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  app.delete("/api/invites/:id", requireAdmin(db), async (req, res, next) => {
+    try {
+      await deleteInviteLink(db, req.params.id);
+      res.json({ ok: true });
+    } catch (e) {
+      if (e.code === "invite_not_deletable") {
+        res.status(409).json({ error: "invite_not_deletable" });
         return;
       }
       next(e);

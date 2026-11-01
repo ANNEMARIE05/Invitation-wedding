@@ -5,10 +5,17 @@ import { ArrowLeft } from "lucide-react";
 import { EASE } from "@/lib/invite-data";
 import { useSettings } from "@/lib/settings";
 import WeddingPetals from "@/components/invite/WeddingPetals";
+import { FloralCornerOverlay } from "@/components/invite/Flowers";
 
-const SHELL_ORBS = [
+const LOGIN_ORBS = [
   { className: "hero-orb hero-orb--magenta left-[10%] top-[12%] h-[min(40vw,280px)] w-[min(40vw,280px)]", delay: 0 },
   { className: "hero-orb hero-orb--wine right-[8%] bottom-[18%] h-[min(44vw,320px)] w-[min(44vw,320px)]", delay: 3 },
+];
+
+const HUB_ORBS = [
+  { className: "hero-orb hero-orb--magenta left-[8%] top-[18%] h-[min(42vw,320px)] w-[min(42vw,320px)]", delay: 0 },
+  { className: "hero-orb hero-orb--wine right-[5%] bottom-[12%] h-[min(50vw,380px)] w-[min(50vw,380px)]", delay: 2 },
+  { className: "hero-orb hero-orb--silver left-[42%] top-[55%] h-[min(28vw,200px)] w-[min(28vw,200px)]", delay: 4 },
 ];
 
 export default function CoupleAuthShell({
@@ -17,6 +24,7 @@ export default function CoupleAuthShell({
   backTo = "/",
   narrow = false,
   showCoupleBanner = true,
+  contentAlign = "center",
 }) {
   const { coupleLabel, initials } = useSettings();
 
@@ -42,13 +50,14 @@ export default function CoupleAuthShell({
       data-testid="couple-auth-shell"
     >
       <div className="pointer-events-none absolute inset-0 hero-atmosphere" aria-hidden />
-      <div className="pointer-events-none absolute inset-0 hero-grid opacity-20" aria-hidden />
-      {SHELL_ORBS.map((o) => (
+      <div className="pointer-events-none absolute inset-0 hero-grid opacity-40" aria-hidden />
+      {(narrow ? LOGIN_ORBS : HUB_ORBS).map((o) => (
         <div key={o.className} className={`pointer-events-none absolute ${o.className}`} style={{ animationDelay: `${o.delay}s` }} aria-hidden />
       ))}
       <div className="pointer-events-none absolute inset-0 hero-veil" aria-hidden />
       <div className="grain-overlay opacity-[0.04]" aria-hidden />
-      {narrow && <WeddingPetals active density={12} variant="hero" />}
+      {!narrow && <FloralCornerOverlay variant="hero" />}
+      <WeddingPetals active density={narrow ? 12 : 10} variant="hero" />
 
       <div className="hero-corners couple-auth-corners pointer-events-none absolute z-[1]" aria-hidden>
         <span className="hero-corner hero-corner--tl" />
@@ -66,20 +75,20 @@ export default function CoupleAuthShell({
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE }}
-          className="flex shrink-0 flex-wrap items-center justify-between gap-4"
+          className="relative z-20 flex shrink-0 flex-wrap items-center justify-between gap-4"
         >
           <Link
             to={backTo}
             data-testid="couple-auth-back"
-            className="inline-flex items-center gap-2 font-cinzel text-[10px] tracking-[0.28em] uppercase text-[#C48B92] transition-colors hover:text-wedding-gold-accent"
+            className="couple-auth-back"
           >
-            <ArrowLeft size={14} strokeWidth={1.5} />
+            <ArrowLeft size={16} strokeWidth={2} aria-hidden />
             {backLabel}
           </Link>
           <div className="flex items-center gap-3">
             <span className="hidden h-px w-10 bg-gradient-to-r from-transparent to-wedding-gold-accent/50 sm:block" />
             <span
-              className="flex h-10 w-10 items-center justify-center rounded-[8px] border border-wedding-rose/30 bg-wedding-on-dark/5 font-cinzel text-[9px] tracking-[0.12em] text-wedding-gold-accent shadow-[0_10px_24px_-8px_rgba(232,61,137,0.4)]"
+              className="couple-auth-monogram flex h-10 w-10 items-center justify-center rounded-[8px] font-cinzel text-[9px] tracking-[0.12em] text-wedding-gold-soft"
               aria-hidden
             >
               {initials.replace(/\s/g, "")}
@@ -88,7 +97,9 @@ export default function CoupleAuthShell({
         </motion.header>
 
         <div
-          className={`mx-auto flex w-full min-h-0 flex-1 flex-col items-center justify-center ${narrow ? "max-w-md" : "max-w-4xl"}`}
+          className={`mx-auto flex w-full min-h-0 flex-1 flex-col items-center ${
+            contentAlign === "start" ? "justify-start pt-2 sm:pt-4" : "justify-center"
+          } ${narrow ? "max-w-md" : "max-w-5xl"}`}
         >
           {showCoupleBanner && (
             <motion.div
@@ -97,7 +108,7 @@ export default function CoupleAuthShell({
               transition={{ duration: 0.85, delay: 0.08, ease: EASE }}
               className="mb-4 shrink-0 text-center sm:mb-5"
             >
-              <p className="font-cinzel text-[9px] tracking-[0.32em] uppercase text-[#C48B92] sm:text-[10px] sm:tracking-[0.42em]">
+              <p className="type-eyebrow--on-dark font-cinzel text-[10px] tracking-[0.32em] sm:text-[11px] sm:tracking-[0.42em]">
                 {coupleLabel}
               </p>
             </motion.div>

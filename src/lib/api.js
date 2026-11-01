@@ -85,10 +85,41 @@ export async function findRsvpByPhone(telephone) {
   }
 }
 
-export async function createRsvp(payload, { update = false } = {}) {
-  const entry = await request("/api/rsvp", { method: "POST", body: { ...payload, update } });
+export async function createRsvp(payload, { update = false, inviteToken = null } = {}) {
+  const body = { ...payload, update };
+  if (inviteToken) body.invite_token = inviteToken;
+  const entry = await request("/api/rsvp", { method: "POST", body });
   notifyStoreChange("rsvps");
+  notifyStoreChange("invites");
   return entry;
+}
+
+export async function getInviteByToken(token) {
+  try {
+    return await request(`/api/invite/${encodeURIComponent(token)}`);
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 404) return null;
+    throw e;
+  }
+}
+
+export async function getInviteLinks() {
+  return ensureArray(await request("/api/invites"));
+}
+
+export async function createInviteLink({ label = "", party_size }) {
+  const row = await request("/api/invites", {
+    method: "POST",
+    body: { label, party_size },
+  });
+  notifyStoreChange("invites");
+  return row;
+}
+
+export async function deleteInviteLink(id) {
+  const result = await request(`/api/invites/${encodeURIComponent(id)}`, { method: "DELETE" });
+  notifyStoreChange("invites");
+  return result;
 }
 
 export async function getGuestbook() {

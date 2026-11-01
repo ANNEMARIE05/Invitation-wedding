@@ -6,12 +6,22 @@ import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import { useNavActive } from "@/lib/use-nav-active";
 import LangToggle from "./LangToggle";
+import { useInvite } from "@/lib/InviteContext";
 
 export default function Nav() {
   const { initials } = useSettings();
   const { m } = useI18n();
+  const { token: inviteToken } = useInvite() || {};
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const sectionIds = useMemo(() => m.nav.links.map((l) => l.href.slice(1)), [m.nav.links]);
+  const navLinks = useMemo(() => {
+    const base = m.nav.links;
+    if (!inviteToken) return base;
+    const confirm = { label: m.nav.confirm, href: "#rsvp" };
+    const idx = base.findIndex((l) => l.href === "#cadeaux");
+    if (idx === -1) return [...base, confirm];
+    return [...base.slice(0, idx), confirm, ...base.slice(idx)];
+  }, [m.nav.links, m.nav.confirm, inviteToken]);
+  const sectionIds = useMemo(() => navLinks.map((l) => l.href.slice(1)), [navLinks]);
   const [activeHref, activateOnNavigate] = useNavActive(sectionIds);
 
   const goTo = (href) => {
@@ -38,7 +48,7 @@ export default function Nav() {
         </button>
         <nav className="hidden xl:flex items-center gap-5 2xl:gap-8">
           <LayoutGroup id="main-nav-links">
-          {m.nav.links.map((l) => {
+          {navLinks.map((l) => {
             const isActive = activeHref === l.href;
             return (
               <button
@@ -92,7 +102,7 @@ export default function Nav() {
             transition={{ duration: 0.18 }}
             className="mobile-nav-panel absolute inset-x-0 top-full z-50 grid gap-1 border-t border-wedding-rose-light/50 px-4 py-3 shadow-xl xl:hidden"
           >
-            {m.nav.links.map((link) => (
+            {navLinks.map((link) => (
               <button
                 key={link.href}
                 type="button"

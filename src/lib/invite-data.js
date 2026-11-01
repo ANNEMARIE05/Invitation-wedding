@@ -15,8 +15,8 @@ export const WEDDING_DATE_SHORT = "04 . 12 . 2026";
 export const VENUE = {
   name: "Salle du Royaume — Cocody Danga",
   address: "Cocody Danga, Abidjan — Côte d'Ivoire",
-  mapsUrl: "https://maps.app.goo.gl/RxudqMYFj3jEBCua7?g_st=aw",
-  embedUrl: "https://www.google.com/maps?q=Salle+du+Royaume+T%C3%A9moins+J%C3%A9hovah+Cocody+Danga&output=embed",
+  mapsUrl: "https://maps.google.com/maps?q=5.3407496%2C-4.0054354&z=17&hl=fr",
+  embedUrl: "https://www.google.com/maps?q=5.3407496,-4.0054354&z=17&output=embed",
 };
 
 /** Données lieux (textes via i18n) */
@@ -31,8 +31,8 @@ export const VENUE_MEDIA = [
   {
     id: "ceremony",
     address: "Cocody Danga, Abidjan — Côte d'Ivoire",
-    mapsUrl: "https://maps.app.goo.gl/RxudqMYFj3jEBCua7?g_st=aw",
-    embedUrl: "https://www.google.com/maps?q=Salle+du+Royaume+T%C3%A9moins+J%C3%A9hovah+Cocody+Danga&output=embed",
+    mapsUrl: "https://maps.google.com/maps?q=5.3407496%2C-4.0054354&z=17&hl=fr",
+    embedUrl: "https://www.google.com/maps?q=5.3407496,-4.0054354&z=17&output=embed",
     image: publicImage("salle-temoins-jehovah.jpg"),
   },
 ];
@@ -118,14 +118,23 @@ export const WEDDING_SONG = {
 export const GIFTS_PRIMARY_PHONE = "07 07 10 34 61";
 export const GIFTS_PRIMARY_PHONE_RAW = "0707103461";
 
+/**
+ * Lien de paiement Wave (pay.wave.com/m/…/c/ci/) — optionnel mais recommandé.
+ * Généré dans l’app Wave ou Wave Business : « Recevoir » / « Envoi de lien ».
+ * Sur mobile, ce lien ouvre directement l’application Wave pour payer les mariés.
+ */
+export const WAVE_PAYMENT_LINK = "";
+
 /** Compte Wave pour les cadeaux & participations */
 export const WAVE_ACCOUNT = {
   name: "Wave",
   number: "07 07 10 34 61",
   rawNumber: "0707103461",
+  e164: "+2250707103461",
   recipient: "Stéphane & Marie",
   color: "#1DC3F4",
-  actionUrl: "https://wave.com",
+  paymentLink: WAVE_PAYMENT_LINK,
+  actionType: "wave_app",
 };
 
 /** Comptes Mobile Money pour les cadeaux & participations */
@@ -142,8 +151,9 @@ export const MOBILE_MONEY_ACCOUNTS = [
     badgeBg: "bg-[#1DC3F4]/15",
     badgeText: "text-[#0094C6]",
     border: "border-[#1DC3F4]/50",
-    actionUrl: "https://wave.com",
-    actionType: "link",
+    e164: "+2250707103461",
+    paymentLink: WAVE_PAYMENT_LINK,
+    actionType: "wave_app",
     iconEmoji: "🌊",
     logoUrl: publicImage("wave-money-logo.png"),
   },
