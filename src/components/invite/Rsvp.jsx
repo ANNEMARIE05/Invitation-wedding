@@ -12,6 +12,13 @@ import InviteCardModal from "./InviteCardModal";
 
 const partySize = (d) => (d.present ? 1 + Number(d.accompagnants || 0) : 0);
 
+/** Normalise présence (API, localStorage, champs texte). */
+function toPresentBool(value) {
+  if (value === false || value === 0 || value === "0" || value === "false") return false;
+  if (value === true || value === 1 || value === "1" || value === "true") return true;
+  return Boolean(value);
+}
+
 const initial = {
   nom: "",
   telephone: "",
@@ -32,7 +39,7 @@ function rsvpToForm(rsvp, regimes) {
   return {
     nom: rsvp.nom || "",
     telephone: rsvp.telephone || "",
-    present: Boolean(rsvp.present),
+    present: toPresentBool(rsvp.present),
     mode: rsvp.mode || "presentiel",
     accompagnants: Number(rsvp.accompagnants) || 0,
     regimeIdx: regimeIdxFromLabel(regimes, rsvp.regime),
@@ -138,7 +145,10 @@ export default function Rsvp() {
   const [cardModalOpen, setCardModalOpen] = useState(false);
   const [autoShareCard, setAutoShareCard] = useState(false);
 
-  const set = (k) => (e) => setForm({ ...form, [k]: e.target ? e.target.value : e });
+  const set = (k) => (e) => {
+    const value = e?.target ? e.target.value : e;
+    setForm((prev) => ({ ...prev, [k]: value }));
+  };
   const firstName = (name) => String(name || "").trim().split(/\s+/)[0] || "";
 
   const buildWaMessage = (d) => {
@@ -263,13 +273,17 @@ export default function Rsvp() {
     }
     setLoading(true);
     try {
+      const present = toPresentBool(form.present);
       const payload = {
-        ...form,
+        nom: String(form.nom || "").trim(),
+        telephone: String(form.telephone || "").trim(),
+        present,
+        mode: present ? form.mode || "presentiel" : "presentiel",
         regime: m.rsvp.regimes[Number(form.regimeIdx) || 0],
-        accompagnants: Number(form.accompagnants),
-        chanson: form.present ? form.chanson : "",
+        accompagnants: present && form.mode === "presentiel" ? Number(form.accompagnants) || 0 : 0,
+        chanson: present ? form.chanson : "",
+        message: form.message || "",
       };
-      delete payload.regimeIdx;
       const data = await createRsvp(payload, {
         update: isUpdate,
         inviteToken: inviteToken || null,
@@ -312,6 +326,14 @@ export default function Rsvp() {
         }
         if (err.code === "invite_party_size") {
           toast.error(m.rsvp.invitePartyLimit(err.payload?.max_party_size || invitePartySize));
+          return;
+        }
+        if (err.code === "missing_field") {
+          toast.error(m.rsvp.toastMissingField(err.payload?.field));
+          return;
+        }
+        if (err.code === "invalid_phone") {
+          toast.error(m.rsvp.phoneHint);
           return;
         }
       }
@@ -535,36 +557,38 @@ export default function Rsvp() {
                     <p className="rsvp-reply-question">{m.rsvp.attendance}</p>
                     <div className="rsvp-radio-list" data-testid="rsvp-attendance">
                       <RsvpRadio
-                        active={form.present === true}
+                        active={toPresentBool(form.present)}
                         testId="rsvp-present-oui"
-                        onClick={() => setForm({ ...form, present: true })}
+                        onClick={() => setForm((prev) => ({ ...prev, present: true }))}
                       >
                         {m.rsvp.present}
                       </RsvpRadio>
                       <RsvpRadio
-                        active={form.present === false}
+                        active={!toPresentBool(form.present)}
                         testId="rsvp-present-non"
-                        onClick={() => setForm({ ...form, present: false, chanson: "" })}
+                        onClick={() =>
+                          setForm((prev) => ({ ...prev, present: false, chanson: "", mode: "presentiel" }))
+                        }
                       >
                         {m.rsvp.absent}
                       </RsvpRadio>
                     </div>
 
-                    {form.present ? (
+                    {toPresentBool(form.present) ? (
                       <>
                         <p className="rsvp-reply-question mt-7">{m.rsvp.mode}</p>
                         <div className="rsvp-radio-list" data-testid="rsvp-mode">
                           <RsvpRadio
                             active={form.mode === "presentiel"}
                             testId="rsvp-mode-presentiel"
-                            onClick={() => setForm({ ...form, mode: "presentiel" })}
+                            onClick={() => setForm((prev) => ({ ...prev, mode: "presentiel" }))}
                           >
                             {m.rsvp.inPerson}
                           </RsvpRadio>
                           <RsvpRadio
                             active={form.mode === "zoom"}
                             testId="rsvp-mode-zoom"
-                            onClick={() => setForm({ ...form, mode: "zoom" })}
+                            onClick={() => setForm((prev) => ({ ...prev, mode: "zoom" }))}
                           >
                             {m.rsvp.onZoom}
                           </RsvpRadio>
@@ -572,7 +596,7 @@ export default function Rsvp() {
                       </>
                     ) : null}
 
-                    {form.present && form.mode === "presentiel" ? (
+                    {toPresentBool(form.present) && form.mode === "presentiel" ? (
                       <div className="mt-7">
                         <RsvpField label={m.rsvp.guests} htmlFor="rsvp-accompagnants">
                           <select

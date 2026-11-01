@@ -36,13 +36,17 @@ export default function CoupleBackofficePanel({
             {coupleLabel ? (
               <p className="couple-classic-card__kicker tracking-[0.28em]">{coupleLabel}</p>
             ) : null}
-            {eyebrow ? <p className="couple-hub-eyebrow mt-2">{eyebrow}</p> : null}
+            {eyebrow ? (
+              <p className="couple-classic-card__kicker mt-2 text-center tracking-[0.34em]">{eyebrow}</p>
+            ) : null}
             {title ? (
-              <h1 className="couple-classic-card__title mt-3 font-display text-[1.85rem] font-medium italic leading-tight sm:text-[2.35rem]">
+              <h1 className="couple-classic-card__title mt-3 text-center font-display text-[1.85rem] font-medium italic leading-tight sm:text-[2.35rem]">
                 {title}
               </h1>
             ) : null}
-            {subtitle ? <p className="type-script mt-2 text-[1.65rem] sm:text-[2rem]">{subtitle}</p> : null}
+            {subtitle ? (
+              <p className="type-script mt-2 text-center text-[1.65rem] sm:text-[2rem]">{subtitle}</p>
+            ) : null}
             {intro ? (
               <>
                 <ClassicRule className="mx-auto mt-5 max-w-md sm:mt-6" />

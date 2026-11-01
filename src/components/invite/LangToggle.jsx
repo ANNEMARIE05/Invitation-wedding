@@ -7,7 +7,7 @@ export default function LangToggle({ floating = false, solid = false }) {
   const { locale, setLocale } = useI18n();
 
   const shell = floating
-    ? "fixed z-[95] top-7 right-7 flex items-center gap-0.5 rounded-[8px] border border-wedding-rose-light/35 bg-[#FFF8FB] p-0.5 shadow-[0_10px_24px_-8px_rgba(18,2,8,0.35)] sm:top-9 sm:right-9"
+    ? "fixed z-[95] top-7 right-7 flex items-center gap-0.5 rounded-[8px] border hairline bg-wedding-on-dark/98 backdrop-blur-md p-0.5 shadow-[0_10px_24px_-8px_rgba(232,61,137,0.4)] sm:top-9 sm:right-9"
     : solid
       ? "flex shrink-0 items-center gap-0.5 rounded-[8px] border border-wedding-rose-light/40 bg-wedding-on-dark p-0.5 shadow-[0_8px_18px_-8px_rgba(232,61,137,0.28)]"
       : "flex shrink-0 items-center gap-0.5 rounded-[8px] border hairline bg-wedding-ivory/90 p-0.5 shadow-[0_8px_18px_-8px_rgba(232,61,137,0.28)]";
@@ -29,7 +29,7 @@ export default function LangToggle({ floating = false, solid = false }) {
           className={`${btn} ${
             locale === code
               ? "bg-wedding-wine-deep text-wedding-on-dark shadow-sm"
-              : "text-wedding-ink-soft hover:bg-wedding-ivory-deep/40 hover:text-wedding-wine-deep"
+              : "text-wedding-wine hover:text-wedding-rose"
           }`}
         >
           {code.toUpperCase()}

@@ -7,8 +7,9 @@ import { useI18n } from "@/lib/locale";
 import { getRsvps } from "@/lib/api";
 import { useStoreSync } from "@/lib/useStoreSync";
 import { useCoupleAuth } from "@/lib/useCoupleAuth";
+import LangToggle from "@/components/invite/LangToggle";
 import ClassicRule from "@/components/invite/ClassicRule";
-import CoupleBackofficeLayout from "@/components/invite/CoupleBackofficeLayout";
+import CoupleAuthShell from "./CoupleAuthShell";
 
 const CARD_EASE = EASE;
 const stagger = 0.08;
@@ -79,66 +80,94 @@ export default function CoupleHub() {
   ];
 
   return (
-    <CoupleBackofficeLayout
-      backLabel={t.backInvitation}
-      backTo="/"
-      panel={{
-        testId: "couple-hub",
-        eyebrow: t.eyebrow,
-        title: t.title,
-        subtitle: t.subtitle,
-        intro: t.intro,
-      }}
-    >
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
-        {cards.map(({ to, testId, icon: Icon, title, desc, badge }, i) => (
-          <motion.li
-            key={to}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.12 + i * stagger, ease: CARD_EASE }}
-            className="min-h-0"
-          >
-            <Link
-              to={to}
-              data-testid={testId}
-              className="couple-hub-tile luxe-card luxe-card--light luxe-card--no-inset group flex h-full flex-col"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <span className="couple-hub-tile__icon" aria-hidden>
-                  <Icon className="h-[18px] w-[18px] sm:h-5 sm:w-5" strokeWidth={1.45} />
-                </span>
-                <ChevronRight
-                  size={17}
-                  className="couple-hub-tile__chevron shrink-0 opacity-50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100"
-                  strokeWidth={1.5}
-                  aria-hidden
-                />
-              </div>
-              <h2 className="couple-hub-tile__title mt-4 font-display text-xl sm:mt-5 sm:text-[1.35rem]">{title}</h2>
-              <p className="couple-hub-tile__desc mt-2 flex-1 text-sm leading-relaxed">{desc}</p>
-              <p className="couple-hub-tile__badge mt-4">{badge}</p>
-            </Link>
-          </motion.li>
-        ))}
-      </ul>
+    <CoupleAuthShell backLabel={t.backInvitation} backTo="/">
+      <LangToggle floating />
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.75, ease: CARD_EASE }}
+        className="text-center"
+        data-testid="couple-hub"
+      >
+        <p className="font-cinzel text-[9px] tracking-[0.35em] uppercase text-[#C48B92] sm:text-[10px] sm:tracking-[0.4em]">
+          {t.eyebrow}
+        </p>
+        <h1 className="mt-2 font-display text-[1.75rem] font-medium italic leading-tight text-wedding-on-dark sm:mt-3 sm:text-4xl sm:leading-normal md:text-5xl">
+          {t.title}
+        </h1>
+        <p className="mt-1.5 font-script text-2xl text-wedding-gold-accent sm:mt-2 sm:text-3xl">{t.subtitle}</p>
+        <p className="mx-auto mt-4 max-w-lg text-xs leading-relaxed text-[#C48B92]/90 sm:mt-5 sm:text-sm">{t.intro}</p>
+      </motion.div>
+
+      <motion.article
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.85, delay: 0.1, ease: CARD_EASE }}
+        className="couple-classic-card couple-backoffice-panel couple-backoffice-panel--wide relative mx-auto mt-8 w-full sm:mt-10"
+      >
+        <div className="couple-classic-card__frame pointer-events-none" aria-hidden />
+        <span className="faire-part-gold-point faire-part-gold-point--tl couple-classic-card__corner" aria-hidden />
+        <span className="faire-part-gold-point faire-part-gold-point--tr couple-classic-card__corner" aria-hidden />
+        <span className="faire-part-gold-point faire-part-gold-point--bl couple-classic-card__corner" aria-hidden />
+        <span className="faire-part-gold-point faire-part-gold-point--br couple-classic-card__corner" aria-hidden />
+
+        <div className="relative px-5 py-8 sm:px-8 sm:py-10">
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
+            {cards.map(({ to, testId, icon: Icon, title, desc, badge }, i) => (
+              <motion.li
+                key={to}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: 0.12 + i * stagger, ease: CARD_EASE }}
+                className="min-h-0"
+              >
+                <Link
+                  to={to}
+                  data-testid={testId}
+                  className="couple-hub-tile luxe-card luxe-card--light luxe-card--no-inset group flex h-full flex-col"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="couple-hub-tile__icon" aria-hidden>
+                      <Icon className="h-[18px] w-[18px] sm:h-5 sm:w-5" strokeWidth={1.45} />
+                    </span>
+                    <ChevronRight
+                      size={17}
+                      className="couple-hub-tile__chevron shrink-0 opacity-50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100"
+                      strokeWidth={1.5}
+                      aria-hidden
+                    />
+                  </div>
+                  <h2 className="couple-hub-tile__title mt-4 font-display text-xl sm:mt-5 sm:text-[1.35rem]">{title}</h2>
+                  <p className="couple-hub-tile__desc mt-2 flex-1 text-sm leading-relaxed">{desc}</p>
+                  <p className="couple-hub-tile__badge mt-4">{badge}</p>
+                </Link>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      </motion.article>
 
       <ClassicRule className="mx-auto mt-9 max-w-xs sm:mt-11" gem="♥" />
-      <footer className="mt-6 flex flex-col items-center gap-4 sm:mt-7">
-        <p className="couple-hub-wish flex items-center gap-2">
-          <Heart size={13} className="text-wedding-wine-accent" fill="currentColor" aria-hidden />
-          <span>{t.wish}</span>
+      <motion.footer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.55, duration: 0.6 }}
+        className="mt-6 flex flex-col items-center gap-4 sm:mt-7"
+      >
+        <p className="flex items-center gap-2 text-[#C48B92]/60">
+          <Heart size={14} className="text-wedding-rose/70" fill="currentColor" aria-hidden />
+          <span className="font-cinzel text-[9px] tracking-[0.25em] uppercase">{t.wish}</span>
         </p>
         <button
           type="button"
           data-testid="couple-logout"
           onClick={signOut}
-          className="btn-couple-classic couple-hub-logout inline-flex w-full max-w-xs items-center justify-center gap-2 sm:w-auto sm:min-w-[14rem]"
+          className="inline-flex items-center gap-2 rounded-[8px] border border-wedding-rose/30 px-5 py-2.5 font-cinzel text-[10px] tracking-[0.22em] uppercase text-[#C48B92] shadow-[0_10px_24px_-10px_rgba(232,61,137,0.4)] transition-all hover:border-wedding-rose/50 hover:text-wedding-on-dark"
         >
           <LogOut size={14} strokeWidth={1.5} aria-hidden />
           {t.logout}
         </button>
-      </footer>
-    </CoupleBackofficeLayout>
+      </motion.footer>
+    </CoupleAuthShell>
   );
 }

@@ -149,12 +149,20 @@ async function main() {
 
   app.post("/api/rsvp", async (req, res, next) => {
     const body = req.body || {};
-    const required = ["nom", "telephone", "present"];
-    for (const key of required) {
-      if (body[key] === undefined || body[key] === null || body[key] === "") {
-        res.status(400).json({ error: "missing_field", field: key });
-        return;
-      }
+    const parsePresent = (value) => {
+      if (value === true || value === 1 || value === "1" || value === "true") return true;
+      if (value === false || value === 0 || value === "0" || value === "false") return false;
+      return null;
+    };
+    const present = parsePresent(body.present);
+    if (!String(body.nom || "").trim() || !String(body.telephone || "").trim() || present === null) {
+      const field = !String(body.nom || "").trim()
+        ? "nom"
+        : !String(body.telephone || "").trim()
+          ? "telephone"
+          : "present";
+      res.status(400).json({ error: "missing_field", field });
+      return;
     }
     try {
       const allowUpdate = Boolean(body.update);
@@ -164,7 +172,7 @@ async function main() {
         {
           nom: String(body.nom).trim(),
           telephone: String(body.telephone).trim(),
-          present: Boolean(body.present),
+          present,
           mode: body.mode || "presentiel",
           accompagnants: body.accompagnants,
           regime: body.regime || "",

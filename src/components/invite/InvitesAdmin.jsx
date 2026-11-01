@@ -226,7 +226,7 @@ export default function InvitesAdmin() {
               type="submit"
               disabled={creating}
               data-testid="invite-create-submit"
-              className="backoffice-btn-primary invites-admin-submit mt-7 w-full sm:mt-8"
+              className="btn-couple-classic invites-admin-submit mt-7 w-full sm:mt-8"
             >
               <Link2 size={17} strokeWidth={1.75} aria-hidden />
               {creating ? "Génération…" : "Générer le lien"}
@@ -239,7 +239,7 @@ export default function InvitesAdmin() {
                 className="invites-admin-fresh mt-6 overflow-hidden"
                 data-testid="invite-last-created"
               >
-                <p className="backoffice-label mb-0">Lien à envoyer</p>
+                <p className="couple-classic-card__legend mb-0 block text-center">Lien à envoyer</p>
                 <p className="invites-admin-fresh__url mt-2">{lastCreatedUrl}</p>
                 <div className="invites-admin-fresh__actions">
                   <CopyButton text={lastCreatedUrl} testId="invite-copy-last" variant="primary" />

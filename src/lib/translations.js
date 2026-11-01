@@ -230,6 +230,11 @@ export const messages = {
       toastPresent: "Votre carte d'invitation est prête.",
       toastAbsent: "Votre réponse a bien été envoyée aux mariés.",
       toastErr: "Une erreur est survenue — merci de réessayer.",
+      toastMissingField: (field) => {
+        const labels = { nom: "nom", telephone: "numéro WhatsApp", present: "présence" };
+        const label = labels[field] || "un champ obligatoire";
+        return `Merci de renseigner votre ${label}.`;
+      },
       zoomThanks: (name) => `Merci ${name} — nous vous retrouverons en ligne pour le discours.`,
       cardThanks: (name, n) => `La carte au nom de ${name} est valable pour ${n} personne${n > 1 ? "s" : ""}.`,
       absentThanks: "Nous sommes tristes de ne pas vous avoir à nos côtés, mais nous vous remercions de votre réponse.",
@@ -635,6 +640,11 @@ export const messages = {
       toastPresent: "Your invitation card is ready.",
       toastAbsent: "Your reply has been sent to the couple.",
       toastErr: "Something went wrong — please try again.",
+      toastMissingField: (field) => {
+        const labels = { nom: "name", telephone: "WhatsApp number", present: "attendance" };
+        const label = labels[field] || "a required field";
+        return `Please enter your ${label}.`;
+      },
       zoomThanks: (name) => `Thank you ${name} — we'll see you online for the discourse.`,
       cardThanks: (name, n) => `Your card for ${name} is valid for ${n} guest${n > 1 ? "s" : ""}.`,
       absentThanks: "We're sad you can't join us, but thank you for letting us know.",
