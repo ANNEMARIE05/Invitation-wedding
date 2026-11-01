@@ -17,7 +17,7 @@ import { useI18n } from "@/lib/locale";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-const SEND_CARD_BG = `${process.env.PUBLIC_URL || ""}/images/carte-invitation-personnelle.png?v=20261025-v2`;
+const SEND_CARD_BG = `${process.env.PUBLIC_URL || ""}/images/carte-invitation-personnelle.png?v=20261031-carte2`;
 
 const partySize = (guest) => 1 + Number(guest?.accompagnants || 0);
 

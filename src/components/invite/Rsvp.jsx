@@ -277,10 +277,10 @@ export default function Rsvp() {
   return (
     <section
       id="rsvp"
-      className="relative bg-[linear-gradient(135deg,#5C0A20_0%,#9B1B4A_50%,#7A1538_100%)] px-5 py-16 sm:px-8 md:py-24 lg:px-16"
+      className="relative bg-[linear-gradient(135deg,#5C0A20_0%,#9B1B4A_50%,#7A1538_100%)] px-2.5 py-16 sm:px-6 md:py-24 lg:px-12"
       data-testid="rsvp-section"
     >
-      <div className={`relative z-10 mx-auto ${confirmed ? "max-w-4xl" : "max-w-xl lg:max-w-2xl"}`}>
+      <div className={`relative z-10 mx-auto w-full ${confirmed ? "max-w-5xl" : "max-w-2xl lg:max-w-3xl"}`}>
         <Chapter index="VI" eyebrow={m.rsvp.chapter} title={m.rsvp.title} script={deadlineLabel} dark />
         <AnimatePresence mode="wait">
           {confirmed ? (

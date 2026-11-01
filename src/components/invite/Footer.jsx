@@ -31,7 +31,7 @@ export default function Footer() {
             <img
               src={footerPhoto}
               alt={m.footer.photoAlt}
-              className="footer-couple-sketch aspect-[4/5] w-52 bg-wedding-on-dark sm:w-64"
+              className="footer-couple-sketch aspect-square w-52 bg-wedding-on-dark sm:w-64"
             />
           </div>
           <p className="invite-on-wine-caption mt-3 font-script text-2xl">{m.footer.love}</p>

@@ -79,14 +79,6 @@ export default function Nav() {
             {mobileNavOpen ? <X size={18} aria-hidden /> : <Menu size={18} aria-hidden />}
           </button>
           <LangToggle solid />
-          <button
-            type="button"
-            data-testid="nav-rsvp-button"
-            onClick={() => goTo("#rsvp")}
-            className="btn-rejoindre !min-w-0 !whitespace-nowrap !px-3 sm:!px-5 !py-2.5 !text-[10px] !shadow-[0_10px_28px_rgba(237,30,121,0.3)]"
-          >
-            <span className="relative z-[1]">{m.nav.confirm}</span>
-          </button>
         </div>
       </div>
       <AnimatePresence>

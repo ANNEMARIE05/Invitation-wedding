@@ -155,15 +155,6 @@ export default function Hero({ start = true }) {
         >
           <button
             type="button"
-            onClick={() => scrollToId("#rsvp")}
-            className="btn-rejoindre btn-hero-cta"
-            data-testid="hero-rsvp-button"
-          >
-            <span className="relative z-[1]">{m.hero.confirm}</span>
-            <ChevronDown size={14} className="btn-rejoindre-icon relative z-[1] rotate-[-90deg] sm:w-4 sm:h-4" aria-hidden />
-          </button>
-          <button
-            type="button"
             onClick={() => scrollToId("#faire-part")}
             className="hero-outline-btn rounded-full border border-wedding-rose-light/35 px-5 py-2.5 font-cinzel text-[9px] font-semibold uppercase tracking-[0.16em] text-wedding-rose-light transition-colors hover:border-wedding-rose/60 hover:text-wedding-on-dark sm:px-6 sm:py-3 sm:text-[10px] sm:tracking-[0.22em]"
           >

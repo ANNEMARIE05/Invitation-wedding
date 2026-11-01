@@ -3,50 +3,50 @@ export const PERSONAL_INVITE_CARD = {
   width: 682,
   height: 1024,
   nameField: {
-    top: 462,
-    left: 95,
-    width: 492,
-    height: 48,
+    top: 362,
+    left: 96,
+    width: 490,
+    height: 44,
   },
-  /** Zone à gauche de « PERSONNE(S) » (texte imprimé : x 291→401, ligne de base ≈ 550). */
+  /** Zone à gauche de « PERSONNE(S) » (texte imprimé : x 282→411, ligne ≈ 444). */
   countField: {
-    top: 532,
-    left: 160,
-    width: 124,
-    height: 24,
+    top: 428,
+    left: 140,
+    width: 138,
+    height: 32,
   },
-  /** Boîte de saisie / affichage numéro Wave en bas à gauche */
+  /** Boîte Wave (blanc intérieur, carte 682×1024). */
   waveField: {
-    top: 915,
-    left: 173,
-    width: 174,
-    height: 31,
+    top: 890,
+    left: 186,
+    width: 160,
+    height: 26,
   },
-  /** Boîte de saisie / affichage numéro Orange Money en bas à droite */
+  /** Boîte Orange Money (blanc intérieur). */
   orangeField: {
-    top: 915,
-    left: 386,
-    width: 187,
-    height: 31,
+    top: 890,
+    left: 394,
+    width: 180,
+    height: 26,
   },
   /** Fallback rétrocompatible */
   giftsField: {
-    top: 915,
-    left: 173,
-    width: 400,
-    height: 31,
+    top: 890,
+    left: 186,
+    width: 388,
+    height: 26,
   },
   name: {
-    fontSize: 27,
-    fontSizeMd: 23,
-    fontSizeSm: 19,
-    fontSizeXs: 16,
+    fontSize: 40,
+    fontSizeMd: 34,
+    fontSizeSm: 28,
+    fontSizeXs: 22,
   },
   count: {
-    fontSize: 18,
+    fontSize: 26,
   },
   phone: {
-    fontSize: 14,
+    fontSize: 19,
   },
 };
 

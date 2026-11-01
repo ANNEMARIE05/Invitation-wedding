@@ -5,7 +5,7 @@ export const EASE = [0.22, 1, 0.36, 1];
 
 const publicImage = (file) => `${process.env.PUBLIC_URL || ""}/images/${file}`;
 
-export const WHATSAPP_NUMBER = "2250172317983";
+export const WHATSAPP_NUMBER = "2250707103461";
 
 export const COUPLE = { bride: "Marie", groom: "Stéphane" };
 export const WEDDING_DATE_ISO = "2026-12-04T13:30:00+00:00";
@@ -115,14 +115,14 @@ export const WEDDING_SONG = {
   thumbUrl: "https://i.ytimg.com/vi/06-XXOTP3Gc/hqdefault.jpg",
 };
 
-export const GIFTS_PRIMARY_PHONE = "01 72 31 79 83";
-export const GIFTS_PRIMARY_PHONE_RAW = "0172317983";
+export const GIFTS_PRIMARY_PHONE = "07 07 10 34 61";
+export const GIFTS_PRIMARY_PHONE_RAW = "0707103461";
 
 /** Compte Wave pour les cadeaux & participations */
 export const WAVE_ACCOUNT = {
   name: "Wave",
-  number: "01 72 31 79 83",
-  rawNumber: "0172317983",
+  number: "07 07 10 34 61",
+  rawNumber: "0707103461",
   recipient: "Stéphane & Marie",
   color: "#1DC3F4",
   actionUrl: "https://wave.com",
@@ -134,8 +134,8 @@ export const MOBILE_MONEY_ACCOUNTS = [
     id: "wave",
     name: "Wave",
     shortName: "Wave",
-    number: "01 72 31 79 83",
-    rawNumber: "0172317983",
+    number: "07 07 10 34 61",
+    rawNumber: "0707103461",
     recipient: "Stéphane & Marie",
     color: "#1DC3F4",
     bgLight: "rgba(29, 195, 244, 0.08)",
@@ -151,8 +151,8 @@ export const MOBILE_MONEY_ACCOUNTS = [
     id: "orange",
     name: "Orange Money",
     shortName: "Orange",
-    number: "01 72 31 79 83",
-    rawNumber: "0172317983",
+    number: "07 07 10 34 61",
+    rawNumber: "0707103461",
     recipient: "Stéphane & Marie",
     color: "#FF7900",
     bgLight: "rgba(255, 121, 0, 0.08)",
@@ -168,8 +168,8 @@ export const MOBILE_MONEY_ACCOUNTS = [
     id: "moov",
     name: "Moov Money",
     shortName: "Moov",
-    number: "01 72 31 79 83",
-    rawNumber: "0172317983",
+    number: "07 07 10 34 61",
+    rawNumber: "0707103461",
     recipient: "Stéphane & Marie",
     color: "#0099D8",
     bgLight: "rgba(0, 153, 216, 0.08)",
@@ -184,8 +184,8 @@ export const MOBILE_MONEY_ACCOUNTS = [
     id: "mtn",
     name: "MTN MoMo",
     shortName: "MTN",
-    number: "01 72 31 79 83",
-    rawNumber: "0172317983",
+    number: "07 07 10 34 61",
+    rawNumber: "0707103461",
     recipient: "Stéphane & Marie",
     color: "#FFCC00",
     bgLight: "rgba(255, 204, 0, 0.12)",

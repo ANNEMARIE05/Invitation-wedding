@@ -1,7 +1,5 @@
 import { Fragment, useEffect, useId, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { CalendarPlus } from "lucide-react";
-import { toast } from "sonner";
 import { EASE } from "@/lib/invite-data";
 import { REVEAL_VIEWPORT } from "@/lib/motion-viewport";
 import { useI18n } from "@/lib/locale";
@@ -18,8 +16,6 @@ const compute = (target) => {
     secondes: Math.floor((d / 1000) % 60),
   };
 };
-
-const toIcs = (date) => date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 
 function ChicWeddingHeart() {
   const rawId = useId();
@@ -101,32 +97,8 @@ function BigDayCountdown({ rows, onDark = false }) {
   );
 }
 
-function BigDayCalendarActions({ m, downloadIcs, googleUrl }) {
-  return (
-    <div className="mt-7 flex w-full max-w-sm flex-col items-stretch justify-center gap-2 sm:mt-9 sm:max-w-none sm:flex-row sm:items-center sm:gap-3">
-      <button
-        type="button"
-        data-testid="download-ics-button"
-        onClick={downloadIcs}
-        className="btn-invite-pill btn-invite-pill--wine-on-dark"
-      >
-        <CalendarPlus size={15} strokeWidth={1.5} /> {m.bigDay.addCalendar}
-      </button>
-      <a
-        data-testid="google-calendar-link"
-        href={googleUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn-invite-pill btn-invite-pill--ghost-on-dark"
-      >
-        {m.bigDay.googleCalendar}
-      </a>
-    </div>
-  );
-}
-
 export default function BigDay() {
-  const { bride, groom, dateIso, dateLabel, venue, locale } = useSettings();
+  const { dateIso, dateLabel, locale } = useSettings();
   const { m } = useI18n();
   const locTag = locale === "en" ? "en-GB" : "fr-FR";
   const target = useMemo(() => new Date(dateIso).getTime(), [dateIso]);
@@ -154,38 +126,6 @@ export default function BigDay() {
       label: cap(new Date(y, m, 1).toLocaleDateString(locTag, { month: "long", year: "numeric" })),
     };
   }, [dateIso, locTag]);
-
-  const start = new Date(dateIso);
-  const end = new Date(start.getTime() + 4 * 3600000);
-
-  const downloadIcs = () => {
-    const ics = [
-      "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//InvitationMariage//FR", "BEGIN:VEVENT",
-      `UID:mariage-${start.getTime()}@invitation`,
-      `DTSTAMP:${toIcs(new Date())}`,
-      `DTSTART:${toIcs(start)}`,
-      `DTEND:${toIcs(end)}`,
-      `SUMMARY:${m.bigDay.icsSummary(groom, bride)}`,
-      `LOCATION:${venue.name}`,
-      `DESCRIPTION:${m.bigDay.icsDescription.replace(/,/g, "\\,")}`,
-      "END:VEVENT", "END:VCALENDAR",
-    ].join("\r\n");
-    const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "mariage.ics";
-    a.click();
-    URL.revokeObjectURL(url);
-    toast.success(m.bigDay.icsOk);
-  };
-
-  const googleUrl = `https://calendar.google.com/calendar/render?${new URLSearchParams({
-    action: "TEMPLATE",
-    text: m.bigDay.icsSummary(groom, bride),
-    dates: `${toIcs(start)}/${toIcs(end)}`,
-    details: m.bigDay.icsDescription,
-    location: `${venue.name} ${venue.address}`,
-  }).toString()}`;
 
   return (
     <section
@@ -284,7 +224,6 @@ export default function BigDay() {
             <p className="invite-on-wine-caption font-cinzel text-[10px] font-semibold sm:text-[11px] tracking-[0.28em] uppercase leading-relaxed">
               {m.bigDay.calendarFooter(dateLabel)}
             </p>
-            <BigDayCalendarActions m={m} downloadIcs={downloadIcs} googleUrl={googleUrl} />
           </div>
         </div>
       </div>

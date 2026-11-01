@@ -103,7 +103,7 @@ export default function Venues() {
                     as="article"
                     lift
                     animate={false}
-                    className="venues-stop-card overflow-hidden !rounded-[1.15rem]"
+                    className="venues-stop-card overflow-hidden !rounded-[0.75rem]"
                     data-testid={`venue-card-${venue.id}`}
                   >
                     <div className="flex flex-col sm:flex-row">

@@ -218,8 +218,10 @@ body {
 }
 
 .chapter-ornament__line {
-    height: 1px;
-    width: 3rem;
+    position: relative;
+    overflow: hidden;
+    height: 3px;
+    width: 0;
     background: linear-gradient(
         90deg,
         transparent 0%,
@@ -227,7 +229,119 @@ body {
         color-mix(in srgb, var(--gold-soft) 85%, var(--gold-accent)) 50%,
         color-mix(in srgb, var(--gold-accent) 45%, transparent) 72%,
         transparent 100%
-    );
+    ) center / 100% 1px no-repeat;
+    transition: width 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.28s;
+}
+
+.chapter-presented .chapter-ornament__line {
+    width: 4.25rem;
+}
+
+.chapter-ornament__line::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 42%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, #fff 42%, #fff6d2 68%, transparent);
+    opacity: 0;
+    transform: translateX(-140%);
+    pointer-events: none;
+}
+
+.chapter-presented .chapter-ornament__line::after {
+    animation: chapter-thread 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+
+.chapter-presented .chapter-ornament__gem {
+    animation: chapter-gem-arrive 0.85s ease-out 0.95s both;
+}
+
+.chapter-title-mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+}
+
+@keyframes chapter-thread {
+    0% {
+        opacity: 0;
+        transform: translateX(-140%);
+    }
+    18% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(250%);
+    }
+}
+
+@keyframes chapter-gem-arrive {
+    0% {
+        transform: scale(0.55);
+        filter: brightness(1);
+    }
+    46% {
+        transform: scale(1.7);
+        filter: brightness(1.75);
+        text-shadow:
+            0 0 8px #fff,
+            0 0 16px var(--gold-accent);
+    }
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+}
+
+.torn-divider.is-crossed .torn-divider__edge {
+    animation: torn-edge-flash 1.15s ease-out both;
+}
+
+.torn-divider.is-crossed svg {
+    animation: torn-edge-glow 1.15s ease-out both;
+}
+
+@keyframes torn-edge-flash {
+    0% {
+        stroke: rgba(212, 175, 55, 0.35);
+        stroke-width: 1.5;
+    }
+    42% {
+        stroke: rgba(255, 248, 224, 0.98);
+        stroke-width: 2.4;
+    }
+    100% {
+        stroke: rgba(212, 175, 55, 0.55);
+        stroke-width: 1.5;
+    }
+}
+
+@keyframes torn-edge-glow {
+    0%,
+    100% {
+        filter: drop-shadow(0 0 0 rgba(255, 236, 180, 0));
+    }
+    42% {
+        filter: drop-shadow(0 0 7px rgba(255, 244, 214, 0.95));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chapter-ornament__line {
+        width: 4.25rem;
+        transition: none;
+    }
+
+    .chapter-presented .chapter-ornament__line::after,
+    .chapter-presented .chapter-ornament__gem,
+    .torn-divider.is-crossed .torn-divider__edge,
+    .torn-divider.is-crossed svg {
+        animation: none;
+    }
 }
 
 .chapter-ornament__line--flip {
@@ -1403,13 +1517,13 @@ body {
     }
 
     .bible-verse-quote {
-        font-size: 0.95rem !important;
-        line-height: 1.42;
+        font-size: 1.32rem !important;
+        line-height: 1.35;
     }
 
     .bible-verse-who {
-        font-size: 0.68rem;
-        letter-spacing: 0.22em;
+        font-size: 0.95rem !important;
+        letter-spacing: 0.14em !important;
     }
 
     .bible-verse-scripture {
@@ -1508,11 +1622,11 @@ body {
 
 .bible-verse-who {
     font-family: 'Cinzel', serif;
-    font-size: 0.62rem;
-    font-weight: 500;
-    letter-spacing: 0.38em;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: color-mix(in srgb, var(--rose) 82%, var(--wine-accent));
+    color: var(--wine-deep);
 }
 
 .bible-verse-lead {
@@ -4070,8 +4184,8 @@ body {
     font-weight: 700;
     font-style: italic;
     font-synthesis: none;
-    line-height: 1.15;
-    letter-spacing: 0.02em;
+    line-height: 1;
+    letter-spacing: 0.01em;
     text-transform: none;
     white-space: nowrap;
     overflow: hidden;
@@ -4158,7 +4272,7 @@ body {
     font-family: Cinzel, "Cormorant Garamond", Georgia, serif;
     font-size: var(--pi-phone-fs, 2.05cqi);
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.01em;
     color: #580b18;
     white-space: nowrap;
     text-shadow: 0 0.5px 1px rgba(255, 252, 248, 0.85);
@@ -4987,8 +5101,8 @@ input:focus, select:focus, textarea:focus {
 
 .footer-couple-sketch {
     display: block;
-    object-fit: contain;
-    object-position: center bottom;
+    object-fit: cover;
+    object-position: center;
 }
 
 .couple-names-animate {

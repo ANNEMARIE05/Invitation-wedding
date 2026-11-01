@@ -10,6 +10,7 @@ import { EASE } from "@/lib/invite-data";
 import { REVEAL_VIEWPORT } from "@/lib/motion-viewport";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
+import { ChapterRule } from "./Chapter";
 import SparkleField from "./SparkleField";
 import LuxeCard from "./LuxeCard";
 
@@ -175,21 +176,24 @@ export function CardActions({
 export default function InviteCard() {
   const { m } = useI18n();
   const [showcaseOpen, setShowcaseOpen] = useState(false);
+  const [presented, setPresented] = useState(false);
   return (
     <section id="faire-part" className="relative overflow-x-visible overflow-y-visible px-[clamp(1.15rem,5.2vw,1.75rem)] py-16 sm:px-10 md:py-24" data-testid="invite-card-section">
       <SparkleField count={14} className="opacity-70" />
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
+        onViewportEnter={() => setPresented(true)}
         viewport={REVEAL_VIEWPORT}
         transition={{ duration: 0.9, ease: EASE }}
-        className="relative z-[1] mb-10 text-center"
+        className={`relative z-[1] mb-10 text-center ${presented ? "chapter-presented" : ""}`}
       >
         <p className="type-eyebrow text-wedding-rose">{m.inviteSection.eyebrow}</p>
         <h2 className="type-display mt-3 text-[1.75rem] leading-[1.12] sm:text-5xl">{m.inviteSection.title}</h2>
         {m.inviteSection.script ? (
           <p className="type-display-script mt-2 text-base sm:mt-3 sm:text-xl">{m.inviteSection.script}</p>
         ) : null}
+        <ChapterRule />
       </motion.div>
 
       <div className="invite-card-showcase relative z-[1] mx-auto w-full max-w-[min(100%,17.5rem)] overflow-visible sm:max-w-[24rem] md:max-w-[26rem]">
