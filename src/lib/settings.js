@@ -52,5 +52,6 @@ export const useSettings = () => {
     },
     dressPalette: merged.dressPalette,
     theme: merged.theme,
+    surfaceMode: merged.surfaceMode,
   };
 };

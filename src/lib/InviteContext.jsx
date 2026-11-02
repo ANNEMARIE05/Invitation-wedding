@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { useLocation } from "react-router-dom";
 import { getInviteByToken } from "@/lib/api";
 import {
+  INVITE_SESSION_KEY,
   parseInviteTokenFromLocation,
   persistInviteToken,
   readPersistedInviteToken,
@@ -13,8 +14,17 @@ export function InviteProvider({ children }) {
   const location = useLocation();
   const [token, setToken] = useState("");
   const [info, setInfo] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loadState, setLoadState] = useState("idle");
   const [ownerRsvpId, setOwnerRsvpId] = useState(null);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("wedding_guest_rsvp") || "null");
+      if (saved?.id) setOwnerRsvpId(saved.id);
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const resolveToken = useCallback(() => {
     const fromUrl = parseInviteTokenFromLocation(location.search);
@@ -26,33 +36,55 @@ export function InviteProvider({ children }) {
   }, [location.search]);
 
   const reload = useCallback(async (activeToken) => {
-    const t = activeToken || token;
+    const t = String(activeToken || token || "").trim();
     if (!t) {
       setInfo(null);
+      setLoadState("idle");
       return;
     }
-    setLoading(true);
-    try {
-      const data = await getInviteByToken(t);
+    setLoadState("loading");
+    const applyInvite = (data) => {
+      if (!data) {
+        setInfo(null);
+        setLoadState("not_found");
+        try {
+          sessionStorage.removeItem(INVITE_SESSION_KEY);
+        } catch {
+          /* ignore */
+        }
+        return;
+      }
       setInfo(data);
+      setLoadState("ok");
+    };
+    try {
+      applyInvite(await getInviteByToken(t));
     } catch {
-      setInfo(null);
-    } finally {
-      setLoading(false);
+      try {
+        await new Promise((r) => setTimeout(r, 1200));
+        applyInvite(await getInviteByToken(t));
+      } catch {
+        setInfo(null);
+        setLoadState("error");
+      }
     }
   }, [token]);
 
   useEffect(() => {
     const t = resolveToken();
     setToken(t);
-    if (t) reload(t);
-    else {
-      setInfo(null);
-      setLoading(false);
+    setInfo(null);
+    if (t) {
+      reload(t);
+    } else {
+      setLoadState("idle");
     }
   }, [resolveToken, reload]);
 
-  const inviteInvalid = Boolean(token && !loading && !info);
+  const inviteLoading = loadState === "loading";
+  const inviteInvalid = loadState === "not_found";
+  const inviteVerifyError = loadState === "error";
+  const inviteReady = loadState === "ok";
 
   const canRegister = useMemo(() => {
     if (!token || !info) return false;
@@ -62,7 +94,7 @@ export function InviteProvider({ children }) {
   }, [token, info, ownerRsvpId]);
 
   const inviteBlocked = Boolean(
-    (token && info && info.used && !canRegister) || inviteInvalid,
+    inviteInvalid || (inviteReady && info?.used && !canRegister),
   );
 
   const maxAccompagnants = info?.party_size ? Math.max(0, info.party_size - 1) : null;
@@ -71,7 +103,10 @@ export function InviteProvider({ children }) {
     () => ({
       token,
       info,
-      loading,
+      loading: inviteLoading,
+      inviteLoading,
+      inviteReady,
+      inviteVerifyError,
       canRegister,
       inviteBlocked,
       inviteInvalid,
@@ -80,7 +115,18 @@ export function InviteProvider({ children }) {
       reload,
       setOwnerRsvpId,
     }),
-    [token, info, loading, canRegister, inviteBlocked, inviteInvalid, maxAccompagnants, reload],
+    [
+      token,
+      info,
+      inviteLoading,
+      inviteReady,
+      inviteVerifyError,
+      canRegister,
+      inviteBlocked,
+      inviteInvalid,
+      maxAccompagnants,
+      reload,
+    ],
   );
 
   return <InviteContext.Provider value={value}>{children}</InviteContext.Provider>;

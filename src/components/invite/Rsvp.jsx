@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Check, MessageCircle, Sparkles, Search } from "lucide-react";
 import { toast } from "sonner";
-import { ApiError, createRsvp, findRsvpByPhone } from "@/lib/api";
+import { ApiError, createRsvp, findRsvpByPhone, getRsvpPolicy } from "@/lib/api";
 import { EASE, WHATSAPP_NUMBER } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
@@ -129,6 +129,9 @@ export default function Rsvp() {
     info: inviteInfo,
     inviteBlocked,
     inviteInvalid,
+    inviteLoading,
+    inviteReady,
+    inviteVerifyError,
     canRegister,
     maxAccompagnants,
     partySize: invitePartySize,
@@ -144,6 +147,44 @@ export default function Rsvp() {
   const [isUpdate, setIsUpdate] = useState(false);
   const [cardModalOpen, setCardModalOpen] = useState(false);
   const [autoShareCard, setAutoShareCard] = useState(false);
+  const recoverAttemptRef = useRef("");
+
+  const applyGuestRegistration = useCallback(
+    (rsvpData, { openCard = false } = {}) => {
+      if (!rsvpData) return;
+      setSent(rsvpData);
+      setForm(rsvpToForm(rsvpData, m.rsvp.regimes));
+      setIsUpdate(true);
+      setOwnerRsvpId?.(rsvpData.id || null);
+      try {
+        localStorage.setItem("wedding_guest_rsvp", JSON.stringify(rsvpData));
+      } catch {}
+      if (openCard && rsvpData.present && (rsvpData.mode || "presentiel") === "presentiel") {
+        setAutoShareCard(false);
+        setCardModalOpen(true);
+      }
+    },
+    [m.rsvp.regimes, setOwnerRsvpId],
+  );
+
+  const recoverIfLinkOwner = useCallback(
+    async (phone) => {
+      const trimmed = String(phone || "").trim();
+      if (!inviteInfo?.used || !inviteInfo?.rsvp_id || !trimmed) return false;
+      try {
+        const result = await findRsvpByPhone(trimmed);
+        const rsvp = result?.rsvp;
+        if (!rsvp || rsvp.id !== inviteInfo.rsvp_id) return false;
+        applyGuestRegistration(rsvp, { openCard: true });
+        reloadInvite?.();
+        toast.success(m.rsvp.toastPresent);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [inviteInfo, applyGuestRegistration, reloadInvite, m.rsvp.toastPresent],
+  );
 
   const set = (k) => (e) => {
     const value = e?.target ? e.target.value : e;
@@ -177,6 +218,51 @@ export default function Rsvp() {
       if (saved?.id) setOwnerRsvpId?.(saved.id);
     } catch {}
   }, [setOwnerRsvpId]);
+
+  useEffect(() => {
+    getRsvpPolicy()
+      .then((policy) => setEditLocked(Boolean(policy?.edit_locked)))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!inviteReady || !inviteInfo?.used || !inviteInfo.rsvp_id) return;
+    if (sent?.id === inviteInfo.rsvp_id) return;
+
+    const phoneKey = `${inviteInfo.rsvp_id}:${form.telephone || lookupPhone || ""}`;
+    if (recoverAttemptRef.current === phoneKey) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const saved = JSON.parse(localStorage.getItem("wedding_guest_rsvp") || "null");
+        if (saved?.id === inviteInfo.rsvp_id) {
+          recoverAttemptRef.current = phoneKey;
+          applyGuestRegistration(saved, { openCard: true });
+          return;
+        }
+        const phone = String(saved?.telephone || form.telephone || lookupPhone || "").trim();
+        if (!phone) return;
+        recoverAttemptRef.current = `${inviteInfo.rsvp_id}:${phone}`;
+        const result = await findRsvpByPhone(phone);
+        if (cancelled || result?.rsvp?.id !== inviteInfo.rsvp_id) return;
+        applyGuestRegistration(result.rsvp, { openCard: true });
+      } catch {
+        /* ignore */
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    inviteReady,
+    inviteInfo,
+    sent?.id,
+    form.telephone,
+    lookupPhone,
+    applyGuestRegistration,
+  ]);
 
   const accompagnantOptions = maxAccompagnants != null
     ? Array.from({ length: maxAccompagnants + 1 }, (_, n) => n)
@@ -259,14 +345,7 @@ export default function Rsvp() {
       toast.error(m.rsvp.inviteLinkRequired);
       return;
     }
-    if (inviteToken && inviteBlocked && !isUpdate) {
-      toast.error(m.rsvp.inviteUsed);
-      return;
-    }
-    if (inviteToken && !canRegister && !isUpdate) {
-      toast.error(m.rsvp.inviteUsed);
-      return;
-    }
+    const phoneForSubmit = String(form.telephone || "").trim();
     if (editLocked && isUpdate) {
       toast.error(m.rsvp.toastLocked);
       return;
@@ -276,7 +355,7 @@ export default function Rsvp() {
       const present = toPresentBool(form.present);
       const payload = {
         nom: String(form.nom || "").trim(),
-        telephone: String(form.telephone || "").trim(),
+        telephone: phoneForSubmit,
         present,
         mode: present ? form.mode || "presentiel" : "presentiel",
         regime: m.rsvp.regimes[Number(form.regimeIdx) || 0],
@@ -284,6 +363,15 @@ export default function Rsvp() {
         chanson: present ? form.chanson : "",
         message: form.message || "",
       };
+
+      const shouldTryRecover =
+        !isUpdate && inviteInfo?.used && (inviteBlocked || !canRegister);
+      if (shouldTryRecover) {
+        if (await recoverIfLinkOwner(phoneForSubmit)) return;
+        toast.error(m.rsvp.inviteUsed);
+        return;
+      }
+
       const data = await createRsvp(payload, {
         update: isUpdate,
         inviteToken: inviteToken || null,
@@ -307,12 +395,19 @@ export default function Rsvp() {
           return;
         }
         if (err.code === "rsvp_exists" && err.payload?.existing) {
-          setForm(rsvpToForm(err.payload.existing, m.rsvp.regimes));
+          const existing = err.payload.existing;
+          if (inviteInfo?.rsvp_id && existing.id === inviteInfo.rsvp_id) {
+            applyGuestRegistration(existing, { openCard: true });
+            toast.success(m.rsvp.toastPresent);
+            return;
+          }
+          setForm(rsvpToForm(existing, m.rsvp.regimes));
           setIsUpdate(true);
           toast.message(m.rsvp.toastExists);
           return;
         }
         if (err.code === "invite_used") {
+          if (await recoverIfLinkOwner(phoneForSubmit)) return;
           toast.error(m.rsvp.inviteUsed);
           return;
         }
@@ -497,10 +592,33 @@ export default function Rsvp() {
               transition={{ duration: 0.9, ease: EASE }}
             >
               <ReplyCard>
+                {inviteLoading ? (
+                  <p
+                    className="mb-6 text-center text-sm text-wedding-ink/85"
+                    data-testid="rsvp-invite-checking"
+                  >
+                    {m.rsvp.inviteChecking}
+                  </p>
+                ) : null}
                 {inviteToken && inviteInfo && !inviteInfo.used && invitePartySize ? (
                   <p className="mb-6 text-center text-sm text-wedding-ink/85" data-testid="rsvp-invite-hint">
                     {m.rsvp.invitePartyHint(invitePartySize)}
                   </p>
+                ) : null}
+                {inviteVerifyError ? (
+                  <div
+                    className="mb-6 rounded-xl border border-wedding-wine/15 bg-wedding-ivory/80 px-4 py-4 text-center text-sm text-wedding-ink"
+                    data-testid="rsvp-invite-verify-error"
+                  >
+                    <p>{m.rsvp.inviteVerifyError}</p>
+                    <button
+                      type="button"
+                      className="mt-3 text-sm font-medium text-wedding-wine-deep underline decoration-wedding-gold-accent/50 underline-offset-4"
+                      onClick={() => reloadInvite?.()}
+                    >
+                      {m.rsvp.inviteRetry}
+                    </button>
+                  </div>
                 ) : null}
                 {inviteBlocked ? (
                   <div
@@ -513,8 +631,21 @@ export default function Rsvp() {
                     ) : null}
                   </div>
                 ) : null}
+                {editLocked && isUpdate ? (
+                  <p className="mb-4 text-center text-xs text-wedding-wine-accent" data-testid="rsvp-edit-locked">
+                    {m.rsvp.lookupLocked}
+                  </p>
+                ) : null}
                 <form onSubmit={submit} className="rsvp-reply-form" data-testid="rsvp-form">
-                  <fieldset disabled={inviteBlocked && !isUpdate} className="min-w-0 border-0 p-0">
+                  <fieldset
+                    disabled={
+                      (inviteBlocked && !isUpdate) ||
+                      (inviteVerifyError && !isUpdate) ||
+                      (inviteLoading && !isUpdate) ||
+                      (editLocked && isUpdate)
+                    }
+                    className="min-w-0 border-0 p-0"
+                  >
                   <RsvpSection title={m.rsvp.sectionIdentity}>
                     <RsvpField label={m.rsvp.name} htmlFor="rsvp-nom">
                       <input

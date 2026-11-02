@@ -440,7 +440,14 @@ async function upsertRsvp(db, payload, { allowUpdate, inviteToken }) {
     throw err;
   }
   const existing = await findRsvpByPhone(db, payload.telephone);
-  await assertInviteTokenForRsvp(db, inviteToken, payload, { allowUpdate, existing });
+  let allow = allowUpdate;
+  if (inviteToken && existing) {
+    const bound = await getInviteLinkByToken(db, inviteToken);
+    if (bound?.rsvp_id && bound.rsvp_id === existing.id) {
+      allow = true;
+    }
+  }
+  await assertInviteTokenForRsvp(db, inviteToken, payload, { allowUpdate: allow, existing });
   const locked = await isRsvpEditLocked(db);
 
   if (existing) {
@@ -449,7 +456,7 @@ async function upsertRsvp(db, payload, { allowUpdate, inviteToken }) {
       err.code = "rsvp_locked";
       throw err;
     }
-    if (!allowUpdate) {
+    if (!allow) {
       const err = new Error("rsvp_exists");
       err.code = "rsvp_exists";
       err.existing = existing;

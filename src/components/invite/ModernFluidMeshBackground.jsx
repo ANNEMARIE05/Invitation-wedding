@@ -20,6 +20,7 @@ export default function ModernFluidMeshBackground({ active = true }) {
 
       {/* Voile de lissage satiné */}
       <div className="fluid-silk-sheen" />
+      <div className="fluid-silk-gold-veil" />
     </div>
   );
 }

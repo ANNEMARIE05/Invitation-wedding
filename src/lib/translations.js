@@ -23,6 +23,11 @@ export const messages = {
       openMenu: "Ouvrir le menu de navigation",
       closeMenu: "Fermer le menu de navigation",
     },
+    surface: {
+      aria: "Luminosité de l’invitation",
+      light: "Clair",
+      dark: "Doux",
+    },
     intro: {
       invited: "Vous êtes convié·e·s",
       weddingTag: "Mariage · Abidjan",
@@ -301,6 +306,10 @@ export const messages = {
         "Si c’est votre lien, retrouvez votre réponse avec votre numéro de téléphone ci-dessous.",
       inviteWrongGuest: "Ce numéro ne correspond pas à l’invité de ce lien.",
       inviteInvalid: "Lien d’invitation invalide — demandez un nouveau lien aux mariés.",
+      inviteChecking: "Vérification de votre lien d’invitation…",
+      inviteVerifyError:
+        "Impossible de joindre le serveur pour vérifier le lien. Vérifiez votre connexion et réessayez.",
+      inviteRetry: "Réessayer",
       inviteLinkRequired:
         "La confirmation se fait uniquement via le lien personnel que les mariés vous ont envoyé.",
       invitePartyLimit: (n) =>
@@ -433,6 +442,11 @@ export const messages = {
       menu: "Navigation",
       openMenu: "Open navigation menu",
       closeMenu: "Close navigation menu",
+    },
+    surface: {
+      aria: "Invitation brightness",
+      light: "Light",
+      dark: "Soft",
     },
     intro: {
       invited: "You are invited",
@@ -711,6 +725,10 @@ export const messages = {
         "If this is your link, find your reply with your phone number below.",
       inviteWrongGuest: "This number does not match the guest for this link.",
       inviteInvalid: "Invalid invitation link — please ask the couple for a new one.",
+      inviteChecking: "Checking your invitation link…",
+      inviteVerifyError:
+        "We couldn't reach the server to verify your link. Check your connection and try again.",
+      inviteRetry: "Try again",
       inviteLinkRequired:
         "RSVP is only available through the personal link the couple sent you.",
       invitePartyLimit: (n) =>

@@ -148,6 +148,18 @@ export function applyThemeToDocument(stored) {
   if (meta) meta.setAttribute("content", site.wineDeep);
 }
 
+export function normalizeSurfaceMode(value) {
+  return value === "dark" ? "dark" : "light";
+}
+
+/** Mode clair / sombre de l’invitation (fond soyeux, cartes, nav). */
+export function applySurfaceModeToDocument(stored) {
+  if (typeof document === "undefined") return;
+  const mode = normalizeSurfaceMode(stored?.surface_mode);
+  document.documentElement.classList.toggle("invite-surface--dark", mode === "dark");
+  document.documentElement.dataset.inviteSurface = mode;
+}
+
 export function themeFromForm(formTheme) {
   const site = {};
   for (const key of Object.keys(DEFAULT_SITE_THEME)) {

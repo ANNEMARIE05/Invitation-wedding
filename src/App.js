@@ -40,6 +40,7 @@ import { parseInviteTokenFromLocation } from "@/lib/invite-link";
 import { scrollToId } from "@/lib/invite-data";
 import RequireCoupleAuth from "@/components/invite/RequireCoupleAuth";
 import { SETTINGS_CHANGE_EVENT } from "@/lib/invite-defaults";
+import { subscribeSystemInviteSurface } from "@/lib/invite-surface";
 import { useStoreSync } from "@/lib/useStoreSync";
 import ThemeApplier from "@/components/invite/ThemeApplier";
 import PersonalInviteCard from "@/components/invite/PersonalInviteCard";
@@ -118,6 +119,7 @@ function Invitation() {
   const [opened, setOpened] = useState(false);
   const [photos, setPhotos] = useState({});
   const [settings, setSettings] = useState(null);
+  const [surfaceMode, setSurfaceMode] = useState("light");
   const { token: inviteToken, loading: inviteLoading } = useInvite();
   const inviteInUrl =
     typeof window !== "undefined" && Boolean(parseInviteTokenFromLocation(window.location.search));
@@ -132,6 +134,8 @@ function Invitation() {
     loadPhotos();
     getSettings().then(setSettings).catch(() => {});
   }, []);
+
+  useEffect(() => subscribeSystemInviteSurface(setSurfaceMode), []);
 
   useEffect(() => {
     const loadSettings = () => getSettings().then(setSettings).catch(() => {});
@@ -198,7 +202,11 @@ function Invitation() {
   return (
     <SettingsContext.Provider value={settings}>
       <PhotosContext.Provider value={photos}>
-        <div className="page-flow invite-surface relative text-wedding-wine antialiased overflow-x-clip">
+        <div
+          className={`page-flow invite-surface relative text-wedding-wine antialiased overflow-x-clip ${
+            surfaceMode === "dark" ? "invite-surface--dark" : ""
+          }`}
+        >
           <InvitationSeo />
           <div className="grain-overlay" />
           <ModernFluidMeshBackground />

@@ -933,6 +933,195 @@ body {
     );
 }
 
+.fluid-silk-gold-veil {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* —— Mode doux : clarté + satin doré (toggle Clair | Doux) —— */
+html.invite-surface--dark body {
+    background: #f3e8ef;
+}
+
+.invite-surface--dark {
+    --ivory: #f0e2ea;
+    --ivory-deep: #e8d4e0;
+    --shadow-rose-chic:
+        0 1px 0 rgba(255, 255, 255, 0.92) inset,
+        0 1px 0 rgba(255, 236, 178, 0.35) inset,
+        0 22px 48px -18px rgba(163, 35, 90, 0.26),
+        0 8px 22px -10px rgba(212, 175, 55, 0.18),
+        0 0 0 1px rgba(212, 175, 55, 0.12);
+    --shadow-rose-lift:
+        0 1px 0 rgba(255, 255, 255, 0.95) inset,
+        0 2px 0 rgba(255, 236, 178, 0.28) inset,
+        0 32px 64px -16px rgba(163, 35, 90, 0.3),
+        0 12px 28px -10px rgba(212, 175, 55, 0.22),
+        0 0 0 1px rgba(212, 175, 55, 0.16);
+    --shadow-rose-soft:
+        0 14px 30px -10px rgba(163, 35, 90, 0.22),
+        0 4px 14px rgba(212, 175, 55, 0.12);
+}
+
+.invite-surface--dark .fluid-silk-mesh-root {
+    background: radial-gradient(circle at 50% 22%, #fdf6fa 0%, #f5e8f0 52%, #eddce8 100%);
+}
+
+.invite-surface--dark .fluid-silk-mesh-root::after {
+    content: "";
+    position: absolute;
+    inset: -8%;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 55% 42% at 18% 12%, rgba(255, 248, 220, 0.55), transparent 58%),
+        radial-gradient(ellipse 48% 38% at 88% 18%, rgba(255, 236, 178, 0.42), transparent 55%),
+        radial-gradient(ellipse 40% 35% at 72% 88%, rgba(255, 220, 235, 0.35), transparent 52%);
+    animation: soft-gold-drift 22s ease-in-out infinite alternate;
+}
+
+@keyframes soft-gold-drift {
+    0% { opacity: 0.65; transform: translate3d(0, 0, 0) scale(1); }
+    100% { opacity: 1; transform: translate3d(10px, -8px, 0) scale(1.03); }
+}
+
+.invite-surface--dark .fluid-silk-blob--rose {
+    background: radial-gradient(circle, rgba(246, 195, 216, 0.68) 0%, rgba(232, 61, 137, 0.28) 55%, transparent 76%);
+}
+
+.invite-surface--dark .fluid-silk-blob--champagne {
+    background: radial-gradient(circle, rgba(255, 236, 178, 0.62) 0%, rgba(229, 193, 88, 0.32) 48%, transparent 72%);
+}
+
+.invite-surface--dark .fluid-silk-blob--pearl {
+    background: radial-gradient(circle, rgba(255, 252, 254, 0.85) 0%, rgba(248, 216, 232, 0.45) 55%, transparent 70%);
+}
+
+.invite-surface--dark .fluid-silk-blob--berry {
+    background: radial-gradient(circle, rgba(196, 54, 115, 0.2) 0%, rgba(163, 35, 90, 0.1) 55%, transparent 72%);
+}
+
+.invite-surface--dark .fluid-silk-sheen {
+    background: linear-gradient(
+        125deg,
+        rgba(255, 255, 255, 0.38) 0%,
+        rgba(255, 236, 178, 0.12) 32%,
+        rgba(255, 248, 252, 0.08) 55%,
+        rgba(255, 220, 235, 0.18) 100%
+    );
+}
+
+.invite-surface--dark .fluid-silk-gold-veil {
+    opacity: 0.68;
+    background: linear-gradient(
+        105deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0) 38%,
+        rgba(255, 248, 230, 0.35) 50%,
+        rgba(255, 255, 255, 0) 62%,
+        transparent 100%
+    );
+    background-size: 220% 100%;
+    animation: shimmer-sweep 7s ease-in-out infinite;
+}
+
+.invite-surface--dark .invite-main-nav {
+    background-color: rgba(252, 238, 246, 0.94);
+    border-bottom: 1.5px solid rgba(212, 175, 55, 0.58);
+    box-shadow:
+        0 12px 28px -10px rgba(163, 35, 90, 0.18),
+        0 1px 0 rgba(255, 255, 255, 0.75) inset;
+}
+
+@supports (backdrop-filter: blur(1px)) {
+    .invite-surface--dark .invite-main-nav {
+        background-color: rgba(252, 238, 246, 0.88);
+        backdrop-filter: blur(20px) saturate(175%);
+    }
+}
+
+.invite-surface--dark .mobile-nav-panel {
+    background: rgba(252, 242, 248, 0.98);
+}
+
+.invite-surface--dark .luxe-card--light {
+    background: linear-gradient(165deg, #fff6fa 0%, #fce8f2 52%, #f5d8e8 100%);
+    border: 1.5px solid rgba(212, 175, 55, 0.28);
+}
+
+.invite-surface--dark .luxe-card--light::after {
+    border-color: rgba(212, 175, 55, 0.2);
+}
+
+.invite-surface--dark .luxe-card--light::before {
+    animation-duration: 7s;
+    background-size: 220% 220%;
+}
+
+.invite-surface--dark .chapter-ornament__line {
+    height: 3px;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--gold-accent) 45%, transparent));
+}
+
+.invite-surface--dark .type-eyebrow:not(.type-eyebrow--on-dark) {
+    text-shadow: 0 0 18px color-mix(in srgb, var(--gold-accent) 28%, transparent);
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .invite-surface--dark .type-display:not(.type-display--on-dark) {
+        background-image: linear-gradient(
+            158deg,
+            var(--wine-deep) 0%,
+            var(--wine) 42%,
+            var(--gold-accent) 78%,
+            var(--gold-soft) 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.7));
+    }
+}
+
+.invite-surface--dark .type-display-script:not(.type-display-script--on-dark) {
+    color: color-mix(in srgb, var(--wine-accent) 55%, var(--gold-accent));
+    text-shadow: 0 0 20px color-mix(in srgb, var(--gold-soft) 35%, transparent);
+}
+
+.invite-surface--dark .sparkle-star {
+    opacity: 0.92;
+    box-shadow:
+        0 0 14px rgba(255, 236, 178, 0.95),
+        0 0 6px rgba(229, 193, 88, 0.85),
+        0 0 3px rgba(255, 255, 255, 0.9);
+}
+
+.invite-surface--dark .sparkle-star--diamond {
+    opacity: 0.95;
+    box-shadow:
+        0 0 18px rgba(255, 236, 178, 1),
+        0 0 8px rgba(229, 193, 88, 0.9);
+}
+
+.invite-surface--dark #cadeaux .pointer-events-none.rounded-full,
+.invite-surface--dark #livre-or .pointer-events-none.rounded-full {
+    background: radial-gradient(
+        circle,
+        rgba(255, 236, 178, 0.45) 0%,
+        rgba(246, 195, 216, 0.35) 40%,
+        transparent 72%
+    ) !important;
+}
+
+@media (max-width: 768px) {
+    .invite-surface--dark .fluid-silk-mesh-root::after {
+        animation: none;
+        opacity: 0.75;
+    }
+}
+
 /* Grand Jour — cadre & cœur chic */
 .bigday-panel-frame {
     position: relative;
@@ -6292,6 +6481,10 @@ body {
     .invite-main-nav {
         background-color: rgba(247, 207, 223, 0.98);
         backdrop-filter: none;
+    }
+
+    html.invite-surface--dark .invite-main-nav {
+        background-color: rgba(252, 238, 246, 0.98);
     }
 }
 
