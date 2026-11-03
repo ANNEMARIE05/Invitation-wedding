@@ -224,19 +224,19 @@ function Invitation() {
                 <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
                 <Venues />
                 <Tenues />
+                <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
+                <Cadeaux />
+                <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
+                <Guestbook />
                 {showRsvp ? (
                   <>
                     <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
                     <Rsvp />
-                    <TornDivider top="var(--wine-deep)" bottom="var(--ivory-deep)" />
+                    <TornDivider top="var(--wine-deep)" bottom="var(--wine-deep)" />
                   </>
                 ) : (
-                  <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
+                  <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
                 )}
-                <Cadeaux />
-                <TornDivider top="var(--ivory-deep)" bottom="var(--ivory)" />
-                <Guestbook />
-                <TornDivider top="var(--ivory-deep)" bottom="var(--wine-deep)" />
               </main>
               <Footer />
             </div>

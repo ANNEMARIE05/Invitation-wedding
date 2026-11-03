@@ -476,7 +476,7 @@ export default function Rsvp() {
       data-testid="rsvp-section"
     >
       <div className={`relative z-10 mx-auto w-full ${confirmed ? "max-w-5xl" : "max-w-2xl lg:max-w-3xl"}`}>
-        <Chapter index="VI" eyebrow={m.rsvp.chapter} title={m.rsvp.title} script={deadlineLabel} dark />
+        <Chapter index="VIII" eyebrow={m.rsvp.chapter} title={m.rsvp.title} script={deadlineLabel} dark />
         <AnimatePresence mode="wait">
           {confirmed ? (
             <motion.div

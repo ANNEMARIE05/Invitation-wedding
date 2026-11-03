@@ -17,9 +17,9 @@ export default function Nav() {
     const base = m.nav.links;
     if (!inviteToken) return base;
     const confirm = { label: m.nav.confirm, href: "#rsvp" };
-    const idx = base.findIndex((l) => l.href === "#cadeaux");
+    const idx = base.findIndex((l) => l.href === "#livre-or");
     if (idx === -1) return [...base, confirm];
-    return [...base.slice(0, idx), confirm, ...base.slice(idx)];
+    return [...base.slice(0, idx + 1), confirm, ...base.slice(idx + 1)];
   }, [m.nav.links, m.nav.confirm, inviteToken]);
   const sectionIds = useMemo(() => navLinks.map((l) => l.href.slice(1)), [navLinks]);
   const [activeHref, activateOnNavigate] = useNavActive(sectionIds);

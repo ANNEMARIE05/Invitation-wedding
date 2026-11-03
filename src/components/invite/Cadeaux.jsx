@@ -78,7 +78,7 @@ export default function Cadeaux() {
 
       <div className="relative z-10 mx-auto max-w-4xl">
         <Chapter
-          index="VII"
+          index="VI"
           eyebrow={m.gifts.chapter}
           title={m.gifts.title}
           script={m.gifts.script}

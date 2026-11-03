@@ -127,7 +127,7 @@ export default function Guestbook() {
       />
       <SparkleField count={10} className="opacity-45" />
       <div className="relative z-10 mx-auto max-w-4xl">
-        <Chapter index="VIII" eyebrow={m.guestbook.chapter} title={m.guestbook.title} script={m.guestbook.script} />
+        <Chapter index="VII" eyebrow={m.guestbook.chapter} title={m.guestbook.title} script={m.guestbook.script} />
 
         <LuxeCard animate className="guestbook-form-card mx-auto w-full overflow-hidden px-5 py-6 sm:px-8 sm:py-8">
           <form onSubmit={submit} data-testid="guestbook-form">
