@@ -6011,6 +6011,10 @@ input:focus, select:focus, textarea:focus {
     margin-top: 0;
 }
 
+.invites-admin-row__actions .invites-admin-whatsapp {
+    margin-top: 0;
+}
+
 .couple-backoffice-panel .invites-admin-delete {
     display: inline-flex;
     align-items: center;

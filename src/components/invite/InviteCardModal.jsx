@@ -35,7 +35,8 @@ export default function InviteCardModal({
 
     let cancelled = false;
     (async () => {
-      await new Promise((r) => setTimeout(r, 550));
+      // Attendre que la modal soit ouverte et la carte rendue avant de capturer
+      await new Promise((r) => setTimeout(r, 1200));
       if (cancelled) return;
 
       try {

@@ -99,6 +99,17 @@ export function InviteProvider({ children }) {
 
   const maxAccompagnants = info?.party_size ? Math.max(0, info.party_size - 1) : null;
 
+  // Persiste party_size en localStorage pour que les sessions suivantes respectent la limite
+  useEffect(() => {
+    if (info?.party_size) {
+      try {
+        localStorage.setItem("wedding_invite_party_size", String(info.party_size));
+      } catch {
+        /* ignore */
+      }
+    }
+  }, [info]);
+
   const value = useMemo(
     () => ({
       token,

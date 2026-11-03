@@ -75,9 +75,19 @@ export const captureCard = async (cardTestId) => {
   try {
     if (target.classList.contains("personal-invite-shell")) {
       await ensureInviteCardFontsReady();
+      // Attendre que l'image de fond soit complètement chargée avant la capture
+      const bgImg = target.querySelector(".personal-invite-bg");
+      if (bgImg && !bgImg.complete) {
+        await new Promise((resolve) => {
+          bgImg.addEventListener("load", resolve, { once: true });
+          bgImg.addEventListener("error", resolve, { once: true });
+          setTimeout(resolve, 3000); // timeout de sécurité 3 s
+        });
+      }
     }
+    // Deux frames + délai pour laisser le layout se stabiliser après resize
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-    await new Promise((r) => setTimeout(r, 80));
+    await new Promise((r) => setTimeout(r, 300));
     const bg = "#FDF8F0";
     return await toPng(target, { pixelRatio: 2, backgroundColor: bg, cacheBust: true });
   } finally {
@@ -153,9 +163,9 @@ export function CardActions({
           data-testid={`${cardTestId}-share-whatsapp`}
           onClick={shareWhatsApp}
           disabled={busy || busyWa}
-          className="inline-flex items-center justify-center gap-1.5 rounded-full border-2 border-[#25D366]/40 bg-[#25D366]/15 px-4 py-2.5 font-cinzel text-[9px] font-semibold uppercase tracking-[0.12em] text-[#0d5925] backdrop-blur-sm transition-all duration-300 hover:border-[#25D366]/70 hover:bg-[#25D366]/25 disabled:opacity-60 sm:gap-2 sm:px-6 sm:py-3.5 sm:text-[11px] sm:tracking-[0.16em]"
+          className="inline-flex items-center justify-center gap-1.5 rounded-full border-2 border-[#25D366] bg-[#25D366] px-4 py-2.5 font-cinzel text-[9px] font-semibold uppercase tracking-[0.12em] text-white shadow-[0_4px_14px_rgba(37,211,102,0.35)] backdrop-blur-sm transition-all duration-300 hover:bg-[#1ebe5d] hover:border-[#1ebe5d] disabled:opacity-60 sm:gap-2 sm:px-6 sm:py-3.5 sm:text-[11px] sm:tracking-[0.16em]"
         >
-          <MessageCircle size={14} className="text-[#25D366] sm:h-4 sm:w-4" />
+          <MessageCircle size={14} className="text-white sm:h-4 sm:w-4" />
           {busyWa ? m.inviteSection.shareWhatsAppBusy : m.inviteSection.shareWhatsApp}
         </button>
       ) : null}

@@ -264,9 +264,20 @@ export default function Rsvp() {
     applyGuestRegistration,
   ]);
 
-  const accompagnantOptions = maxAccompagnants != null
-    ? Array.from({ length: maxAccompagnants + 1 }, (_, n) => n)
-    : [0, 1, 2, 3, 4];
+  const accompagnantOptions = (() => {
+    if (maxAccompagnants != null) {
+      return Array.from({ length: maxAccompagnants + 1 }, (_, n) => n);
+    }
+    // Fallback : lire le party_size persisté en localStorage (session précédente)
+    try {
+      const ps = parseInt(localStorage.getItem("wedding_invite_party_size") || "0", 10);
+      if (ps >= 1) {
+        const max = Math.max(0, ps - 1);
+        return Array.from({ length: max + 1 }, (_, n) => n);
+      }
+    } catch {}
+    return [0, 1, 2, 3, 4];
+  })();
 
   useEffect(() => {
     if (maxAccompagnants == null) return;

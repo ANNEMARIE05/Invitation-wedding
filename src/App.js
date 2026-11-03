@@ -37,7 +37,6 @@ import InvitesAdmin from "@/components/invite/InvitesAdmin";
 import CoupleSpace from "@/components/invite/CoupleSpace";
 import { InviteProvider, useInvite } from "@/lib/InviteContext";
 import { parseInviteTokenFromLocation } from "@/lib/invite-link";
-import { scrollToId } from "@/lib/invite-data";
 import RequireCoupleAuth from "@/components/invite/RequireCoupleAuth";
 import { SETTINGS_CHANGE_EVENT } from "@/lib/invite-defaults";
 import { subscribeSystemInviteSurface } from "@/lib/invite-surface";
@@ -123,7 +122,7 @@ function Invitation() {
   const { token: inviteToken, loading: inviteLoading } = useInvite();
   const inviteInUrl =
     typeof window !== "undefined" && Boolean(parseInviteTokenFromLocation(window.location.search));
-  const showRsvp = Boolean(inviteToken) || (inviteLoading && inviteInUrl);
+  const showRsvp = Boolean(inviteToken);
 
   const loadPhotos = () =>
     getPhotos()
@@ -193,11 +192,6 @@ function Invitation() {
     window.__lenis?.stop();
   }, [opened]);
 
-  useEffect(() => {
-    if (!opened || !inviteToken || !inviteInUrl) return undefined;
-    const t = window.setTimeout(() => scrollToId("#rsvp"), 700);
-    return () => window.clearTimeout(t);
-  }, [opened, inviteToken, inviteInUrl]);
 
   return (
     <SettingsContext.Provider value={settings}>
