@@ -46,7 +46,7 @@ export default function CoupleAuthShell({
 
   return (
     <div
-      className={`couple-auth-page ${pageClass} text-wedding-on-dark antialiased`}
+      className={`couple-auth-page ${pageClass} antialiased`}
       data-testid="couple-auth-shell"
     >
       <div className="pointer-events-none absolute inset-0 hero-atmosphere" aria-hidden />

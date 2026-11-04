@@ -5232,10 +5232,73 @@ input:focus, select:focus, textarea:focus {
     max-width: min(96rem, 100%);
 }
 
+/* Backoffice — texte sombre et surfaces lisibles (cartes sur fond hero) */
+.couple-auth-page .couple-backoffice-panel.couple-classic-card {
+    color: #2f0518;
+    background: linear-gradient(180deg, #fdf0f6 0%, #f6dce8 48%, #f0d0e0 100%);
+    box-shadow:
+        0 32px 72px -18px rgba(92, 10, 32, 0.42),
+        0 22px 44px rgba(42, 5, 11, 0.34),
+        0 0 0 1px rgba(106, 16, 55, 0.26);
+}
+
+.couple-auth-page .couple-backoffice-panel .couple-classic-card__frame {
+    border-color: rgba(106, 16, 55, 0.24);
+}
+
+.couple-auth-page .couple-backoffice-panel .couple-classic-card__kicker,
+.couple-auth-page .couple-backoffice-panel .couple-classic-card__legend {
+    color: var(--wine-deep);
+}
+
+.couple-auth-page .couple-backoffice-panel .backoffice-section {
+    border-color: rgba(106, 16, 55, 0.3);
+    background: linear-gradient(165deg, #f8e6ef 0%, #f0d4e2 55%, #ebc8da 100%);
+}
+
+.couple-auth-page .couple-backoffice-panel .backoffice-field {
+    border-color: rgba(106, 16, 55, 0.38);
+    background: #fffafc;
+    color: #2f0518;
+}
+
+.couple-auth-page .couple-backoffice-panel .backoffice-field::placeholder {
+    color: rgba(47, 5, 24, 0.62);
+}
+
+.couple-auth-page .couple-backoffice-panel .backoffice-hint,
+.couple-auth-page .couple-backoffice-panel .backoffice-rsvp-list__empty {
+    color: #4a1028;
+}
+
+.couple-auth-page .couple-backoffice-panel .backoffice-rsvp-list {
+    border-color: rgba(106, 16, 55, 0.28);
+    background: rgba(245, 220, 232, 0.92);
+}
+
+.couple-auth-page .couple-backoffice-panel .backoffice-rsvp-row {
+    border-color: rgba(106, 16, 55, 0.26);
+    background: linear-gradient(165deg, #fff6fa 0%, #fce8f2 100%);
+    box-shadow: 0 3px 14px -8px rgba(92, 10, 32, 0.26);
+}
+
+.couple-auth-page .couple-backoffice-panel .backoffice-rsvp-row__name {
+    color: #2f0518;
+}
+
+.couple-auth-page .couple-backoffice-panel .backoffice-rsvp-row__message {
+    color: #3a061c;
+    font-weight: 500;
+}
+
+.couple-auth-page .couple-backoffice-panel .backoffice-rsvp-row__date {
+    color: #4a1028;
+}
+
 .backoffice-section {
     border-radius: var(--radius-frame);
-    border: 1px solid rgba(232, 61, 137, 0.2);
-    background: linear-gradient(165deg, #fff8fb 0%, #fff0f6 55%, #fce8f0 100%);
+    border: 1px solid rgba(106, 16, 55, 0.26);
+    background: linear-gradient(165deg, #f8e6ef 0%, #f0d4e2 55%, #e8c8d8 100%);
     padding: 1.15rem 1.2rem 1.25rem;
     box-shadow: var(--shadow-rose-soft);
 }
@@ -5274,16 +5337,16 @@ input:focus, select:focus, textarea:focus {
 
 .backoffice-field {
     border-radius: var(--radius-soft);
-    border: 1px solid rgba(232, 61, 137, 0.22);
-    background: rgba(255, 253, 254, 0.95);
+    border: 1px solid rgba(106, 16, 55, 0.32);
+    background: #fffafc;
     padding: 0.55rem 0.75rem;
     font-size: 0.875rem;
-    color: var(--ink);
+    color: #2f0518;
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .backoffice-field::placeholder {
-    color: rgba(42, 5, 11, 0.45);
+    color: rgba(47, 5, 24, 0.58);
 }
 
 .backoffice-field:focus {
@@ -5415,8 +5478,8 @@ input:focus, select:focus, textarea:focus {
 
 .backoffice-rsvp-list {
     border-radius: var(--radius-frame);
-    border: 1px solid rgba(232, 61, 137, 0.16);
-    background: rgba(255, 253, 254, 0.5);
+    border: 1px solid rgba(106, 16, 55, 0.24);
+    background: rgba(245, 220, 232, 0.88);
     padding: 0.85rem;
 }
 
@@ -5436,10 +5499,10 @@ input:focus, select:focus, textarea:focus {
 .backoffice-rsvp-row {
     list-style: none;
     border-radius: var(--radius-soft);
-    border: 1px solid rgba(232, 61, 137, 0.14);
-    background: linear-gradient(165deg, #fffdfb 0%, #fff5f9 100%);
+    border: 1px solid rgba(106, 16, 55, 0.22);
+    background: linear-gradient(165deg, #fff6fa 0%, #fce8f2 100%);
     padding: 1rem 1.05rem;
-    box-shadow: 0 2px 10px -6px rgba(163, 35, 90, 0.18);
+    box-shadow: 0 3px 12px -8px rgba(92, 10, 32, 0.22);
 }
 
 .backoffice-rsvp-row__head {
@@ -5605,7 +5668,8 @@ input:focus, select:focus, textarea:focus {
     margin-top: 0.55rem;
     font-size: 0.9375rem;
     line-height: 1.55;
-    color: rgba(42, 5, 11, 0.88);
+    font-weight: 500;
+    color: #3a061c;
 }
 
 .backoffice-rsvp-page-btn {
