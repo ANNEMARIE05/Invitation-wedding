@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Check, MessageCircle, Sparkles, Search } from "lucide-react";
 import { toast } from "sonner";
-import { ApiError, createRsvp, findRsvpByPhone, getRsvpPolicy } from "@/lib/api";
+import { ApiError, createRsvp, findRsvpByPhone } from "@/lib/api";
 import { EASE, WHATSAPP_NUMBER } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
@@ -92,11 +92,25 @@ const ReplyCard = ({ children, className = "" }) => (
   </div>
 );
 
-function RsvpPhoneLookup({ m, lookupPhone, setLookupPhone, lookup, lookupBusy }) {
+function RsvpPhoneLookup({
+  m,
+  lookupPhone,
+  setLookupPhone,
+  lookup,
+  lookupBusy,
+  title,
+  hint,
+  action,
+  variant = "footer",
+}) {
+  const Tag = variant === "main" ? "div" : "footer";
   return (
-    <footer className="rsvp-recall">
-      <p className="rsvp-recall-title">{m.rsvp.lookupTitle}</p>
-      <p className="rsvp-recall-hint">{m.rsvp.lookupHint}</p>
+    <Tag
+      className={`rsvp-recall${variant === "main" ? " rsvp-recall--main" : ""}`}
+      data-testid={variant === "main" ? "rsvp-link-lookup" : undefined}
+    >
+      <p className="rsvp-recall-title">{title || m.rsvp.lookupTitle}</p>
+      <p className="rsvp-recall-hint">{hint || m.rsvp.lookupHint}</p>
       <form onSubmit={lookup} className="rsvp-recall-form">
         <input
           type="tel"
@@ -114,10 +128,10 @@ function RsvpPhoneLookup({ m, lookupPhone, setLookupPhone, lookup, lookupBusy })
           data-testid="rsvp-lookup-submit"
         >
           <Search size={14} aria-hidden />
-          {lookupBusy ? m.rsvp.lookupBusy : m.rsvp.lookupAction}
+          {lookupBusy ? m.rsvp.lookupBusy : action || m.rsvp.lookupAction}
         </button>
       </form>
-    </footer>
+    </Tag>
   );
 }
 
@@ -143,8 +157,7 @@ export default function Rsvp() {
   const [loading, setLoading] = useState(false);
   const [lookupPhone, setLookupPhone] = useState("");
   const [lookupBusy, setLookupBusy] = useState(false);
-  const [editLocked, setEditLocked] = useState(false);
-  const [isUpdate, setIsUpdate] = useState(false);
+  const [hasRegistered, setHasRegistered] = useState(false);
   const [cardModalOpen, setCardModalOpen] = useState(false);
   const [autoShareCard, setAutoShareCard] = useState(false);
   const recoverAttemptRef = useRef("");
@@ -154,7 +167,7 @@ export default function Rsvp() {
       if (!rsvpData) return;
       setSent(rsvpData);
       setForm(rsvpToForm(rsvpData, m.rsvp.regimes));
-      setIsUpdate(true);
+      setHasRegistered(true);
       setOwnerRsvpId?.(rsvpData.id || null);
       try {
         localStorage.setItem("wedding_guest_rsvp", JSON.stringify(rsvpData));
@@ -218,12 +231,6 @@ export default function Rsvp() {
       if (saved?.id) setOwnerRsvpId?.(saved.id);
     } catch {}
   }, [setOwnerRsvpId]);
-
-  useEffect(() => {
-    getRsvpPolicy()
-      .then((policy) => setEditLocked(Boolean(policy?.edit_locked)))
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     if (!inviteReady || !inviteInfo?.used || !inviteInfo.rsvp_id) return;
@@ -293,12 +300,10 @@ export default function Rsvp() {
     setLookupBusy(true);
     try {
       let rsvpData = null;
-      let isLocked = false;
       try {
         const result = await findRsvpByPhone(phone);
         if (result?.rsvp) {
           rsvpData = result.rsvp;
-          isLocked = Boolean(result.edit_locked);
         }
       } catch {
         // Fallback si l'API est temporairement inaccessible
@@ -314,23 +319,27 @@ export default function Rsvp() {
         } catch {}
       }
 
+      const linkIsUsed = Boolean(inviteToken && inviteInfo?.used && inviteInfo.rsvp_id);
+
       if (!rsvpData) {
+        if (linkIsUsed) {
+          toast.error(m.rsvp.linkLookupNotFound);
+          return;
+        }
         setForm({ ...initial, telephone: phone });
-        setIsUpdate(false);
-        setEditLocked(false);
+        setHasRegistered(false);
         toast.message(m.rsvp.lookupNotFound);
         return;
       }
 
-      if (inviteToken && inviteInfo?.used && inviteInfo.rsvp_id && rsvpData.id !== inviteInfo.rsvp_id) {
+      if (linkIsUsed && rsvpData.id !== inviteInfo.rsvp_id) {
         toast.error(m.rsvp.inviteWrongGuest);
         return;
       }
 
-      setEditLocked(isLocked);
       setForm(rsvpToForm(rsvpData, m.rsvp.regimes));
       setSent(rsvpData);
-      setIsUpdate(true);
+      setHasRegistered(true);
       setOwnerRsvpId?.(rsvpData.id || null);
       try {
         localStorage.setItem("wedding_guest_rsvp", JSON.stringify(rsvpData));
@@ -357,10 +366,6 @@ export default function Rsvp() {
       return;
     }
     const phoneForSubmit = String(form.telephone || "").trim();
-    if (editLocked && isUpdate) {
-      toast.error(m.rsvp.toastLocked);
-      return;
-    }
     setLoading(true);
     try {
       const present = toPresentBool(form.present);
@@ -376,7 +381,7 @@ export default function Rsvp() {
       };
 
       const shouldTryRecover =
-        !isUpdate && inviteInfo?.used && (inviteBlocked || !canRegister);
+        !hasRegistered && inviteInfo?.used && (inviteBlocked || !canRegister);
       if (shouldTryRecover) {
         if (await recoverIfLinkOwner(phoneForSubmit)) return;
         toast.error(m.rsvp.inviteUsed);
@@ -384,14 +389,12 @@ export default function Rsvp() {
       }
 
       const data = await createRsvp(payload, {
-        update: isUpdate,
         inviteToken: inviteToken || null,
       });
       setSent(data);
-      setIsUpdate(true);
+      setHasRegistered(true);
       setOwnerRsvpId?.(data?.id || null);
       reloadInvite?.();
-      setEditLocked(false);
       setAutoShareCard(false);
       setCardModalOpen(Boolean(data?.present && (data.mode || "presentiel") === "presentiel"));
       try {
@@ -400,20 +403,8 @@ export default function Rsvp() {
       toast.success(data?.present ? m.rsvp.toastPresent : m.rsvp.toastAbsent);
     } catch (err) {
       if (err instanceof ApiError) {
-        if (err.code === "rsvp_locked") {
-          setEditLocked(true);
-          toast.error(m.rsvp.toastLocked);
-          return;
-        }
         if (err.code === "rsvp_exists" && err.payload?.existing) {
-          const existing = err.payload.existing;
-          if (inviteInfo?.rsvp_id && existing.id === inviteInfo.rsvp_id) {
-            applyGuestRegistration(existing, { openCard: true });
-            toast.success(m.rsvp.toastPresent);
-            return;
-          }
-          setForm(rsvpToForm(existing, m.rsvp.regimes));
-          setIsUpdate(true);
+          applyGuestRegistration(err.payload.existing, { openCard: true });
           toast.message(m.rsvp.toastExists);
           return;
         }
@@ -451,19 +442,10 @@ export default function Rsvp() {
 
   const handleAutoShareDone = useCallback(() => setAutoShareCard(false), []);
 
-  const startEdit = () => {
-    if (editLocked) {
-      toast.error(m.rsvp.toastLocked);
-      return;
-    }
-    if (sent) {
-      setForm(rsvpToForm(sent, m.rsvp.regimes));
-      setIsUpdate(true);
-      setSent(null);
-    }
-  };
-
   const confirmed = sent;
+  /** Lien à usage unique déjà consommé : plus de formulaire, uniquement la recherche de carte. */
+  const linkConsumed = Boolean(inviteReady && inviteInfo?.used);
+  const showRegistrationForm = Boolean(!confirmed && inviteReady && canRegister);
 
   if (!inviteToken) {
     return null;
@@ -503,19 +485,9 @@ export default function Rsvp() {
                           : m.rsvp.absentThanks}
                     </p>
 
-                    {!editLocked ? (
-                      <button
-                        type="button"
-                        onClick={startEdit}
-                        className="mt-5 text-sm text-wedding-wine-deep underline decoration-wedding-gold-accent/50 underline-offset-4 hover:decoration-wedding-gold-accent"
-                      >
-                        {m.rsvp.editMyRsvp}
-                      </button>
-                    ) : (
-                      <p className="mx-auto mt-5 max-w-md text-xs text-wedding-wine-accent md:mx-0">
-                        {m.rsvp.lookupLocked}
-                      </p>
-                    )}
+                    <p className="mx-auto mt-5 max-w-md text-xs text-wedding-wine-accent md:mx-0">
+                      {m.rsvp.noEditHint}
+                    </p>
                   </div>
 
                   <div className="rsvp-confirmation-actions">
@@ -591,6 +563,9 @@ export default function Rsvp() {
                   setLookupPhone={setLookupPhone}
                   lookup={lookup}
                   lookupBusy={lookupBusy}
+                  title={linkConsumed ? m.rsvp.linkLookupTitle : undefined}
+                  hint={linkConsumed ? m.rsvp.linkLookupHint : undefined}
+                  action={linkConsumed ? m.rsvp.linkLookupAction : undefined}
                 />
               </ReplyCard>
             </motion.div>
@@ -631,30 +606,31 @@ export default function Rsvp() {
                     </button>
                   </div>
                 ) : null}
-                {inviteBlocked ? (
+                {inviteBlocked && inviteInvalid ? (
                   <div
                     className="mb-6 rounded-xl border border-wedding-wine/15 bg-wedding-ivory/80 px-4 py-4 text-center text-sm text-wedding-ink"
                     data-testid="rsvp-invite-blocked"
                   >
-                    <p>{inviteInvalid ? m.rsvp.inviteInvalid : m.rsvp.inviteUsed}</p>
-                    {!inviteInvalid ? (
-                      <p className="mt-2 text-xs text-wedding-ink/75">{m.rsvp.inviteUsedLookupHint}</p>
-                    ) : null}
+                    <p>{m.rsvp.inviteInvalid}</p>
                   </div>
                 ) : null}
-                {editLocked && isUpdate ? (
-                  <p className="mb-4 text-center text-xs text-wedding-wine-accent" data-testid="rsvp-edit-locked">
-                    {m.rsvp.lookupLocked}
-                  </p>
+                {linkConsumed ? (
+                  <div className="text-center" data-testid="rsvp-link-answered">
+                    <span className="rsvp-confirmation-mark mx-auto">
+                      <Check size={22} className="text-wedding-gold-accent" />
+                    </span>
+                    <h3 className="mt-4 font-display text-2xl font-medium text-wedding-ink sm:text-3xl">
+                      {m.rsvp.linkAnsweredTitle}
+                    </h3>
+                    <p className="type-prose mx-auto mt-2 max-w-md text-sm">
+                      {m.rsvp.linkAnsweredText}
+                    </p>
+                  </div>
                 ) : null}
+                {showRegistrationForm ? (
                 <form onSubmit={submit} className="rsvp-reply-form" data-testid="rsvp-form">
                   <fieldset
-                    disabled={
-                      (inviteBlocked && !isUpdate) ||
-                      (inviteVerifyError && !isUpdate) ||
-                      (inviteLoading && !isUpdate) ||
-                      (editLocked && isUpdate)
-                    }
+                    disabled={inviteLoading && !hasRegistered}
                     className="min-w-0 border-0 p-0"
                   >
                   <RsvpSection title={m.rsvp.sectionIdentity}>
@@ -767,12 +743,26 @@ export default function Rsvp() {
                       className="rsvp-reply-submit animate-blink"
                     >
                       <Send size={15} className="text-wedding-gold-accent" aria-hidden />
-                      {loading ? m.rsvp.submitting : isUpdate ? m.rsvp.submitUpdate : m.rsvp.submit}
+                      {loading ? m.rsvp.submitting : m.rsvp.submit}
                     </button>
                   </div>
                   </fieldset>
                 </form>
+                ) : null}
 
+                {linkConsumed ? (
+                <RsvpPhoneLookup
+                  m={m}
+                  lookupPhone={lookupPhone}
+                  setLookupPhone={setLookupPhone}
+                  lookup={lookup}
+                  lookupBusy={lookupBusy}
+                  title={m.rsvp.linkLookupTitle}
+                  hint={m.rsvp.linkLookupHint}
+                  action={m.rsvp.linkLookupAction}
+                  variant="main"
+                />
+                ) : showRegistrationForm ? (
                 <RsvpPhoneLookup
                   m={m}
                   lookupPhone={lookupPhone}
@@ -780,6 +770,7 @@ export default function Rsvp() {
                   lookup={lookup}
                   lookupBusy={lookupBusy}
                 />
+                ) : null}
               </ReplyCard>
             </motion.div>
           )}

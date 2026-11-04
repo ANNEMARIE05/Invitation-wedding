@@ -48,7 +48,7 @@ export default function PhotosAdmin() {
           "Chaque carte correspond à un emplacement réel sur le site. L’aperçu montre l’image actuelle (démo ou la vôtre).",
       }}
     >
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {PHOTO_SLOTS.map((s) => {
           const { src, customized } = resolvePhotoSlot(s.key, photos);
           const preview = customized ? fileUrl(src) : src;
@@ -58,7 +58,7 @@ export default function PhotosAdmin() {
               className="backoffice-photo-slot luxe-card luxe-card--light luxe-card--no-inset overflow-hidden"
               data-testid={`photo-slot-${s.key}`}
             >
-              <div className="relative h-44 bg-wedding-ivory-deep/40">
+              <div className="relative h-28 bg-wedding-ivory-deep/40 sm:h-44">
                 {preview ? (
                   <img
                     src={preview}
@@ -87,9 +87,9 @@ export default function PhotosAdmin() {
                   )}
                 </span>
               </div>
-              <div className="p-5">
+              <div className="p-3 text-left sm:p-5">
                 <p className="backoffice-label mb-0">{s.label}</p>
-                <p className="backoffice-hint mt-1">{s.hint}</p>
+                <p className="backoffice-hint mt-1 max-sm:line-clamp-2">{s.hint}</p>
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp"

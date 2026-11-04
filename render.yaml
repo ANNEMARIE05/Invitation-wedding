@@ -11,6 +11,11 @@ services:
         value: 22
       - key: NODE_ENV
         value: production
+      # Base PostgreSQL persistante (Neon, Supabase, Render Postgres…) — à renseigner dans le dashboard Render.
+      # Sans elle, SQLite est utilisé : sur le plan gratuit, le disque est effacé à chaque redémarrage
+      # (RSVP, liens d'invitation et livre d'or perdus).
+      - key: DATABASE_URL
+        sync: false
       - key: DATABASE_PATH
         value: ./data/wedding.db
       - key: ALLOWED_ORIGINS

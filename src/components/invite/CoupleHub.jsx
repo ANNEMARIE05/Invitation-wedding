@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BarChart3, Camera, LogOut, Settings2, ChevronRight, Heart, Link2 } from "lucide-react";
+import { BarChart3, Camera, LogOut, Settings2, ChevronRight, Heart, Link2, Feather } from "lucide-react";
 import { EASE } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
-import { getRsvps } from "@/lib/api";
+import { getGuestbook, getRsvps } from "@/lib/api";
 import { useStoreSync } from "@/lib/useStoreSync";
 import { useCoupleAuth } from "@/lib/useCoupleAuth";
 import LangToggle from "@/components/invite/LangToggle";
@@ -25,6 +25,7 @@ export default function CoupleHub() {
     navigate("/espace-maries", { replace: true });
   };
   const [stats, setStats] = useState({ total: null, presents: null });
+  const [guestbookCount, setGuestbookCount] = useState(null);
 
   const refreshStats = useCallback(() => {
     getRsvps()
@@ -35,11 +36,24 @@ export default function CoupleHub() {
       .catch(() => setStats({ total: 0, presents: 0 }));
   }, []);
 
+  const refreshGuestbookCount = useCallback(() => {
+    getGuestbook()
+      .then((rows) => {
+        const n = (Array.isArray(rows) ? rows : []).filter(
+          (r) => !/^testeur$/i.test(String(r?.nom || "").trim()),
+        ).length;
+        setGuestbookCount(n);
+      })
+      .catch(() => setGuestbookCount(0));
+  }, []);
+
   useEffect(() => {
     refreshStats();
-  }, [refreshStats]);
+    refreshGuestbookCount();
+  }, [refreshStats, refreshGuestbookCount]);
 
   useStoreSync("rsvps", refreshStats);
+  useStoreSync("guestbook", refreshGuestbookCount);
 
   const cards = [
     {
@@ -70,6 +84,17 @@ export default function CoupleHub() {
       badge: t.cards.photos.badge,
     },
     {
+      to: "/mots-doux",
+      testId: "hub-card-guestbook",
+      icon: Feather,
+      title: t.cards.guestbook.title,
+      desc: t.cards.guestbook.desc,
+      badge:
+        guestbookCount !== null
+          ? t.cards.guestbook.badge(guestbookCount)
+          : t.cards.guestbook.loading,
+    },
+    {
       to: "/infos",
       testId: "hub-card-infos",
       icon: Settings2,
@@ -95,7 +120,7 @@ export default function CoupleHub() {
         <h1 className="mt-2 font-display text-[1.75rem] font-medium italic leading-tight text-wedding-on-dark sm:mt-3 sm:text-4xl sm:leading-normal md:text-5xl">
           {t.title}
         </h1>
-        <p className="mt-1.5 font-script text-2xl text-wedding-gold-accent sm:mt-2 sm:text-3xl">{t.subtitle}</p>
+        <p className="mt-1.5 font-script text-xl text-wedding-gold-accent sm:mt-2 sm:text-3xl">{t.subtitle}</p>
         <p className="mx-auto mt-4 max-w-lg text-xs leading-relaxed text-[#C48B92]/90 sm:mt-5 sm:text-sm">{t.intro}</p>
       </motion.div>
 
@@ -103,7 +128,7 @@ export default function CoupleHub() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.85, delay: 0.1, ease: CARD_EASE }}
-        className="couple-classic-card couple-backoffice-panel couple-backoffice-panel--wide relative mx-auto mt-8 w-full sm:mt-10"
+        className="couple-classic-card couple-backoffice-panel couple-backoffice-panel--wide relative mx-auto mt-6 w-full sm:mt-10"
       >
         <div className="couple-classic-card__frame pointer-events-none" aria-hidden />
         <span className="faire-part-gold-point faire-part-gold-point--tl couple-classic-card__corner" aria-hidden />
@@ -111,8 +136,8 @@ export default function CoupleHub() {
         <span className="faire-part-gold-point faire-part-gold-point--bl couple-classic-card__corner" aria-hidden />
         <span className="faire-part-gold-point faire-part-gold-point--br couple-classic-card__corner" aria-hidden />
 
-        <div className="relative px-5 py-8 sm:px-8 sm:py-10">
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
+        <div className="relative px-3 py-5 sm:px-8 sm:py-10">
+          <ul className="grid auto-rows-fr grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 lg:gap-5">
             {cards.map(({ to, testId, icon: Icon, title, desc, badge }, i) => (
               <motion.li
                 key={to}
@@ -124,22 +149,26 @@ export default function CoupleHub() {
                 <Link
                   to={to}
                   data-testid={testId}
-                  className="couple-hub-tile luxe-card luxe-card--light luxe-card--no-inset group flex h-full flex-col"
+                  className="couple-hub-tile couple-hub-tile--grid luxe-card luxe-card--light luxe-card--no-inset group flex h-full flex-col text-left"
                 >
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center justify-between gap-1 sm:items-start sm:gap-2">
                     <span className="couple-hub-tile__icon" aria-hidden>
-                      <Icon className="h-[18px] w-[18px] sm:h-5 sm:w-5" strokeWidth={1.45} />
+                      <Icon className="h-3.5 w-3.5 sm:h-5 sm:w-5" strokeWidth={1.45} />
                     </span>
                     <ChevronRight
                       size={17}
-                      className="couple-hub-tile__chevron shrink-0 opacity-50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100"
+                      className="couple-hub-tile__chevron hidden shrink-0 opacity-50 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100 sm:block"
                       strokeWidth={1.5}
                       aria-hidden
                     />
                   </div>
-                  <h2 className="couple-hub-tile__title mt-4 font-display text-xl sm:mt-5 sm:text-[1.35rem]">{title}</h2>
-                  <p className="couple-hub-tile__desc mt-2 flex-1 text-sm leading-relaxed">{desc}</p>
-                  <p className="couple-hub-tile__badge mt-4">{badge}</p>
+                  <h2 className="couple-hub-tile__title mt-2 font-display text-base font-semibold leading-snug text-[#3a061c] sm:mt-5 sm:text-[1.35rem] sm:font-medium sm:leading-normal">
+                    {title}
+                  </h2>
+                  <p className="couple-hub-tile__desc mt-1.5 flex-1 text-xs font-medium leading-snug text-[#4a1028] sm:mt-2 sm:text-sm sm:font-normal sm:leading-relaxed">
+                    {desc}
+                  </p>
+                  <p className="couple-hub-tile__badge mt-2 text-left sm:mt-4">{badge}</p>
                 </Link>
               </motion.li>
             ))}

@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Feather, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
-import { getGuestbook, createGuestbook } from "@/lib/api";
+import { ApiError, getGuestbook, createGuestbook } from "@/lib/api";
 import { useStoreSync } from "@/lib/useStoreSync";
 import { EASE } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
@@ -11,12 +11,6 @@ import Chapter from "./Chapter";
 import LuxeCard from "./LuxeCard";
 import ClassicRule from "./ClassicRule";
 import SparkleField from "./SparkleField";
-
-/** Messages de test / maquette — non affichés (état vide à la place). */
-function isPlaceholderGuestbookEntry(row) {
-  const nom = String(row?.nom || "").trim();
-  return /^testeur$/i.test(nom);
-}
 
 function GuestbookEmptyState({ text, testId = "guestbook-empty" }) {
   return (
@@ -65,7 +59,7 @@ export default function Guestbook() {
   const [carouselPaused, setCarouselPaused] = useState(false);
 
   const displayMessages = useMemo(
-    () => messages.filter((row) => !isPlaceholderGuestbookEntry(row)),
+    () => messages.filter((row) => row && String(row.message || "").trim()),
     [messages],
   );
 
@@ -97,16 +91,29 @@ export default function Guestbook() {
 
   const submit = async (e) => {
     e.preventDefault();
+    const cleanNom = nom.trim();
+    const cleanMessage = message.trim();
+    if (!cleanNom || !cleanMessage) {
+      toast.error(m.guestbook.toastMissing);
+      return;
+    }
     setLoading(true);
     try {
-      const data = await createGuestbook({ nom, message });
-      setMessages((prevMsgs) => [data, ...prevMsgs]);
+      const data = await createGuestbook({ nom: cleanNom, message: cleanMessage });
+      if (!data?.id) throw new Error("invalid_response");
+      setMessages((prevMsgs) => [data, ...prevMsgs.filter((row) => row.id !== data.id)]);
       setIndex(0);
       setNom("");
       setMessage("");
       toast.success(m.guestbook.toastOk);
-    } catch {
-      toast.error(m.guestbook.toastErr);
+    } catch (err) {
+      if (err instanceof ApiError && err.code === "missing_field") {
+        toast.error(m.guestbook.toastMissing);
+      } else if (!(err instanceof ApiError) || err.status >= 500 || err.code === "invalid_api_response") {
+        toast.error(m.guestbook.toastNetwork);
+      } else {
+        toast.error(m.guestbook.toastErr);
+      }
     } finally {
       setLoading(false);
     }

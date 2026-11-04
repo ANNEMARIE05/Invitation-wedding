@@ -372,17 +372,26 @@ async function deleteInviteLink(db, id) {
 
 async function bindInviteLinkToRsvp(db, inviteToken, rsvpId) {
   const t = String(inviteToken || "").trim();
-  if (!t || !rsvpId) return;
+  if (!t || !rsvpId) return false;
   if (db.isPg) {
-    await db.pool.query(
+    const res = await db.pool.query(
       `UPDATE invite_links SET rsvp_id = $1 WHERE token = $2 AND (rsvp_id IS NULL OR rsvp_id = $1)`,
       [rsvpId, t],
     );
-    return;
+    return res.rowCount > 0;
   }
-  db.sqlite
+  const info = db.sqlite
     .prepare(`UPDATE invite_links SET rsvp_id = ? WHERE token = ? AND (rsvp_id IS NULL OR rsvp_id = ?)`)
     .run(rsvpId, t, rsvpId);
+  return Number(info.changes) > 0;
+}
+
+async function deleteRsvpById(db, id) {
+  if (db.isPg) {
+    await db.pool.query("DELETE FROM rsvps WHERE id = $1", [id]);
+    return;
+  }
+  db.sqlite.prepare("DELETE FROM rsvps WHERE id = ?").run(id);
 }
 
 /**
@@ -432,7 +441,7 @@ async function assertInviteTokenForRsvp(db, inviteToken, payload, { allowUpdate,
   return { party_size: invite.party_size };
 }
 
-async function upsertRsvp(db, payload, { allowUpdate, inviteToken }) {
+async function upsertRsvp(db, payload, { inviteToken }) {
   const key = normalizePhone(payload.telephone);
   if (!key) {
     const err = new Error("invalid_phone");
@@ -440,76 +449,19 @@ async function upsertRsvp(db, payload, { allowUpdate, inviteToken }) {
     throw err;
   }
   const existing = await findRsvpByPhone(db, payload.telephone);
-  let allow = allowUpdate;
-  if (inviteToken && existing) {
-    const bound = await getInviteLinkByToken(db, inviteToken);
-    if (bound?.rsvp_id && bound.rsvp_id === existing.id) {
-      allow = true;
-    }
-  }
-  await assertInviteTokenForRsvp(db, inviteToken, payload, { allowUpdate: allow, existing });
-  const locked = await isRsvpEditLocked(db);
+  await assertInviteTokenForRsvp(db, inviteToken, payload, { allowUpdate: false, existing });
 
   if (existing) {
-    if (locked) {
-      const err = new Error("rsvp_locked");
-      err.code = "rsvp_locked";
-      throw err;
+    if (inviteToken) {
+      const bound = await getInviteLinkByToken(db, inviteToken);
+      if (bound?.rsvp_id && bound.rsvp_id === existing.id) {
+        return existing;
+      }
     }
-    if (!allow) {
-      const err = new Error("rsvp_exists");
-      err.code = "rsvp_exists";
-      err.existing = existing;
-      throw err;
-    }
-    const updated_at = new Date().toISOString();
-    if (db.isPg) {
-      await db.pool.query(
-        `UPDATE rsvps SET
-          nom = $1, telephone = $2, telephone_norm = $3,
-          present = $4, mode = $5, accompagnants = $6,
-          regime = $7, chanson = $8, message = $9, updated_at = $10
-         WHERE id = $11`,
-        [
-          payload.nom,
-          payload.telephone,
-          key,
-          payload.present ? 1 : 0,
-          payload.mode || "presentiel",
-          Number(payload.accompagnants) || 0,
-          payload.regime || "",
-          payload.chanson || "",
-          payload.message || "",
-          updated_at,
-          existing.id,
-        ],
-      );
-    } else {
-      db.sqlite.prepare(
-        `UPDATE rsvps SET
-          nom = ?, telephone = ?, telephone_norm = ?,
-          present = ?, mode = ?, accompagnants = ?,
-          regime = ?, chanson = ?, message = ?, updated_at = ?
-         WHERE id = ?`,
-      ).run(
-        payload.nom,
-        payload.telephone,
-        key,
-        payload.present ? 1 : 0,
-        payload.mode || "presentiel",
-        Number(payload.accompagnants) || 0,
-        payload.regime || "",
-        payload.chanson || "",
-        payload.message || "",
-        updated_at,
-        existing.id,
-      );
-    }
-    const updated = await findRsvpByPhone(db, payload.telephone);
-    if (inviteToken && updated?.id) {
-      await bindInviteLinkToRsvp(db, inviteToken, updated.id);
-    }
-    return updated;
+    const err = new Error("rsvp_exists");
+    err.code = "rsvp_exists";
+    err.existing = existing;
+    throw err;
   }
 
   const id = `rsvp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -556,7 +508,14 @@ async function upsertRsvp(db, payload, { allowUpdate, inviteToken }) {
   }
   const created = await findRsvpByPhone(db, payload.telephone);
   if (inviteToken && created?.id) {
-    await bindInviteLinkToRsvp(db, inviteToken, created.id);
+    // Lien à usage unique : si un autre envoi a « pris » le lien entre-temps, on annule.
+    const bound = await bindInviteLinkToRsvp(db, inviteToken, created.id);
+    if (!bound) {
+      await deleteRsvpById(db, created.id);
+      const err = new Error("invite_used");
+      err.code = "invite_used";
+      throw err;
+    }
   }
   return created;
 }

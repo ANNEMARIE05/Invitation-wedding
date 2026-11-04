@@ -86,12 +86,11 @@ export function InviteProvider({ children }) {
   const inviteVerifyError = loadState === "error";
   const inviteReady = loadState === "ok";
 
+  /** Lien à usage unique : dès qu’une présence est enregistrée, plus de nouveau formulaire. */
   const canRegister = useMemo(() => {
     if (!token || !info) return false;
-    if (!info.used) return true;
-    if (ownerRsvpId && info.rsvp_id && ownerRsvpId === info.rsvp_id) return true;
-    return false;
-  }, [token, info, ownerRsvpId]);
+    return !info.used;
+  }, [token, info]);
 
   const inviteBlocked = Boolean(
     inviteInvalid || (inviteReady && info?.used && !canRegister),

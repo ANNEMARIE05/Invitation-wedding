@@ -34,6 +34,7 @@ import RsvpDashboard from "@/components/invite/RsvpDashboard";
 import PhotosAdmin from "@/components/invite/PhotosAdmin";
 import InfosAdmin from "@/components/invite/InfosAdmin";
 import InvitesAdmin from "@/components/invite/InvitesAdmin";
+import GuestbookAdmin from "@/components/invite/GuestbookAdmin";
 import CoupleSpace from "@/components/invite/CoupleSpace";
 import { InviteProvider, useInvite } from "@/lib/InviteContext";
 import { parseInviteTokenFromLocation } from "@/lib/invite-link";
@@ -290,6 +291,14 @@ export default function App() {
                 element={
                   <RequireCoupleAuth>
                     <InvitesAdmin />
+                  </RequireCoupleAuth>
+                }
+              />
+              <Route
+                path="/mots-doux"
+                element={
+                  <RequireCoupleAuth>
+                    <GuestbookAdmin />
                   </RequireCoupleAuth>
                 }
               />

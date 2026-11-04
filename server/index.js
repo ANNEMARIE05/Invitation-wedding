@@ -165,7 +165,6 @@ async function main() {
       return;
     }
     try {
-      const allowUpdate = Boolean(body.update);
       const inviteToken = String(body.invite_token || "").trim() || null;
       const entry = await upsertRsvp(
         db,
@@ -179,7 +178,7 @@ async function main() {
           chanson: body.chanson || "",
           message: body.message || "",
         },
-        { allowUpdate, inviteToken },
+        { inviteToken },
       );
       res.json(entry);
     } catch (e) {
@@ -281,8 +280,8 @@ async function main() {
 
   app.post("/api/guestbook", async (req, res, next) => {
     try {
-      const nom = String(req.body?.nom || "").trim();
-      const message = String(req.body?.message || "").trim();
+      const nom = String(req.body?.nom || "").trim().slice(0, 80);
+      const message = String(req.body?.message || "").trim().slice(0, 280);
       if (!nom || !message) {
         res.status(400).json({ error: "missing_field" });
         return;

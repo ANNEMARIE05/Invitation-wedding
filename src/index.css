@@ -5363,6 +5363,9 @@ input:focus, select:focus, textarea:focus {
 }
 
 .backoffice-rsvp-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     border-radius: var(--radius-frame);
     border: 1px solid rgba(232, 61, 137, 0.18);
     background: linear-gradient(165deg, #fff8fb 0%, #fff0f6 100%);
@@ -5439,35 +5442,83 @@ input:focus, select:focus, textarea:focus {
     box-shadow: 0 2px 10px -6px rgba(163, 35, 90, 0.18);
 }
 
-.backoffice-rsvp-row__main {
+.backoffice-rsvp-row__head {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.75rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.55rem;
+}
+
+@media (min-width: 480px) {
+    .backoffice-rsvp-row__head {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.85rem;
+    }
+}
+
+.backoffice-rsvp-row__badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.5rem;
+}
+
+@media (min-width: 480px) {
+    .backoffice-rsvp-row__badges {
+        flex-shrink: 0;
+        justify-content: flex-end;
+        max-width: 48%;
+    }
 }
 
 .backoffice-rsvp-row__name {
     font-family: 'Cormorant Garamond', 'Playfair Display', serif;
     font-size: 1.2rem;
     font-weight: 600;
-    line-height: 1.2;
+    line-height: 1.25;
     color: var(--ink);
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+}
+
+@media (min-width: 480px) {
+    .backoffice-rsvp-row__name {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+.backoffice-rsvp-row__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.85rem;
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(232, 61, 137, 0.1);
 }
 
 .backoffice-rsvp-row__contact {
-    margin-top: 0.2rem;
-    font-size: 0.875rem;
-    color: rgba(42, 5, 11, 0.68);
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--wine-deep);
 }
 
 .backoffice-rsvp-row__date {
-    display: block;
-    margin-top: 0.35rem;
-    font-family: 'Cinzel', serif;
-    font-size: 0.5625rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(42, 5, 11, 0.48);
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.35;
+    text-transform: none;
+    color: #3a061c;
+    white-space: nowrap;
 }
 
 .backoffice-rsvp-badge {
@@ -5525,12 +5576,12 @@ input:focus, select:focus, textarea:focus {
 }
 
 .backoffice-rsvp-row__fact-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.5rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.6875rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: rgba(42, 5, 11, 0.5);
+    color: #4a1028;
 }
 
 .backoffice-rsvp-row__fact-value {
@@ -5608,7 +5659,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .couple-hub-tile {
-    padding: 1.15rem 1.2rem 1.25rem;
+    padding: 0.75rem 0.75rem 0.85rem;
     text-decoration: none;
     color: var(--ink);
     border-radius: var(--radius-frame);
@@ -5617,6 +5668,279 @@ input:focus, select:focus, textarea:focus {
 @media (min-width: 640px) {
     .couple-hub-tile {
         padding: 1.25rem 1.35rem 1.35rem;
+    }
+}
+
+@media (max-width: 639px) {
+    /* Backoffice mobile — fond doux, contraste fort, corps lisible */
+    .couple-auth-page {
+        --radius-frame: 6px;
+        --radius-soft: 4px;
+        --backoffice-mobile-ink: #2f0518;
+        --backoffice-mobile-muted: #4a1028;
+    }
+
+    .couple-auth-page .couple-backoffice-panel.couple-classic-card {
+        border-radius: 6px;
+        color: var(--backoffice-mobile-ink);
+        background: linear-gradient(180deg, #fdf2f7 0%, #f8e4ef 52%, #f5dce8 100%);
+        box-shadow:
+            0 20px 48px -16px rgba(92, 10, 32, 0.38),
+            0 0 0 1px rgba(163, 35, 90, 0.22);
+    }
+
+    .couple-auth-page .couple-backoffice-panel .couple-classic-card__kicker,
+    .couple-auth-page .couple-backoffice-panel .couple-classic-card__title,
+    .couple-auth-page .couple-backoffice-panel .couple-classic-card__legend {
+        color: var(--backoffice-mobile-ink);
+    }
+
+    .couple-auth-page .couple-backoffice-panel .luxe-card--light {
+        border-radius: 6px;
+        border-width: 1px;
+        border-color: rgba(106, 16, 55, 0.28);
+        color: var(--backoffice-mobile-ink);
+        background: linear-gradient(165deg, #fff8fb 0%, #fce8f2 58%, #f6d9e8 100%);
+        box-shadow: 0 4px 14px -8px rgba(92, 10, 32, 0.28);
+    }
+
+    .couple-auth-page .couple-backoffice-panel .couple-hub-tile.luxe-card::before {
+        display: none;
+    }
+
+    .couple-hub-tile__icon {
+        height: 1.85rem;
+        width: 1.85rem;
+        border-radius: 4px;
+        color: var(--wine-deep);
+        background: rgba(255, 251, 253, 0.95);
+        border-color: rgba(106, 16, 55, 0.32);
+    }
+
+    .couple-hub-tile--grid .couple-hub-tile__title,
+    .couple-hub-tile--grid .couple-hub-tile__desc,
+    .couple-hub-tile--grid .couple-hub-tile__badge {
+        text-align: left;
+        width: 100%;
+    }
+
+    .couple-hub-tile__title {
+        color: var(--backoffice-mobile-ink);
+    }
+
+    .couple-hub-tile__desc {
+        color: var(--backoffice-mobile-muted);
+    }
+
+    .couple-hub-tile__badge {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.625rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        line-height: 1.4;
+        text-transform: none;
+        color: var(--wine-deep);
+    }
+
+    .couple-backoffice-header .couple-classic-card__kicker {
+        font-size: 0.5625rem;
+        letter-spacing: 0.18em;
+        color: var(--wine-deep);
+    }
+
+    .couple-backoffice-panel .couple-hub-intro {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        color: var(--backoffice-mobile-muted);
+        text-align: center;
+    }
+
+    .couple-auth-page .backoffice-section {
+        padding: 0.85rem 0.9rem 0.95rem;
+        border-radius: 6px;
+        border-color: rgba(106, 16, 55, 0.22);
+        background: linear-gradient(165deg, #fdf2f7 0%, #f8e6ef 55%, #f3d9e6 100%);
+        color: var(--backoffice-mobile-ink);
+    }
+
+    .couple-auth-page .backoffice-section__title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--backoffice-mobile-ink);
+        text-align: left;
+    }
+
+    .couple-auth-page .backoffice-label {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--wine-deep);
+        text-align: left;
+    }
+
+    .couple-auth-page .backoffice-hint {
+        font-size: 0.8125rem;
+        line-height: 1.5;
+        color: var(--backoffice-mobile-muted);
+        text-align: left;
+    }
+
+    .couple-auth-page .backoffice-field {
+        border-radius: 4px;
+        border-color: rgba(106, 16, 55, 0.3);
+        background: #fffafb;
+        color: var(--backoffice-mobile-ink);
+        font-size: 1rem;
+    }
+
+    .couple-auth-page .backoffice-link-chip {
+        border-radius: 4px;
+        background: #fffafb;
+        color: var(--wine-deep);
+        font-size: 0.625rem;
+        letter-spacing: 0.08em;
+    }
+
+    .couple-auth-page .backoffice-btn-primary {
+        border-radius: 4px;
+        font-size: 0.6875rem;
+        letter-spacing: 0.14em;
+    }
+
+    .couple-auth-page .backoffice-rsvp-stat {
+        padding: 0.7rem 0.5rem;
+        border-radius: 6px;
+        border-color: rgba(106, 16, 55, 0.22);
+        background: linear-gradient(165deg, #fdf2f7 0%, #f5dce8 100%);
+    }
+
+    .couple-auth-page .backoffice-rsvp-stat__value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--backoffice-mobile-ink);
+    }
+
+    .couple-auth-page .backoffice-rsvp-stat__label {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.625rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--backoffice-mobile-muted);
+        max-width: 100%;
+    }
+
+    .couple-auth-page .backoffice-rsvp-stat__detail {
+        font-size: 0.6875rem;
+        font-weight: 500;
+        line-height: 1.35;
+        color: var(--backoffice-mobile-muted);
+        text-wrap: balance;
+    }
+
+    .couple-auth-page .backoffice-rsvp-regimes {
+        border-radius: 4px;
+        background: rgba(255, 250, 252, 0.85);
+        font-size: 0.8125rem;
+        color: var(--backoffice-mobile-muted);
+    }
+
+    .couple-auth-page .backoffice-rsvp-list {
+        border-radius: 6px;
+        background: rgba(255, 248, 251, 0.65);
+    }
+
+    .couple-auth-page .backoffice-rsvp-row {
+        border-radius: 6px;
+        background: linear-gradient(165deg, #fff8fb 0%, #fce8f2 100%);
+    }
+
+    .couple-auth-page .backoffice-rsvp-row__name {
+        font-size: 1.125rem;
+        color: var(--backoffice-mobile-ink);
+    }
+
+    .couple-auth-page .backoffice-rsvp-row__contact {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--wine-deep);
+    }
+
+    .couple-auth-page .backoffice-rsvp-row__date {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: #2f0518;
+    }
+
+    .couple-auth-page .backoffice-rsvp-row__message {
+        color: var(--backoffice-mobile-muted);
+        font-size: 0.875rem;
+    }
+
+    .couple-auth-page .backoffice-rsvp-row__fact-label {
+        font-size: 0.6875rem;
+        color: #3a061c;
+    }
+
+    .couple-auth-page .backoffice-rsvp-badge {
+        border-radius: 4px;
+        font-size: 0.5625rem;
+        letter-spacing: 0.06em;
+    }
+
+    .couple-auth-page .backoffice-rsvp-page-btn {
+        border-radius: 4px;
+        background: #fffafb;
+        font-size: 0.625rem;
+        color: var(--wine-deep);
+    }
+
+    .couple-auth-page .backoffice-hint.tabular-nums {
+        font-size: 0.8125rem;
+        color: var(--backoffice-mobile-muted);
+    }
+
+    .couple-auth-page .couple-backoffice-panel .invites-admin-stat {
+        padding: 0.55rem 0.4rem;
+        border-radius: 6px;
+        background: linear-gradient(165deg, #fdf2f7 0%, #f5dce8 100%);
+        border-color: rgba(106, 16, 55, 0.2);
+    }
+
+    .couple-auth-page .couple-backoffice-panel .invites-admin-stat__value {
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: var(--backoffice-mobile-ink);
+    }
+
+    .couple-auth-page .couple-backoffice-panel .invites-admin-stat__label {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.5625rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--backoffice-mobile-muted);
+    }
+
+    .couple-auth-page .couple-backoffice-panel .couple-classic-card__frame {
+        inset: 5px;
+        border-radius: 4px;
+    }
+
+    .couple-auth-page .couple-backoffice-panel .backoffice-photo-slot.luxe-card::before {
+        display: none;
+    }
+
+    .couple-auth-page .couple-backoffice-panel .backoffice-photo-slot {
+        border-radius: 6px;
+    }
+
+    .couple-auth-page .couple-backoffice-panel .backoffice-photo-slot .btn-couple-classic {
+        font-size: 0.625rem;
+        letter-spacing: 0.08em;
+        padding: 0.6rem 0.65rem;
     }
 }
 
@@ -6505,4 +6829,26 @@ a.rounded-full,
 .venue-action-btn,
 .back-to-top-btn {
     box-shadow: var(--shadow-rose-soft);
+}
+
+/* Lien d'invitation déjà utilisé : la recherche de carte remplace le formulaire */
+.rsvp-recall.rsvp-recall--main {
+    margin-top: 1.75rem;
+    padding: 1.25rem 1.25rem 1.4rem;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 0.9rem;
+    background: rgba(255, 250, 244, 0.7);
+    text-align: center;
+}
+
+.rsvp-recall--main .rsvp-recall-form {
+    justify-content: center;
+}
+
+.rsvp-recall--main .rsvp-recall-btn {
+    padding: 0.6rem 1.15rem;
+    border-radius: 999px;
+    background: #7a1538;
+    color: #fff8ef;
+    text-decoration: none;
 }

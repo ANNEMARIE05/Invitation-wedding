@@ -18,14 +18,19 @@ import CoupleBackofficeLayout from "@/components/invite/CoupleBackofficeLayout";
 
 const PAGE_SIZE = 8;
 
-const formatDate = (iso) =>
-  new Date(iso).toLocaleDateString("fr-FR", {
+const formatDate = (iso) => {
+  const d = new Date(iso);
+  const date = d.toLocaleDateString("fr-FR", {
     day: "numeric",
     month: "short",
     year: "numeric",
+  });
+  const time = d.toLocaleTimeString("fr-FR", {
     hour: "2-digit",
     minute: "2-digit",
   });
+  return `${date} · ${time}`;
+};
 
 const norm = (s) =>
   String(s ?? "")
@@ -64,19 +69,24 @@ function RsvpListItem({ r, index }) {
 
   return (
     <li className="backoffice-rsvp-row" data-testid={`dashboard-rsvp-${index}`}>
-      <div className="backoffice-rsvp-row__main">
-        <div className="min-w-0 flex-1">
-          <p className="backoffice-rsvp-row__name">{r.nom}</p>
-          {contact ? <p className="backoffice-rsvp-row__contact">{contact}</p> : null}
-          <time className="backoffice-rsvp-row__date" dateTime={r.created_at}>
-            {formatDate(r.created_at)}
-          </time>
-        </div>
-        <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
+      <div className="backoffice-rsvp-row__head">
+        <p className="backoffice-rsvp-row__name">{r.nom}</p>
+        <div className="backoffice-rsvp-row__badges">
           <PresenceBadge present={r.present} />
           <ModeBadge r={r} />
         </div>
       </div>
+
+      {(contact || r.created_at) && (
+        <div className="backoffice-rsvp-row__meta">
+          {contact ? (
+            <p className="backoffice-rsvp-row__contact tabular-nums">{contact}</p>
+          ) : null}
+          <time className="backoffice-rsvp-row__date tabular-nums" dateTime={r.created_at}>
+            {formatDate(r.created_at)}
+          </time>
+        </div>
+      )}
 
       {(accomp > 0 || regime) && (
         <ul className="backoffice-rsvp-row__facts">
@@ -242,7 +252,7 @@ export default function RsvpDashboard() {
       }}
     >
       <div className="backoffice-rsvp w-full">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-testid="dashboard-stats">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:grid-cols-2 lg:grid-cols-4" data-testid="dashboard-stats">
           {stats.map(({ icon: Icon, label, value, detail, testId }) => (
             <div key={label} className="backoffice-rsvp-stat" data-testid={testId}>
               <Icon size={17} className="text-wedding-wine-accent" strokeWidth={1.6} aria-hidden />

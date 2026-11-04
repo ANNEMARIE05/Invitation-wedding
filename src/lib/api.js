@@ -85,8 +85,8 @@ export async function findRsvpByPhone(telephone) {
   }
 }
 
-export async function createRsvp(payload, { update = false, inviteToken = null } = {}) {
-  const body = { ...payload, update };
+export async function createRsvp(payload, { inviteToken = null } = {}) {
+  const body = { ...payload };
   if (inviteToken) body.invite_token = inviteToken;
   const entry = await request("/api/rsvp", { method: "POST", body });
   notifyStoreChange("rsvps");
