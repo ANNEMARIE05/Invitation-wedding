@@ -40,12 +40,12 @@ app.use(createCorsMiddleware());
 app.use(cookieParser());
 app.use(express.json({ limit: "12mb" }));
 
-app.get("/api/health", (_req, res) => {
-  res.json({ ok: true });
-});
-
 async function main() {
   const db = await openDatabase();
+
+  app.get("/api/health", (_req, res) => {
+    res.json({ ok: true, db: db.isPg ? "postgres" : "sqlite" });
+  });
 
   app.get("/api/auth/status", async (req, res, next) => {
     try {
@@ -332,6 +332,11 @@ async function main() {
     const origins = parseAllowedOrigins();
     const dbType = db.isPg ? "PostgreSQL" : "SQLite";
     console.log(`API [${dbType}] démarrée sur le port ${PORT}`);
+    if (!db.isPg && process.env.NODE_ENV === "production") {
+      console.warn(
+        "[DB WARN] SQLite en production : sans volume persistant (ex. Render gratuit), liens d'invitation, RSVP et livre d'or sont effacés à chaque redémarrage. Renseignez DATABASE_URL.",
+      );
+    }
     if (origins.length) {
       console.log(`CORS autorisé : ${origins.join(", ")}`);
     }
