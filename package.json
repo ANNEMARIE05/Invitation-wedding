@@ -75,7 +75,8 @@
     "start:api": "node --watch server/index.js",
     "build": "craco build",
     "test": "craco test",
-    "refresh": "npm install && npm run build"
+    "refresh": "npm install && npm run build",
+    "db:migrate": "node scripts/migrate-sqlite-to-pg.js"
   },
   "browserslist": {
     "production": [

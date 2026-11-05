@@ -97,12 +97,18 @@ async function openDatabase() {
       return { isPg: true, pool };
     } catch (err) {
       console.error("[DB ERROR] Échec de la connexion PostgreSQL :", err.message);
-      throw err;
+      if (process.env.NODE_ENV === "production") {
+        throw err;
+      }
+      console.warn(
+        "[DB WARN] Impossible de joindre PostgreSQL en environnement de dev local (ex: absence de connectivité IPv6 locale pour Supabase direct)."
+      );
+      console.warn("[DB WARN] Bascule automatique sur SQLite local (data/wedding.db) pour le développement.");
     }
   }
 
   // Fallback SQLite local
-  console.log("[DB] Aucune DATABASE_URL détectée. Utilisation de SQLite local.");
+  console.log("[DB] Utilisation de SQLite local (data/wedding.db).");
   const { DatabaseSync } = require("node:sqlite");
   const dbPath = process.env.DATABASE_PATH
     ? path.resolve(process.env.DATABASE_PATH)
