@@ -54,14 +54,18 @@ export function buildInviteLinkShareText({ url, partySize = 1, coupleLabel = "" 
   return [
     "Bonjour,",
     "",
-    `Vous êtes invité(e) au mariage de ${names}.`,
+    `C’est avec une immense joie que nous vous invitons au mariage de ${names}. Votre présence nous tient vraiment à cœur, et nous serions tellement heureux de vous compter parmi nous.`,
     "",
-    "Voici votre lien pour découvrir l’invitation et confirmer votre présence :",
+    "Voici votre lien personnel pour découvrir l’invitation et nous dire si vous serez des nôtres :",
     String(url || "").trim(),
     "",
     quota,
     "",
-    "À très bientôt !",
+    "Pour que nous puissions préparer ce jour avec tout notre amour, merci de confirmer votre présence avant le 26 novembre — c’est notre dernier délai. Si vous pouvez nous répondre un peu plus tôt, ce serait un vrai cadeau.",
+    "",
+    "Merci du fond du cœur. On a déjà hâte de vous retrouver !",
+    "",
+    "À très bientôt",
   ].join("\n");
 }
 
