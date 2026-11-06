@@ -6,6 +6,7 @@ import { getPhotos, uploadPhoto } from "@/lib/api";
 import { useStoreSync } from "@/lib/useStoreSync";
 import { PHOTO_SLOTS, resolvePhotoSlot } from "@/lib/invite-defaults";
 import CoupleBackofficeLayout from "@/components/invite/CoupleBackofficeLayout";
+import { WeddingButtonMark } from "@/components/invite/WeddingLoader";
 
 export default function PhotosAdmin() {
   const [photos, setPhotos] = useState({});
@@ -105,9 +106,11 @@ export default function PhotosAdmin() {
                   data-testid={`photo-upload-button-${s.key}`}
                   onClick={() => inputs.current[s.key]?.click()}
                   disabled={busy === s.key}
-                  className="btn-couple-classic mt-4 inline-flex w-full items-center justify-center gap-2 disabled:opacity-50"
+                  aria-busy={busy === s.key || undefined}
+                  className={`btn-couple-classic mt-4 inline-flex w-full items-center justify-center gap-2${busy === s.key ? " is-busy" : ""}`}
                 >
-                  <Upload size={14} /> {busy === s.key ? "Envoi…" : customized ? "Remplacer" : "Choisir une photo"}
+                  {busy === s.key ? <WeddingButtonMark /> : <Upload size={14} />}
+                  <span>{busy === s.key ? "Envoi de la photo…" : customized ? "Remplacer" : "Choisir une photo"}</span>
                 </button>
               </div>
             </div>

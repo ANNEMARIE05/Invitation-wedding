@@ -5,6 +5,7 @@ import { useStoreSync } from "@/lib/useStoreSync";
 import { useI18n } from "@/lib/locale";
 import { useSettings } from "@/lib/settings";
 import CoupleBackofficeLayout from "@/components/invite/CoupleBackofficeLayout";
+import { WeddingLoader } from "@/components/invite/WeddingLoader";
 
 const PAGE_SIZE = 8;
 
@@ -145,9 +146,7 @@ export default function GuestbookAdmin() {
           </div>
 
           <div className="backoffice-rsvp-list" data-testid="guestbook-admin-list">
-            {loading && (
-              <p className="backoffice-rsvp-list__empty font-display italic">{t.loadingList}</p>
-            )}
+            {loading && <WeddingLoader compact label={t.loadingList} />}
             {!loading && messages.length === 0 && (
               <p className="backoffice-rsvp-list__empty font-display italic" data-testid="guestbook-admin-empty">
                 {t.empty}

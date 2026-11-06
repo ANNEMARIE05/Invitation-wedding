@@ -10,6 +10,7 @@ import { useCoupleAuth } from "@/lib/useCoupleAuth";
 import LangToggle from "@/components/invite/LangToggle";
 import ClassicRule from "@/components/invite/ClassicRule";
 import CoupleAuthShell from "./CoupleAuthShell";
+import { WeddingButtonMark } from "./WeddingLoader";
 
 const CARD_EASE = EASE;
 const stagger = 0.08;
@@ -62,6 +63,7 @@ export default function CoupleHub() {
       icon: BarChart3,
       title: t.cards.rsvp.title,
       desc: t.cards.rsvp.desc,
+      pending: stats.total === null,
       badge:
         stats.total !== null
           ? t.cards.rsvp.badge(stats.presents, stats.total)
@@ -89,6 +91,7 @@ export default function CoupleHub() {
       icon: Feather,
       title: t.cards.guestbook.title,
       desc: t.cards.guestbook.desc,
+      pending: guestbookCount === null,
       badge:
         guestbookCount !== null
           ? t.cards.guestbook.badge(guestbookCount)
@@ -138,7 +141,7 @@ export default function CoupleHub() {
 
         <div className="relative px-3 py-5 sm:px-8 sm:py-10">
           <ul className="grid auto-rows-fr grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 lg:gap-5">
-            {cards.map(({ to, testId, icon: Icon, title, desc, badge }, i) => (
+            {cards.map(({ to, testId, icon: Icon, title, desc, badge, pending }, i) => (
               <motion.li
                 key={to}
                 initial={{ opacity: 0, y: 16 }}
@@ -168,7 +171,10 @@ export default function CoupleHub() {
                   <p className="couple-hub-tile__desc mt-1.5 flex-1 text-xs font-medium leading-snug text-[#4a1028] sm:mt-2 sm:text-sm sm:font-normal sm:leading-relaxed">
                     {desc}
                   </p>
-                  <p className="couple-hub-tile__badge mt-2 text-left sm:mt-4">{badge}</p>
+                  <p className={`couple-hub-tile__badge mt-2 text-left sm:mt-4${pending ? " couple-hub-tile__badge--loading" : ""}`}>
+                    {pending ? <WeddingButtonMark /> : null}
+                    <span>{badge}</span>
+                  </p>
                 </Link>
               </motion.li>
             ))}

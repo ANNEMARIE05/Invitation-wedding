@@ -25,11 +25,12 @@ export default function CoupleAuthShell({
   narrow = false,
   showCoupleBanner = true,
   contentAlign = "center",
+  viewportFit = false,
 }) {
   const { coupleLabel, initials } = useSettings();
 
   useEffect(() => {
-    if (!narrow) return undefined;
+    if (!narrow && !viewportFit) return undefined;
     const prevHtml = document.documentElement.style.overflow;
     const prevBody = document.body.style.overflow;
     document.documentElement.style.overflow = "hidden";
@@ -38,15 +39,15 @@ export default function CoupleAuthShell({
       document.documentElement.style.overflow = prevHtml;
       document.body.style.overflow = prevBody;
     };
-  }, [narrow]);
+  }, [narrow, viewportFit]);
 
-  const pageClass = narrow
+  const pageClass = narrow || viewportFit
     ? "relative flex h-dvh max-h-dvh flex-col overflow-hidden"
     : "relative min-h-screen overflow-x-clip";
 
   return (
     <div
-      className={`couple-auth-page ${pageClass} antialiased`}
+      className={`couple-auth-page ${viewportFit ? "couple-auth-page--fit " : ""}${pageClass} antialiased`}
       data-testid="couple-auth-shell"
     >
       <div className="pointer-events-none absolute inset-0 hero-atmosphere" aria-hidden />
@@ -68,7 +69,7 @@ export default function CoupleAuthShell({
 
       <div
         className={`relative z-10 mx-auto flex w-full max-w-6xl flex-col px-5 sm:px-10 ${
-          narrow ? "h-full min-h-0 py-5 sm:py-6" : "min-h-screen py-8 sm:py-12"
+          viewportFit ? "h-full min-h-0 py-4 sm:py-5" : narrow ? "h-full min-h-0 py-5 sm:py-6" : "min-h-screen py-8 sm:py-12"
         }`}
       >
         <motion.header
@@ -106,7 +107,7 @@ export default function CoupleAuthShell({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.85, delay: 0.08, ease: EASE }}
-              className="mb-4 shrink-0 text-center sm:mb-5"
+              className={`shrink-0 text-center ${viewportFit ? "mb-2 sm:mb-3" : "mb-4 sm:mb-5"}`}
             >
               <p className="type-eyebrow--on-dark font-cinzel text-[10px] tracking-[0.32em] sm:text-[11px] sm:tracking-[0.42em]">
                 {coupleLabel}

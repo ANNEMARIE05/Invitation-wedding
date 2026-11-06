@@ -11,6 +11,7 @@ import {
   settingsFromForm,
 } from "@/lib/invite-defaults";
 import CoupleBackofficeLayout from "@/components/invite/CoupleBackofficeLayout";
+import { WeddingButtonMark, WeddingLoader } from "@/components/invite/WeddingLoader";
 
 const toInput = (iso) => {
   if (!iso) return "";
@@ -91,7 +92,8 @@ function LocationFields({ prefix, title, hint, form, setNested }) {
 
 export default function InfosAdmin() {
   const [form, setForm] = useState(null);
-  const [saving, setSaving] = useState(false);
+  const [busyAction, setBusyAction] = useState("");
+  const saving = Boolean(busyAction);
 
   useEffect(() => {
     getSettings()
@@ -116,7 +118,8 @@ export default function InfosAdmin() {
 
   const save = async (e) => {
     e.preventDefault();
-    setSaving(true);
+    if (saving) return;
+    setBusyAction("save");
     try {
       const raw = settingsFromForm({
         ...form,
@@ -128,16 +131,17 @@ export default function InfosAdmin() {
     } catch {
       toast.error("Échec de l'enregistrement — réessayez.");
     } finally {
-      setSaving(false);
+      setBusyAction("");
     }
   };
 
   const resetAllToDefaults = async () => {
+    if (saving) return;
     const ok = window.confirm(
       "Remettre à jour toutes les informations (couple, date, lieux, Zoom) avec les valeurs par défaut du faire-part ? Vos modifications seront remplacées.",
     );
     if (!ok) return;
-    setSaving(true);
+    setBusyAction("reset");
     try {
       const raw = codeDefaultSettings();
       await saveSettings(raw);
@@ -147,7 +151,7 @@ export default function InfosAdmin() {
     } catch {
       toast.error("Échec — réessayez.");
     } finally {
-      setSaving(false);
+      setBusyAction("");
     }
   };
 
@@ -158,10 +162,10 @@ export default function InfosAdmin() {
           testId: "infos-admin",
           eyebrow: "Backoffice",
           title: "Vos informations",
-          subtitle: "chargement…",
+          subtitle: "un instant",
         }}
       >
-        <p className="couple-hub-intro text-center font-display italic">Chargement des informations…</p>
+        <WeddingLoader compact label="Chargement des informations…" />
       </CoupleBackofficeLayout>
     );
   }
@@ -307,19 +311,23 @@ export default function InfosAdmin() {
           <button
             type="submit"
             disabled={saving}
+            aria-busy={busyAction === "save" || undefined}
             data-testid="infos-save-button"
-            className="backoffice-btn-primary flex flex-1 items-center justify-center gap-2"
+            className={`backoffice-btn-primary flex flex-1 items-center justify-center gap-2${busyAction === "save" ? " is-busy" : ""}`}
           >
-            <Save size={15} /> {saving ? "Enregistrement…" : "Enregistrer"}
+            {busyAction === "save" ? <WeddingButtonMark /> : <Save size={15} />}
+            <span>{busyAction === "save" ? "Enregistrement…" : "Enregistrer"}</span>
           </button>
           <button
             type="button"
             disabled={saving}
+            aria-busy={busyAction === "reset" || undefined}
             data-testid="infos-reset-defaults-button"
             onClick={resetAllToDefaults}
-            className="btn-couple-classic inline-flex items-center justify-center gap-2 sm:shrink-0"
+            className={`btn-couple-classic inline-flex items-center justify-center gap-2 sm:shrink-0${busyAction === "reset" ? " is-busy" : ""}`}
           >
-            Remettre à jour tout
+            {busyAction === "reset" ? <WeddingButtonMark /> : null}
+            <span>{busyAction === "reset" ? "Mise à jour…" : "Remettre à jour tout"}</span>
           </button>
         </div>
       </form>

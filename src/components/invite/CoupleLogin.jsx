@@ -9,6 +9,7 @@ import { useCoupleAuth } from "@/lib/useCoupleAuth";
 import LangToggle from "@/components/invite/LangToggle";
 import ClassicRule from "@/components/invite/ClassicRule";
 import CoupleAuthShell from "./CoupleAuthShell";
+import { WeddingButtonMark } from "./WeddingLoader";
 
 export default function CoupleLogin() {
   const { m } = useI18n();
@@ -122,9 +123,11 @@ export default function CoupleLogin() {
               type="submit"
               data-testid="couple-login-submit"
               disabled={busy || !password.trim()}
-              className="btn-couple-classic w-full"
+              aria-busy={busy || undefined}
+              className={`btn-couple-classic w-full${busy ? " is-busy" : ""}`}
             >
-              {busy ? t.submitting : t.submit}
+              {busy ? <WeddingButtonMark /> : null}
+              <span>{busy ? t.submitting : t.submit}</span>
             </button>
           </form>
 

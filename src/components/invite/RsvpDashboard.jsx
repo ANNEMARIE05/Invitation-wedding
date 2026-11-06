@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { getRsvps } from "@/lib/api";
 import { useStoreSync } from "@/lib/useStoreSync";
 import CoupleBackofficeLayout from "@/components/invite/CoupleBackofficeLayout";
+import { WeddingLoader } from "@/components/invite/WeddingLoader";
 
 const PAGE_SIZE = 8;
 
@@ -354,9 +355,7 @@ export default function RsvpDashboard() {
           </div>
 
           <div className="backoffice-rsvp-list" data-testid="dashboard-table">
-            {loading && (
-              <p className="backoffice-rsvp-list__empty font-display italic">Chargement des réponses…</p>
-            )}
+            {loading && <WeddingLoader compact label="Chargement des réponses…" />}
             {!loading && rsvps.length === 0 && (
               <p className="backoffice-rsvp-list__empty font-display italic" data-testid="dashboard-empty">
                 Aucune réponse pour le moment.

@@ -18,6 +18,7 @@ import { useSettings } from "@/lib/settings";
 import { createInviteLink, deleteInviteLink, getInviteLinks } from "@/lib/api";
 import { useStoreSync } from "@/lib/useStoreSync";
 import CoupleBackofficeLayout from "@/components/invite/CoupleBackofficeLayout";
+import { WeddingButtonMark, WeddingLoader } from "@/components/invite/WeddingLoader";
 
 const PARTY_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -225,11 +226,12 @@ export default function InvitesAdmin() {
             <button
               type="submit"
               disabled={creating}
+              aria-busy={creating || undefined}
               data-testid="invite-create-submit"
-              className="btn-couple-classic invites-admin-submit mt-7 w-full sm:mt-8"
+              className={`btn-couple-classic invites-admin-submit mt-7 w-full sm:mt-8${creating ? " is-busy" : ""}`}
             >
-              <Link2 size={17} strokeWidth={1.75} aria-hidden />
-              {creating ? "Génération…" : "Générer le lien"}
+              {creating ? <WeddingButtonMark /> : <Link2 size={17} strokeWidth={1.75} aria-hidden />}
+              <span>{creating ? "Création du lien…" : "Générer le lien"}</span>
             </button>
 
             {lastCreatedUrl ? (
@@ -259,7 +261,7 @@ export default function InvitesAdmin() {
         <section className="mt-10 sm:mt-12">
           <h2 className="couple-classic-card__legend text-center">Vos liens</h2>
 
-          {loading ? <p className="couple-hub-intro mt-6 text-center text-sm">Chargement…</p> : null}
+          {loading ? <WeddingLoader compact label="Chargement de vos liens…" /> : null}
 
           {!loading && rows.length === 0 ? (
             <div className="invites-admin-empty backoffice-section mt-6 text-center">
