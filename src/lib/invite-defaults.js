@@ -28,7 +28,7 @@ function mergeLocation(stored, id) {
   const time = (loc.time || "").trim() || def.time;
   let maps_url = (loc.maps_url || "").trim() || def.maps_url || mapsSearch(`${name} ${address}`);
   const embed_url = (loc.embed_url || "").trim() || def.embed_url || mapsEmbed(`${name} ${address}`);
-  if (id === "ceremony" && isLegacySalleRoyaumeGoogleMaps(maps_url)) {
+  if (id === "ceremony") {
     maps_url = SALLE_ROYAUME_YANGO_URL;
   }
   return { name, address, time, maps_url, embed_url };
@@ -66,6 +66,10 @@ export function buildVenueCards(m, merged) {
   return VENUE_MEDIA.map((base) => {
     const text = m.venues.items.find((v) => v.id === base.id) || {};
     const loc = merged.locations[base.id] || mergeLocation({}, base.id);
+    let mapsUrl = loc.maps_url;
+    if (base.id === "ceremony" || isLegacySalleRoyaumeGoogleMaps(mapsUrl)) {
+      mapsUrl = SALLE_ROYAUME_YANGO_URL;
+    }
     return {
       id: base.id,
       image: base.image,
@@ -74,7 +78,7 @@ export function buildVenueCards(m, merged) {
       time: loc.time,
       note: text.note || "",
       address: loc.address,
-      mapsUrl: loc.maps_url,
+      mapsUrl,
       embedUrl: loc.embed_url,
     };
   });

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, MapPin, Navigation, Video } from "lucide-react";
 import { toast } from "sonner";
 import { EASE } from "@/lib/invite-data";
-import { isYangoLink, yangoAnchorProps } from "@/lib/yango-open";
+import { isYangoLink, yangoAnchorProps, SALLE_ROYAUME_YANGO_URL } from "@/lib/yango-open";
 import { REVEAL_VIEWPORT } from "@/lib/motion-viewport";
 import { useI18n } from "@/lib/locale";
 import { usePhoto } from "@/lib/photos";
@@ -14,7 +14,7 @@ import LuxeCard from "./LuxeCard";
 
 const protectJehovah = (text) => String(text || "").replace(/Jéhovah/g, "Jéh\u2060ovah");
 
-function VenueMapEmbed({ venue, loadingLabel, mapTitle }) {
+function VenueMapEmbed({ venue, loadingLabel, mapTitle, isYango, yangoLabel }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function VenueMapEmbed({ venue, loadingLabel, mapTitle }) {
   return (
     <div
       data-testid={`venue-map-${venue.id}`}
-      className={`venue-map-shell venues-stop-card__map-frame min-h-[168px] sm:min-h-[180px] ${loading ? "venue-map-shell--loading" : "venue-map-shell--loaded"}`}
+      className={`venue-map-shell venues-stop-card__map-frame relative overflow-hidden rounded-xl min-h-[168px] sm:min-h-[180px] ${loading ? "venue-map-shell--loading" : "venue-map-shell--loaded"}`}
     >
       {loading ? (
         <div className="venue-map-loader" role="status" aria-live="polite">
@@ -40,6 +40,19 @@ function VenueMapEmbed({ venue, loadingLabel, mapTitle }) {
         loading="lazy"
         onLoad={() => setLoading(false)}
       />
+      {isYango ? (
+        <a
+          href={SALLE_ROYAUME_YANGO_URL}
+          {...yangoAnchorProps(SALLE_ROYAUME_YANGO_URL)}
+          aria-label={yangoLabel || "Ouvrir dans l'application Yango"}
+          className="group absolute inset-0 z-10 flex flex-col items-center justify-end p-3 bg-gradient-to-t from-[#1b0008]/85 via-[#1b0008]/20 to-transparent cursor-pointer transition-all hover:from-[#1b0008]/95"
+        >
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EA1C24] px-4 py-2 font-cinzel text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-xl shadow-black/50 backdrop-blur-sm transition-transform group-hover:scale-105 active:scale-95 sm:text-xs">
+            <Navigation size={13} className="text-white fill-white/20" />
+            <span>{yangoLabel || "Ouvrir dans Yango"}</span>
+          </div>
+        </a>
+      ) : null}
     </div>
   );
 }
@@ -77,92 +90,103 @@ export default function Venues() {
             aria-hidden="true"
           />
           <ol className="relative z-[1] list-none space-y-0 p-0 m-0">
-            {venues.map((venue, i) => (
-              <li key={venue.id} className="venues-journey-step">
-                {i > 0 ? (
-                  <div className="venues-journey-bridge-wrap">
-                    <motion.p
-                      initial={{ opacity: 0, scale: 0.92 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={REVEAL_VIEWPORT}
-                      transition={{ duration: 0.5, ease: EASE }}
-                      className="venues-journey-bridge"
-                    >
-                      {vCopy.journeyBetween}
-                    </motion.p>
-                  </div>
-                ) : null}
-                <motion.div
-                  initial={{ opacity: 0, y: 36 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={REVEAL_VIEWPORT}
-                  transition={{ duration: 0.85, delay: i * 0.08, ease: EASE }}
-                  className="relative pt-2"
-                >
-                  <span className="venues-journey-dot" aria-hidden="true" />
-                  <LuxeCard
-                    as="article"
-                    lift
-                    animate={false}
-                    className="venues-stop-card overflow-hidden !rounded-[12px]"
-                    data-testid={`venue-card-${venue.id}`}
-                  >
-                    <div className="flex flex-col sm:flex-row">
-                      <div className="venues-stop-card__time-side shrink-0">
-                        <span
-                          className="venues-stop-card__time-fleuron"
-                          aria-hidden="true"
-                          style={{ "--venues-fleuron-delay": `${i * 0.45}s` }}
-                        >
-                          <img
-                            src={ROSE_PINK}
-                            alt=""
-                            className="venues-stop-card__time-fleuron-image"
-                            decoding="async"
-                            draggable={false}
-                          />
-                        </span>
-                        <p className="venues-stop-card__time type-accent-time">{venue.time}</p>
-                      </div>
-                      <div className="group relative h-44 shrink-0 overflow-hidden sm:h-auto sm:min-h-[15rem] sm:w-[13.5rem] md:min-h-[17rem] md:w-[17.5rem] lg:w-[20rem]">
-                        <img
-                          src={venue.image}
-                          alt=""
-                          className="h-full w-full object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.04]"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-wedding-wine-deep/55 via-wedding-wine/15 to-transparent sm:bg-gradient-to-r sm:from-wedding-wine-deep/35 sm:via-transparent sm:to-transparent" />
-                      </div>
-                      <div className="flex min-w-0 flex-1 flex-col items-start px-3.5 py-4 text-left sm:p-7">
-                        <p className="font-cinzel text-[11px] font-bold tracking-[0.24em] uppercase text-wedding-wine-accent sm:text-xs sm:tracking-[0.28em]">
-                          {venue.eyebrow}
-                        </p>
-                        <h3 className="type-card-title mt-1 text-lg italic sm:text-2xl">{protectJehovah(venue.name)}</h3>
-                        <div className="mt-3 flex items-start justify-start gap-2.5 text-wedding-wine">
-                          <MapPin size={17} className="mt-0.5 shrink-0 text-wedding-wine-accent" strokeWidth={1.5} />
-                          <p className="type-prose text-sm sm:text-base">{venue.address}</p>
-                        </div>
-                        <p className="type-prose mt-3 text-sm sm:text-base">{protectJehovah(venue.note)}</p>
-                        <motion.a
-                          data-testid={`venue-directions-${venue.id}`}
-                          href={venue.mapsUrl}
-                          {...yangoAnchorProps(venue.mapsUrl)}
-                          whileTap={{ scale: 0.96 }}
-                          whileHover={{ y: -2 }}
-                          className="venue-action-btn mt-4 inline-flex w-fit max-w-full items-center justify-center gap-1.5 rounded-full border border-wedding-wine-deep/20 bg-wedding-wine-deep px-5 py-2.5 font-cinzel text-[11px] uppercase tracking-[0.14em] text-wedding-on-dark transition-all duration-300 hover:bg-wedding-wine-accent sm:mt-5 sm:gap-2 sm:px-6 sm:py-3 sm:text-xs sm:tracking-[0.18em]"
-                        >
-                          <Navigation size={14} /> {isYangoLink(venue.mapsUrl) ? vCopy.yango : vCopy.maps}
-                        </motion.a>
-                        {venue.embedUrl ? (
-                          <div className="venues-stop-card__map mt-6 w-full">
-                            <VenueMapEmbed venue={venue} loadingLabel={vCopy.mapLoading} mapTitle={vCopy.mapTitle} />
-                          </div>
-                        ) : null}
-                      </div>
+            {venues.map((venue, i) => {
+              const isYango = venue.id === "ceremony" || isYangoLink(venue.mapsUrl);
+              const effectiveMapsUrl = isYango ? SALLE_ROYAUME_YANGO_URL : venue.mapsUrl;
+
+              return (
+                <li key={venue.id} className="venues-journey-step">
+                  {i > 0 ? (
+                    <div className="venues-journey-bridge-wrap">
+                      <motion.p
+                        initial={{ opacity: 0, scale: 0.92 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={REVEAL_VIEWPORT}
+                        transition={{ duration: 0.5, ease: EASE }}
+                        className="venues-journey-bridge"
+                      >
+                        {vCopy.journeyBetween}
+                      </motion.p>
                     </div>
-                  </LuxeCard>
-                </motion.div>
-              </li>
-            ))}
+                  ) : null}
+                  <motion.div
+                    initial={{ opacity: 0, y: 36 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={REVEAL_VIEWPORT}
+                    transition={{ duration: 0.85, delay: i * 0.08, ease: EASE }}
+                    className="relative pt-2"
+                  >
+                    <span className="venues-journey-dot" aria-hidden="true" />
+                    <LuxeCard
+                      as="article"
+                      lift
+                      animate={false}
+                      className="venues-stop-card overflow-hidden !rounded-[12px]"
+                      data-testid={`venue-card-${venue.id}`}
+                    >
+                      <div className="flex flex-col sm:flex-row">
+                        <div className="venues-stop-card__time-side shrink-0">
+                          <span
+                            className="venues-stop-card__time-fleuron"
+                            aria-hidden="true"
+                            style={{ "--venues-fleuron-delay": `${i * 0.45}s` }}
+                          >
+                            <img
+                              src={ROSE_PINK}
+                              alt=""
+                              className="venues-stop-card__time-fleuron-image"
+                              decoding="async"
+                              draggable={false}
+                            />
+                          </span>
+                          <p className="venues-stop-card__time type-accent-time">{venue.time}</p>
+                        </div>
+                        <div className="group relative h-44 shrink-0 overflow-hidden sm:h-auto sm:min-h-[15rem] sm:w-[13.5rem] md:min-h-[17rem] md:w-[17.5rem] lg:w-[20rem]">
+                          <img
+                            src={venue.image}
+                            alt=""
+                            className="h-full w-full object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.04]"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-wedding-wine-deep/55 via-wedding-wine/15 to-transparent sm:bg-gradient-to-r sm:from-wedding-wine-deep/35 sm:via-transparent sm:to-transparent" />
+                        </div>
+                        <div className="flex min-w-0 flex-1 flex-col items-start px-3.5 py-4 text-left sm:p-7">
+                          <p className="font-cinzel text-[11px] font-bold tracking-[0.24em] uppercase text-wedding-wine-accent sm:text-xs sm:tracking-[0.28em]">
+                            {venue.eyebrow}
+                          </p>
+                          <h3 className="type-card-title mt-1 text-lg italic sm:text-2xl">{protectJehovah(venue.name)}</h3>
+                          <div className="mt-3 flex items-start justify-start gap-2.5 text-wedding-wine">
+                            <MapPin size={17} className="mt-0.5 shrink-0 text-wedding-wine-accent" strokeWidth={1.5} />
+                            <p className="type-prose text-sm sm:text-base">{venue.address}</p>
+                          </div>
+                          <p className="type-prose mt-3 text-sm sm:text-base">{protectJehovah(venue.note)}</p>
+                          <motion.a
+                            data-testid={`venue-directions-${venue.id}`}
+                            href={effectiveMapsUrl}
+                            {...(isYango ? yangoAnchorProps(effectiveMapsUrl) : { target: "_blank", rel: "noopener noreferrer" })}
+                            whileTap={{ scale: 0.96 }}
+                            whileHover={{ y: -2 }}
+                            className="venue-action-btn mt-4 inline-flex w-fit max-w-full items-center justify-center gap-1.5 rounded-full border border-wedding-wine-deep/20 bg-wedding-wine-deep px-5 py-2.5 font-cinzel text-[11px] uppercase tracking-[0.14em] text-wedding-on-dark transition-all duration-300 hover:bg-wedding-wine-accent sm:mt-5 sm:gap-2 sm:px-6 sm:py-3 sm:text-xs sm:tracking-[0.18em]"
+                          >
+                            <Navigation size={14} /> {isYango ? vCopy.yango : vCopy.maps}
+                          </motion.a>
+                          {venue.embedUrl ? (
+                            <div className="venues-stop-card__map mt-6 w-full">
+                              <VenueMapEmbed
+                                venue={venue}
+                                loadingLabel={vCopy.mapLoading}
+                                mapTitle={vCopy.mapTitle}
+                                isYango={isYango}
+                                yangoLabel={vCopy.yango}
+                              />
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    </LuxeCard>
+                  </motion.div>
+                </li>
+              );
+            })}
           </ol>
         </div>
 
