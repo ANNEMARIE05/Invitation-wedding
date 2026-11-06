@@ -1,5 +1,6 @@
 import coupleIllustration from "@/assets/couple-illustration.jpg";
 import weddingArchSketch from "@/assets/wedding-arch-sketch.jpg";
+import { SALLE_ROYAUME_YANGO_URL } from "@/lib/yango-open";
 
 export const EASE = [0.22, 1, 0.36, 1];
 
@@ -15,7 +16,7 @@ export const WEDDING_DATE_SHORT = "04 . 12 . 2026";
 export const VENUE = {
   name: "Salle du Royaume — Cocody Danga",
   address: "Cocody Danga, Abidjan — Côte d'Ivoire",
-  mapsUrl: "https://maps.google.com/maps?q=5.3407496%2C-4.0054354&z=17&hl=fr",
+  mapsUrl: SALLE_ROYAUME_YANGO_URL,
   embedUrl: "https://www.google.com/maps?q=5.3407496,-4.0054354&z=17&output=embed",
 };
 
@@ -31,7 +32,7 @@ export const VENUE_MEDIA = [
   {
     id: "ceremony",
     address: "Cocody Danga, Abidjan — Côte d'Ivoire",
-    mapsUrl: "https://maps.google.com/maps?q=5.3407496%2C-4.0054354&z=17&hl=fr",
+    mapsUrl: SALLE_ROYAUME_YANGO_URL,
     embedUrl: "https://www.google.com/maps?q=5.3407496,-4.0054354&z=17&output=embed",
     image: publicImage("salle-temoins-jehovah.jpg"),
   },

@@ -1,4 +1,5 @@
 import { COUPLE, WEDDING_DATE_ISO, VENUE, IMAGES, VENUE_MEDIA, ZOOM, getZoomJoinUrl } from "./invite-data";
+import { isLegacySalleRoyaumeGoogleMaps, SALLE_ROYAUME_YANGO_URL } from "./yango-open";
 import { messages } from "./translations";
 import { mergeTheme, normalizeSurfaceMode, themeFromForm } from "./theme";
 
@@ -25,8 +26,11 @@ function mergeLocation(stored, id) {
   const name = (loc.name || "").trim() || def.name;
   const address = (loc.address || "").trim() || def.address;
   const time = (loc.time || "").trim() || def.time;
-  const maps_url = (loc.maps_url || "").trim() || def.maps_url || mapsSearch(`${name} ${address}`);
+  let maps_url = (loc.maps_url || "").trim() || def.maps_url || mapsSearch(`${name} ${address}`);
   const embed_url = (loc.embed_url || "").trim() || def.embed_url || mapsEmbed(`${name} ${address}`);
+  if (id === "ceremony" && isLegacySalleRoyaumeGoogleMaps(maps_url)) {
+    maps_url = SALLE_ROYAUME_YANGO_URL;
+  }
   return { name, address, time, maps_url, embed_url };
 }
 

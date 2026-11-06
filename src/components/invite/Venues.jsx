@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, MapPin, Navigation, Video } from "lucide-react";
 import { toast } from "sonner";
 import { EASE } from "@/lib/invite-data";
+import { isYangoLink, yangoAnchorProps } from "@/lib/yango-open";
 import { REVEAL_VIEWPORT } from "@/lib/motion-viewport";
 import { useI18n } from "@/lib/locale";
 import { usePhoto } from "@/lib/photos";
@@ -144,13 +145,12 @@ export default function Venues() {
                         <motion.a
                           data-testid={`venue-directions-${venue.id}`}
                           href={venue.mapsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          {...yangoAnchorProps(venue.mapsUrl)}
                           whileTap={{ scale: 0.96 }}
                           whileHover={{ y: -2 }}
                           className="venue-action-btn mt-4 inline-flex w-fit max-w-full items-center justify-center gap-1.5 rounded-full border border-wedding-wine-deep/20 bg-wedding-wine-deep px-5 py-2.5 font-cinzel text-[11px] uppercase tracking-[0.14em] text-wedding-on-dark transition-all duration-300 hover:bg-wedding-wine-accent sm:mt-5 sm:gap-2 sm:px-6 sm:py-3 sm:text-xs sm:tracking-[0.18em]"
                         >
-                          <Navigation size={14} /> {vCopy.maps}
+                          <Navigation size={14} /> {isYangoLink(venue.mapsUrl) ? vCopy.yango : vCopy.maps}
                         </motion.a>
                         {venue.embedUrl ? (
                           <div className="venues-stop-card__map mt-6 w-full">

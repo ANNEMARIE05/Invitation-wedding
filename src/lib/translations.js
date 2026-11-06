@@ -163,6 +163,7 @@ export const messages = {
       journeyMapsLabel: "Plans & accès",
       mapLoading: "Chargement de la carte…",
       maps: "Voir sur Google Maps",
+      yango: "Ouvrir dans Yango",
       mapTitle: (name) => `Carte — ${name}`,
       items: [
         {
@@ -626,6 +627,7 @@ export const messages = {
       journeyMapsLabel: "Maps & directions",
       mapLoading: "Loading map…",
       maps: "Open in Google Maps",
+      yango: "Open in Yango",
       mapTitle: (name) => `Map — ${name}`,
       items: [
         {

@@ -66,7 +66,7 @@ function LocationFields({ prefix, title, hint, form, setNested }) {
           />
         </div>
         <div>
-          <label className={labelCls}>Lien Google Maps (optionnel)</label>
+          <label className={labelCls}>Lien d'itinéraire (optionnel)</label>
           <input
             data-testid={`infos-${prefix}-maps`}
             value={loc.maps_url}
