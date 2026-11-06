@@ -15,7 +15,7 @@ services:
       # Sans elle, SQLite est utilisé : sur le plan gratuit, le disque est effacé à chaque redémarrage
       # (RSVP, liens d'invitation et livre d'or perdus).
       - key: DATABASE_URL
-        sync: false
+        value: postgresql://postgres.nxlimynbymlxzmhapgec:3OLjyOsVfEmoTIbe@aws-1-eu-central-1.pooler.supabase.com:6543/postgres
       - key: DATABASE_PATH
         value: ./data/wedding.db
       - key: ALLOWED_ORIGINS

@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { EASE } from "@/lib/invite-data";
 import { buildInviteUrl, shareInviteLinkOnWhatsApp } from "@/lib/invite-link";
 import { useSettings } from "@/lib/settings";
-import { createInviteLink, deleteInviteLink, getInviteLinks } from "@/lib/api";
+import { createInviteLink, deleteInviteLink, getHealth, getInviteLinks } from "@/lib/api";
 import { useStoreSync } from "@/lib/useStoreSync";
 import CoupleBackofficeLayout from "@/components/invite/CoupleBackofficeLayout";
 import { WeddingButtonMark, WeddingLoader } from "@/components/invite/WeddingLoader";
@@ -84,6 +84,15 @@ export default function InvitesAdmin() {
   const [partySize, setPartySize] = useState(2);
   const [creating, setCreating] = useState(false);
   const [lastCreatedUrl, setLastCreatedUrl] = useState("");
+  const [ephemeralDb, setEphemeralDb] = useState(false);
+
+  useEffect(() => {
+    const isLocalHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+    if (isLocalHost) return;
+    getHealth()
+      .then((health) => setEphemeralDb(health.db === "sqlite"))
+      .catch(() => {});
+  }, []);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -143,6 +152,18 @@ export default function InvitesAdmin() {
       }}
     >
       <div className="invites-admin mx-auto max-w-3xl">
+        {ephemeralDb ? (
+          <div
+            role="alert"
+            className="backoffice-section mb-6 border border-wedding-wine/30 text-center"
+            data-testid="invites-ephemeral-db-warning"
+          >
+            <p className="couple-hub-intro text-sm font-medium text-wedding-wine-deep">
+              Base temporaire : les liens peuvent être effacés au redémarrage du serveur. Configurez
+              DATABASE_URL (PostgreSQL) sur l’hébergeur de l’API.
+            </p>
+          </div>
+        ) : null}
         {!loading && rows.length > 0 ? (
           <motion.ul
             initial={{ opacity: 0 }}

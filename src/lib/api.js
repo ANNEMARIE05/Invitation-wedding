@@ -52,6 +52,10 @@ function ensureObject(data) {
   return data && typeof data === "object" && !Array.isArray(data) ? data : {};
 }
 
+export async function getHealth() {
+  return ensureObject(await request("/api/health"));
+}
+
 export async function getAuthStatus() {
   return request("/api/auth/status");
 }
