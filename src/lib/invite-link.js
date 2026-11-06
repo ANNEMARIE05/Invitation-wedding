@@ -53,14 +53,14 @@ export function buildInviteLinkShareText({ url, partySize = 1 }) {
   return [
     "Bonjour,",
     "",
-    "C’est avec une immense joie que nous vous invitons à notre mariage en 2026.",
+    "C’est avec une immense joie que nous vous invitons à notre mariage.",
     "",
     "Voici votre lien personnel pour découvrir l’invitation et nous dire si vous serez des nôtres :",
     String(url || "").trim(),
     "",
     quota,
     "",
-    "Pour que nous puissions préparer ce jour avec tout notre amour, merci de confirmer votre présence avant le 26 novembre.",
+    "Pour que nous puissions préparer ce jour avec tout notre amour, merci de confirmer votre présence avant le 26 novembre 2026.",
     "",
     "On a hâte de vous retrouver !",
   ].join("\n");
