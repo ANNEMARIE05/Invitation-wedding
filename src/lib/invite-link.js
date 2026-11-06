@@ -44,9 +44,8 @@ export function readPersistedInviteToken() {
 }
 
 /** Message WhatsApp accompagnant un lien d’invitation personnalisé. */
-export function buildInviteLinkShareText({ url, partySize = 1, coupleLabel = "" }) {
+export function buildInviteLinkShareText({ url, partySize = 1 }) {
   const n = Math.min(10, Math.max(1, Number(partySize) || 1));
-  const names = String(coupleLabel || "").trim() || "nos mariés";
   const quota =
     n > 1
       ? `Ce lien est valable pour ${n} personnes (invité principal inclus).`
@@ -54,18 +53,16 @@ export function buildInviteLinkShareText({ url, partySize = 1, coupleLabel = "" 
   return [
     "Bonjour,",
     "",
-    `C’est avec une immense joie que nous vous invitons au mariage de ${names}. Votre présence nous tient vraiment à cœur, et nous serions tellement heureux de vous compter parmi nous.`,
+    "C’est avec une immense joie que nous vous invitons à notre mariage en 2026.",
     "",
     "Voici votre lien personnel pour découvrir l’invitation et nous dire si vous serez des nôtres :",
     String(url || "").trim(),
     "",
     quota,
     "",
-    "Pour que nous puissions préparer ce jour avec tout notre amour, merci de confirmer votre présence avant le 26 novembre — c’est notre dernier délai. Si vous pouvez nous répondre un peu plus tôt, ce serait un vrai cadeau.",
+    "Pour que nous puissions préparer ce jour avec tout notre amour, merci de confirmer votre présence avant le 26 novembre.",
     "",
-    "Merci du fond du cœur. On a déjà hâte de vous retrouver !",
-    "",
-    "À très bientôt",
+    "On a hâte de vous retrouver !",
   ].join("\n");
 }
 
