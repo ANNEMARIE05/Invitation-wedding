@@ -1,5 +1,8 @@
 import { useId } from "react";
+import { motion } from "framer-motion";
+import { EASE } from "@/lib/invite-data";
 import { useI18n } from "@/lib/locale";
+import SparkleField from "@/components/invite/SparkleField";
 import CoupleAuthShell from "./CoupleAuthShell";
 
 function WeddingMark({ compact = false }) {
@@ -79,6 +82,50 @@ export function WeddingLoader({ label, compact = false }) {
       <WeddingMark compact={compact} />
       {label ? <p className="wedding-loader-block__label">{label}</p> : null}
     </div>
+  );
+}
+
+/** Écran affiché avant l'enveloppe, le temps que l'invitation soit prête. */
+export function InviteArrivalGate({ slow = false }) {
+  const { m } = useI18n();
+  const t = m.intro.gate;
+  const subtitle = slow ? t.slow : t.subtitle;
+
+  return (
+    <motion.div
+      className="intro-gate couple-auth-page--fit fixed inset-0 z-[80] flex items-center justify-center overflow-hidden bg-[#25040E] px-5"
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.55, ease: EASE }}
+      role="status"
+      aria-live="polite"
+      aria-label={subtitle}
+      data-testid="invite-arrival-gate"
+    >
+      <div className="pointer-events-none absolute inset-0 hero-atmosphere" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 hero-grid opacity-25" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 hero-veil" aria-hidden="true" />
+      <div className="grain-overlay opacity-[0.04]" aria-hidden="true" />
+      <SparkleField count={12} className="z-[2] opacity-80" />
+      <div className="intro-gate-vignette pointer-events-none absolute inset-0 z-[3]" aria-hidden="true" />
+      <div className="hero-corners intro-gate-corners pointer-events-none absolute z-[5]" aria-hidden="true">
+        <span className="hero-corner hero-corner--tl" />
+        <span className="hero-corner hero-corner--tr" />
+        <span className="hero-corner hero-corner--bl" />
+        <span className="hero-corner hero-corner--br" />
+      </div>
+      <div className="wedding-gate relative z-10">
+        <WeddingMark />
+        <p className="wedding-gate__eyebrow">{t.eyebrow}</p>
+        <h1 className="wedding-gate__title">{t.title}</h1>
+        <p className="wedding-gate__script">{t.script}</p>
+        <p className="wedding-gate__sub">{subtitle}</p>
+        <div className="wedding-gate__dots" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+      </div>
+    </motion.div>
   );
 }
 

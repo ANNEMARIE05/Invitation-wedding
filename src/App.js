@@ -27,6 +27,7 @@ import Cadeaux from "@/components/invite/Cadeaux";
 import Guestbook from "@/components/invite/Guestbook";
 import Footer from "@/components/invite/Footer";
 import IntroGate from "@/components/invite/IntroGate";
+import { InviteArrivalGate } from "@/components/invite/WeddingLoader";
 import WeddingPetals from "@/components/invite/WeddingPetals";
 import MusicPlayer from "@/components/invite/MusicPlayer";
 import BackToTop from "@/components/invite/BackToTop";
@@ -120,10 +121,20 @@ function Invitation() {
   const [photos, setPhotos] = useState({});
   const [settings, setSettings] = useState(null);
   const [surfaceMode, setSurfaceMode] = useState("light");
-  const { token: inviteToken, loading: inviteLoading } = useInvite();
+  const [preludeReady, setPreludeReady] = useState(false);
+  const [connectionSlow, setConnectionSlow] = useState(false);
+  const [waitExpired, setWaitExpired] = useState(false);
+  const {
+    token: inviteToken,
+    inviteReady,
+    inviteInvalid,
+    inviteVerifyError,
+  } = useInvite();
   const inviteInUrl =
     typeof window !== "undefined" && Boolean(parseInviteTokenFromLocation(window.location.search));
   const showRsvp = Boolean(inviteToken);
+  const inviteSettled = !inviteInUrl || inviteReady || inviteInvalid || inviteVerifyError;
+  const showEnvelope = waitExpired || (preludeReady && inviteSettled);
 
   const loadPhotos = () =>
     getPhotos()
@@ -131,8 +142,28 @@ function Invitation() {
       .catch(() => setPhotos({}));
 
   useEffect(() => {
+    let cancelled = false;
+    const slowTimer = window.setTimeout(() => {
+      if (!cancelled) setConnectionSlow(true);
+    }, 3200);
+    const giveUpTimer = window.setTimeout(() => {
+      if (!cancelled) setWaitExpired(true);
+    }, 12000);
+    const minWait = new Promise((resolve) => window.setTimeout(resolve, 1100));
+    const settingsLoad = getSettings()
+      .then((data) => {
+        if (!cancelled) setSettings(data);
+      })
+      .catch(() => {});
     loadPhotos();
-    getSettings().then(setSettings).catch(() => {});
+    Promise.all([minWait, settingsLoad]).then(() => {
+      if (!cancelled) setPreludeReady(true);
+    });
+    return () => {
+      cancelled = true;
+      window.clearTimeout(slowTimer);
+      window.clearTimeout(giveUpTimer);
+    };
   }, []);
 
   useEffect(() => subscribeSystemInviteSurface(setSurfaceMode), []);
@@ -208,7 +239,12 @@ function Invitation() {
           {!opened && <LangToggle floating />}
           <WeddingPetals active={opened} density={24} />
           <AnimatePresence mode="wait">
-            {!opened && <IntroGate key="intro-gate" onOpen={() => setOpened(true)} />}
+            {!opened && !showEnvelope && (
+              <InviteArrivalGate key="invite-arrival" slow={connectionSlow} />
+            )}
+            {!opened && showEnvelope && (
+              <IntroGate key="intro-gate" onOpen={() => setOpened(true)} />
+            )}
           </AnimatePresence>
           {opened && <Nav />}
           {opened ? (

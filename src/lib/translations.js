@@ -34,6 +34,13 @@ export const messages = {
       openAria: "Ouvrir l'invitation",
       open: "Ouvrir",
       tapEnvelope: "ou touchez l'enveloppe",
+      gate: {
+        eyebrow: "Chargement",
+        title: "Votre invitation",
+        script: "un instant…",
+        subtitle: "Nous préparons l'enveloppe.",
+        slow: "La connexion prend un peu de temps — merci de patienter.",
+      },
     },
     music: {
       eyebrow: "Ambiance",
@@ -491,6 +498,13 @@ export const messages = {
       openAria: "Open the invitation",
       open: "Open",
       tapEnvelope: "or tap the envelope",
+      gate: {
+        eyebrow: "Loading",
+        title: "Your invitation",
+        script: "one moment…",
+        subtitle: "We're preparing the envelope.",
+        slow: "The connection is taking a little longer — thank you for waiting.",
+      },
     },
     music: {
       eyebrow: "Ambience",
