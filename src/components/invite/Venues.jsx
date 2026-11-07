@@ -3,7 +3,12 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, MapPin, Navigation, Video } from "lucide-react";
 import { toast } from "sonner";
 import { EASE } from "@/lib/invite-data";
-import { isYangoLink, yangoAnchorProps, SALLE_ROYAUME_YANGO_URL } from "@/lib/yango-open";
+import {
+  isYangoLink,
+  yangoAnchorProps,
+  SALLE_ROYAUME_YANGO_URL,
+  MAIRIE_COCODY_YANGO_URL,
+} from "@/lib/yango-open";
 import { REVEAL_VIEWPORT } from "@/lib/motion-viewport";
 import { useI18n } from "@/lib/locale";
 import { usePhoto } from "@/lib/photos";
@@ -14,12 +19,14 @@ import LuxeCard from "./LuxeCard";
 
 const protectJehovah = (text) => String(text || "").replace(/Jéhovah/g, "Jéh\u2060ovah");
 
-function VenueMapEmbed({ venue, loadingLabel, mapTitle, isYango, yangoLabel }) {
+function VenueMapEmbed({ venue, loadingLabel, mapTitle, isYango, yangoLabel, yangoUrl }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
   }, [venue.embedUrl]);
+
+  const targetYangoUrl = yangoUrl || venue.mapsUrl || SALLE_ROYAUME_YANGO_URL;
 
   return (
     <div
@@ -42,8 +49,8 @@ function VenueMapEmbed({ venue, loadingLabel, mapTitle, isYango, yangoLabel }) {
       />
       {isYango ? (
         <a
-          href={SALLE_ROYAUME_YANGO_URL}
-          {...yangoAnchorProps(SALLE_ROYAUME_YANGO_URL)}
+          href={targetYangoUrl}
+          {...yangoAnchorProps(targetYangoUrl)}
           aria-label={yangoLabel || "Ouvrir dans l'application Yango"}
           className="group absolute inset-0 z-10 flex flex-col items-center justify-end p-3 bg-gradient-to-t from-[#1b0008]/85 via-[#1b0008]/20 to-transparent cursor-pointer transition-all hover:from-[#1b0008]/95"
         >
@@ -91,8 +98,12 @@ export default function Venues() {
           />
           <ol className="relative z-[1] list-none space-y-0 p-0 m-0">
             {venues.map((venue, i) => {
-              const isYango = venue.id === "ceremony" || isYangoLink(venue.mapsUrl);
-              const effectiveMapsUrl = isYango ? SALLE_ROYAUME_YANGO_URL : venue.mapsUrl;
+              const isYango = venue.id === "ceremony" || venue.id === "civil" || isYangoLink(venue.mapsUrl);
+              const effectiveMapsUrl = venue.id === "civil"
+                ? MAIRIE_COCODY_YANGO_URL
+                : venue.id === "ceremony"
+                  ? SALLE_ROYAUME_YANGO_URL
+                  : (venue.mapsUrl || SALLE_ROYAUME_YANGO_URL);
 
               return (
                 <li key={venue.id} className="venues-journey-step">
@@ -177,6 +188,7 @@ export default function Venues() {
                                 mapTitle={vCopy.mapTitle}
                                 isYango={isYango}
                                 yangoLabel={vCopy.yango}
+                                yangoUrl={effectiveMapsUrl}
                               />
                             </div>
                           ) : null}

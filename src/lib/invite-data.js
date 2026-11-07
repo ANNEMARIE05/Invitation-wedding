@@ -1,6 +1,6 @@
 import coupleIllustration from "@/assets/couple-illustration.jpg";
 import weddingArchSketch from "@/assets/wedding-arch-sketch.jpg";
-import { SALLE_ROYAUME_YANGO_URL } from "@/lib/yango-open";
+import { MAIRIE_COCODY_YANGO_URL, SALLE_ROYAUME_YANGO_URL } from "@/lib/yango-open";
 
 export const EASE = [0.22, 1, 0.36, 1];
 
@@ -25,8 +25,8 @@ export const VENUE_MEDIA = [
   {
     id: "civil",
     address: "Cocody, Abidjan — Côte d'Ivoire",
-    mapsUrl: "https://maps.app.goo.gl/jEqFhD6qW3Y7rPAQ8?g_st=aw",
-    embedUrl: "https://www.google.com/maps?q=H%C3%B4tel+communal+de+Cocody+Abidjan&output=embed",
+    mapsUrl: MAIRIE_COCODY_YANGO_URL,
+    embedUrl: "https://www.google.com/maps?q=5.332758,-4.003835&z=17&output=embed",
     image: publicImage("mairie-cocody.jpg"),
   },
   {

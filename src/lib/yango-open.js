@@ -2,6 +2,10 @@
 export const SALLE_ROYAUME_LAT = 5.3407496;
 export const SALLE_ROYAUME_LON = -4.0054354;
 
+/** Coordonnées de l'Hôtel communal de Cocody (Mairie de Cocody). */
+export const MAIRIE_COCODY_LAT = 5.332758;
+export const MAIRIE_COCODY_LON = -4.003835;
+
 export const YANG0_PACKAGE = "com.yandex.yango";
 /** Jeton Adjust embarqué dans l’application Yango pour les liens de trajet. */
 export const ADJUST_TRACKER = "ki0yjo2_ns9zpoe";
@@ -20,7 +24,8 @@ export function yangoRouteUrl(lat = SALLE_ROYAUME_LAT, lon = SALLE_ROYAUME_LON) 
   return `https://u9xb.adj.st/route?${params.toString()}`;
 }
 
-export const SALLE_ROYAUME_YANGO_URL = yangoRouteUrl();
+export const SALLE_ROYAUME_YANGO_URL = yangoRouteUrl(SALLE_ROYAUME_LAT, SALLE_ROYAUME_LON);
+export const MAIRIE_COCODY_YANGO_URL = yangoRouteUrl(MAIRIE_COCODY_LAT, MAIRIE_COCODY_LON);
 
 export function isYangoLink(url) {
   const raw = String(url || "").toLowerCase();
@@ -31,11 +36,12 @@ export function isYangoLink(url) {
     raw.includes("yandextaxi://") ||
     raw.includes("yango.go.link") ||
     raw.includes("yango.com") ||
-    (raw.includes("5.340749") && raw.includes("-4.005435"))
+    (raw.includes("5.340749") && raw.includes("-4.005435")) ||
+    (raw.includes("5.33275") && raw.includes("-4.00383"))
   );
 }
 
-/** Ancien lien Google Maps de la salle, à remplacer par Yango. */
+/** Ancien lien Google Maps de la salle ou de la mairie, à remplacer par Yango. */
 export function isLegacySalleRoyaumeGoogleMaps(url) {
   const raw = String(url || "").trim();
   if (!raw) return false;
@@ -49,9 +55,17 @@ export function isLegacySalleRoyaumeGoogleMaps(url) {
       host === "maps.app.goo.gl";
     if (!google) return false;
     const blob = `${u.searchParams.get("q") || ""} ${u.searchParams.get("query") || ""} ${decodeURIComponent(u.pathname)}`;
-    return blob.includes("5.340749") && blob.includes("-4.005435");
+    return (
+      (blob.includes("5.340749") && blob.includes("-4.005435")) ||
+      (blob.includes("5.33275") && blob.includes("-4.00383")) ||
+      blob.includes("jEqFhD6qW3Y7rPAQ8")
+    );
   } catch {
-    return raw.includes("5.340749") && raw.includes("-4.005435");
+    return (
+      (raw.includes("5.340749") && raw.includes("-4.005435")) ||
+      (raw.includes("5.33275") && raw.includes("-4.00383")) ||
+      raw.includes("jEqFhD6qW3Y7rPAQ8")
+    );
   }
 }
 
@@ -74,7 +88,12 @@ export function coordsFromYangoUrl(url) {
       return { lat: String(lat).trim(), lon: String(lon).trim() };
     }
   } catch {
-    /* lien relatif ou invalide : coordonnées de la salle */
+    /* lien relatif ou invalide */
+  }
+
+  const raw = String(url || "");
+  if (raw.includes("5.33275") || raw.includes("civil") || raw.includes("mairie")) {
+    return { lat: String(MAIRIE_COCODY_LAT), lon: String(MAIRIE_COCODY_LON) };
   }
   return { lat: String(SALLE_ROYAUME_LAT), lon: String(SALLE_ROYAUME_LON) };
 }
@@ -90,7 +109,8 @@ export function openYangoRoute(event, url = SALLE_ROYAUME_YANGO_URL) {
     event.preventDefault();
   }
   const { lat, lon } = coordsFromYangoUrl(url);
-  const fallback = encodeURIComponent(yangoRouteUrl(lat, lon));
+  const targetUrl = yangoRouteUrl(lat, lon);
+  const fallback = encodeURIComponent(targetUrl);
 
   if (isAndroid()) {
     const intentUrl = `intent://route?end-lat=${encodeURIComponent(lat)}&end-lon=${encodeURIComponent(lon)}&adj_t=${ADJUST_TRACKER}&ref=${ADJUST_TRACKER}#Intent;scheme=yandexyango;package=${YANG0_PACKAGE};S.browser_fallback_url=${fallback};end`;
@@ -104,13 +124,13 @@ export function openYangoRoute(event, url = SALLE_ROYAUME_YANGO_URL) {
     window.location.href = appUrl;
     setTimeout(() => {
       if (Date.now() - start < 1500) {
-        window.location.href = yangoRouteUrl(lat, lon);
+        window.location.href = targetUrl;
       }
     }, 600);
     return;
   }
 
-  window.open(yangoRouteUrl(lat, lon), "_blank", "noopener,noreferrer");
+  window.open(targetUrl, "_blank", "noopener,noreferrer");
 }
 
 export function yangoAnchorProps(url = SALLE_ROYAUME_YANGO_URL) {

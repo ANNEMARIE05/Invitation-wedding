@@ -1,5 +1,5 @@
 import { COUPLE, WEDDING_DATE_ISO, VENUE, IMAGES, VENUE_MEDIA, ZOOM, getZoomJoinUrl } from "./invite-data";
-import { isLegacySalleRoyaumeGoogleMaps, SALLE_ROYAUME_YANGO_URL } from "./yango-open";
+import { isLegacySalleRoyaumeGoogleMaps, MAIRIE_COCODY_YANGO_URL, SALLE_ROYAUME_YANGO_URL } from "./yango-open";
 import { messages } from "./translations";
 import { mergeTheme, normalizeSurfaceMode, themeFromForm } from "./theme";
 
@@ -30,6 +30,8 @@ function mergeLocation(stored, id) {
   const embed_url = (loc.embed_url || "").trim() || def.embed_url || mapsEmbed(`${name} ${address}`);
   if (id === "ceremony") {
     maps_url = SALLE_ROYAUME_YANGO_URL;
+  } else if (id === "civil") {
+    maps_url = MAIRIE_COCODY_YANGO_URL;
   }
   return { name, address, time, maps_url, embed_url };
 }
@@ -67,8 +69,10 @@ export function buildVenueCards(m, merged) {
     const text = m.venues.items.find((v) => v.id === base.id) || {};
     const loc = merged.locations[base.id] || mergeLocation({}, base.id);
     let mapsUrl = loc.maps_url;
-    if (base.id === "ceremony" || isLegacySalleRoyaumeGoogleMaps(mapsUrl)) {
+    if (base.id === "ceremony") {
       mapsUrl = SALLE_ROYAUME_YANGO_URL;
+    } else if (base.id === "civil") {
+      mapsUrl = MAIRIE_COCODY_YANGO_URL;
     }
     return {
       id: base.id,
